@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/scriptInputViewModelState.dart';
+import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/script_input_view_model_state.dart';
 
-import '../viewModel/scriptInputViewModel.dart';
+import '../viewModel/script_input_view_model.dart';
 
 class ScriptInputScreen extends ConsumerWidget {
   const ScriptInputScreen({super.key});

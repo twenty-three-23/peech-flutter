@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/scriptInputViewModelState.dart';
+import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/script_input_view_model_state.dart';
 
 
 final scriptInputViewModel = StateNotifierProvider<ScriptInputViewModel, ScriptInputViewModelState>(
