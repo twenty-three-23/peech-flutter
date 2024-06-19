@@ -20,32 +20,35 @@ class ScriptInputScreen extends ConsumerWidget {
         leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
         title: const Text("대본으로 시작"),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20,),
-          const Text("대본을 입력해주세요"),
-          const SizedBox(height: 20,),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: TextField(
-                maxLines: 20,
-                onChanged: (value) {
-                  viewModel.setScript(value);
-                },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20,),
+            const Text("대본을 입력해주세요"),
+            const SizedBox(height: 20,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: TextField(
+                  minLines: 1,
+                  maxLines: null,
+                  onChanged: (value) {
+                    viewModel.setScript(value);
+                  },
+                  decoration: InputDecoration(
+                    hintText: "안녕하세요. 발표 시작하겠습니다...",
+                    border: const OutlineInputBorder(),
+                    counterText: "${viewModelState.script?.length ?? 0} 자"
+                  ),
                 ),
               ),
             ),
-          ),
-          Text("${viewModelState.script?.length ?? 0} 자"),
-          TextButton(
-              onPressed: () {  },
-              child: const Text("예상 시간 확인")
-          ),
-          Text(viewModelState.script ?? "none"),
-        ],
+            TextButton(
+                onPressed: () {  },
+                child: const Text("예상 시간 확인")
+            ),
+          ],
+        ),
       ),
     );
   }
