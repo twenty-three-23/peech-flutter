@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/scriptInputViewModelState.dart';
 
-class ScriptInputScreen extends StatefulWidget {
+import '../viewModel/scriptInputViewModel.dart';
+
+class ScriptInputScreen extends ConsumerWidget {
   const ScriptInputScreen({super.key});
 
   @override
-  State<ScriptInputScreen> createState() => _ScriptInputScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
 
-class _ScriptInputScreenState extends State<ScriptInputScreen> {
-  @override
-  Widget build(BuildContext context) {
+    ScriptInputViewModelState viewModelState = ref.watch(scriptInputViewModel);
+    ScriptInputViewModel viewModel = ref.watch(scriptInputViewModel.notifier);
     final scriptController = TextEditingController();
+    ref.listen(scriptInputViewModel, (previous, next) { debugPrint("prev: ${previous?.script}, next: ${next.script}"); });
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
@@ -26,14 +30,21 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
             child: Center(
               child: TextField(
                 maxLines: 20,
-                controller: scriptController,
-                decoration: InputDecoration(
+                onChanged: (value) {
+                  viewModel.setScript(value);
+                },
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
-
               ),
             ),
           ),
+          Text("${viewModelState.script?.length ?? 0} 자"),
+          TextButton(
+              onPressed: () {  },
+              child: const Text("예상 시간 확인")
+          ),
+          Text(viewModelState.script ?? "none"),
         ],
       ),
     );
