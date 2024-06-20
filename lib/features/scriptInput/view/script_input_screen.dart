@@ -53,19 +53,36 @@ class ScriptInputScreen extends StatelessWidget {
                   return const CircularProgressIndicator();
                 }
                 else if(_controller.scriptExpectedTime.value != null) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("전체 예상시간: ${_controller.scriptExpectedTime.value?.expectedAllTime ?? "전체 예상시간 결과 존재하지 않음"}"),
-                      const SizedBox(height: 10,),
-                      const Text("0번째 문단"),
-                      Text(_controller.scriptExpectedTime.value?.paragraphs?[0]?.paragraph ?? "문단 결과 존재하지 않음"),
-                      Text(_controller.scriptExpectedTime.value?.expectedTimePerParagraphs?[0]?.time ?? "예상 시간 결과 존재하지 않음"),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("전체 예상시간: ${_controller.scriptExpectedTime.value?.expectedAllTime ?? "전체 예상시간 결과 존재하지 않음"}"),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          primary: false,
+                          itemCount: _controller.scriptExpectedTime.value?.paragraphs?.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10,),
+                                Text("$index번째 문단 - ${_controller.scriptExpectedTime.value?.expectedTimePerParagraphs?[index]?.time ?? "예상 시간 결과 존재하지 않음"}"),
+                                Text(_controller.scriptExpectedTime.value?.paragraphs?[index]?.paragraph ?? "문단 결과 존재하지 않음"),
+                              ],
+                            );
+                          },
+                        ),
 
-                    ],
+
+                      ],
+                    ),
                   );
                 }
-                else return const Text('');
+                else {
+                  return const Text('');
+                }
               },
             ),
           ],
