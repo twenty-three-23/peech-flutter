@@ -44,22 +44,31 @@ class ScriptInputScreen extends StatelessWidget {
             TextButton(
                 child: const Text("예상 시간 확인"),
                 onPressed: () {
-                  // viewModel.getExpectedTimeTest();
-                  // showDialog(
-                  //     context: context,
-                  //     builder: ((context) {
-                  //       return AlertDialog(
-                  //         title: const Text("예상 시간입니다"),
-                  //         content: Text(viewModelState.scriptExpectedTimeModel == null ? "로딩중" : "결과"),
-                  //         actions: [
-                  //           ElevatedButton(
-                  //               onPressed: () { Navigator.of(context).pop(); },
-                  //               child: const Text("닫기")
-                  //           )
-                  //         ],
-                  //       );
-                  //     })
-                  // );
+                  _controller.getExpectedTime();
+                  showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        alignment: Alignment.center,
+                        content: GetX<ScriptInputController>(
+                          builder: (_) {
+                            if(_controller.scriptExpectedTime.value == null) {
+                              return const Text("로딩중..");
+                            }
+                            else {
+                              return Text(_controller.scriptExpectedTime.value?.expectedAllTime ?? "결과 존재하지 않음");
+                            }
+                          },
+                        ),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () { Navigator.of(context).pop(); },
+                              child: const Text("닫기")
+                          )
+                        ],
+                      );
+                    })
+                  );
                 },
             ),
           ],

@@ -6,13 +6,22 @@ import '../model/script_expected_time_model.dart';
 
 class ScriptInputController extends GetxController {
 
-  final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
+  ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
 
+  String? _script;
   Rx<String?> script = Rx<String?>(null);
-  Rx<ScriptExpectedTimeModel?> scriptExpectedTime = null.obs;
+  ScriptExpectedTimeModel? _scriptExpectedTime;
+  Rx<ScriptExpectedTimeModel?> scriptExpectedTime = Rx<ScriptExpectedTimeModel?>(null);
 
   void updateScript(String newScript) {
-    script.value = newScript;
+    _script = newScript;
+    script.value = _script;
+  }
+
+  void getExpectedTime() async {
+    scriptExpectedTime.value = null;
+    _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();
+    scriptExpectedTime.value = _scriptExpectedTime;
   }
 
 }
