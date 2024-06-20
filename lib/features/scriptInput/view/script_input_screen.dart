@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:swm_peech_flutter/features/scriptInput/viewModel/state/script_input_view_model_state.dart';
+import 'package:get/get.dart';
 
-import '../viewModel/script_input_view_model.dart';
+import '../viewModel/script_input_controller.dart';
 
-class ScriptInputScreen extends ConsumerWidget {
+class ScriptInputScreen extends StatelessWidget {
   const ScriptInputScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
 
-    ScriptInputViewModelState viewModelState = ref.watch(scriptInputViewModel);
-    ScriptInputViewModel viewModel = ref.watch(scriptInputViewModel.notifier);
-    final scriptController = TextEditingController();
-    ref.listen(scriptInputViewModel, (previous, next) { debugPrint("prev: ${previous?.script}, next: ${next.script}"); });
+    final ScriptInputController _controller = Get.put(ScriptInputController());
 
     return Scaffold(
       appBar: AppBar(
@@ -29,23 +25,42 @@ class ScriptInputScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: TextField(
-                  minLines: 1,
-                  maxLines: null,
-                  onChanged: (value) {
-                    viewModel.setScript(value);
-                  },
-                  decoration: InputDecoration(
-                    hintText: "안녕하세요. 발표 시작하겠습니다...",
-                    border: const OutlineInputBorder(),
-                    counterText: "${viewModelState.script?.length ?? 0} 자"
+                child: GetX<ScriptInputController>(
+                  builder: (_) => TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    onChanged: (value) {
+                      _controller.updateScript(value);
+                    },
+                    decoration: InputDecoration(
+                        hintText: "안녕하세요. 발표 시작하겠습니다...",
+                        border: const OutlineInputBorder(),
+                        counterText: "${_controller.script.value?.length ?? 0} 자"
+                    ),
                   ),
-                ),
+                )
               ),
             ),
             TextButton(
-                onPressed: () {  },
-                child: const Text("예상 시간 확인")
+                child: const Text("예상 시간 확인"),
+                onPressed: () {
+                  // viewModel.getExpectedTimeTest();
+                  // showDialog(
+                  //     context: context,
+                  //     builder: ((context) {
+                  //       return AlertDialog(
+                  //         title: const Text("예상 시간입니다"),
+                  //         content: Text(viewModelState.scriptExpectedTimeModel == null ? "로딩중" : "결과"),
+                  //         actions: [
+                  //           ElevatedButton(
+                  //               onPressed: () { Navigator.of(context).pop(); },
+                  //               child: const Text("닫기")
+                  //           )
+                  //         ],
+                  //       );
+                  //     })
+                  // );
+                },
             ),
           ],
         ),

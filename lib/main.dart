@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'features/home/view/homeScreen.dart';
 
 void main() {
@@ -11,10 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ProviderScope(
-        child: MaterialApp(
-          home: HomeScreen()
-        )
+    return GetMaterialApp(
+      home: HomeScreen()
     );
   }
 }
