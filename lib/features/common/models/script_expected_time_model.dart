@@ -1,6 +1,8 @@
 
-import 'package:swm_peech_flutter/features/scriptInput/model/expected_time_per_paragraph_model.dart';
-import 'package:swm_peech_flutter/features/scriptInput/model/paragraph_model.dart';
+
+import 'package:swm_peech_flutter/features/common/models/paragraph_model.dart';
+
+import 'expected_time_per_paragraph_model.dart';
 
 class ScriptExpectedTimeModel {
 
