@@ -30,6 +30,8 @@ class VoiceRecodeCtr extends GetxController {
 
   @override
   void onClose() {
+    stopRecording();
+    stopPlaying();
     _recorder!.closeRecorder();
     _player!.closePlayer();
     _recorder = null;
