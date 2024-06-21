@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swm_peech_flutter/features/scriptInput/view/scriptInputScreen.dart';
+import 'package:swm_peech_flutter/features/scriptInput/view/script_input_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
