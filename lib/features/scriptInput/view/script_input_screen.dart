@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/voiceRecode/view/voice_recode_screen.dart';
 
-import '../viewModel/script_input_controller.dart';
+import '../controller/script_input_controller.dart';
 
 class ScriptInputScreen extends StatelessWidget {
   const ScriptInputScreen({super.key});
@@ -84,7 +85,9 @@ class ScriptInputScreen extends StatelessWidget {
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () { Navigator.push(context, MaterialPageRoute(
+                                builder: (_) => const VoiceRecodeScreen()
+                            )); },
                             child: const Text("연습하러 가기")
                           ),
                         ),
