@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/scriptInput/dataSource/script_expected_time_data_source.dart';
 
@@ -10,9 +11,30 @@ class ScriptInputController extends GetxController {
 
   String? _script;
   Rx<String?> script = Rx<String?>(null);
+
+  //발표 전 대본 기반 에상 시간
   ScriptExpectedTimeModel? _scriptExpectedTime;
   Rx<ScriptExpectedTimeModel?> scriptExpectedTime = Rx<ScriptExpectedTimeModel?>(null);
+
   Rx<bool> isLoading = false.obs;
+
+
+  //대본 입력 TextField 텍스트 컨트롤러
+  TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    script.listen((value) {
+      textEditingController.text = value ?? '';
+    });
+  }
+
+  @override
+  void onClose() {
+    textEditingController.dispose();
+    super.onClose();
+  }
 
   void updateScript(String newScript) {
     _script = newScript;
@@ -21,6 +43,7 @@ class ScriptInputController extends GetxController {
 
   void getExpectedTime() async {
     isLoading.value = true;
+    script.value = '';
     scriptExpectedTime.value = null;
     _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();
     _scriptExpectedTime?.expectedTimePerParagraphs?.sort((a, b) => (a?.paragraphId ?? 0).compareTo(b?.paragraphId ?? 0));
