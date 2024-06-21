@@ -7,7 +7,7 @@ import '../../common/models/script_expected_time_model.dart';
 
 
 
-class ScriptInputController extends GetxController {
+class ScriptInputCtr extends GetxController {
 
   //녹음 연습 전 스크립트 컨트롤러
   final BeforeRecodeScriptCtr _beforeRecodeScriptCtr = BeforeRecodeScriptCtr();

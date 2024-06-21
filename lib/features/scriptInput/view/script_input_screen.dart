@@ -9,7 +9,7 @@ class ScriptInputScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ScriptInputController _controller = Get.put(ScriptInputController());
+    final ScriptInputCtr _controller = Get.put(ScriptInputCtr());
 
     // 화면이 빌드된 후 스크립트 변수를 초기화
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -30,7 +30,7 @@ class ScriptInputScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: GetX<ScriptInputController>(
+                child: GetX<ScriptInputCtr>(
                   builder: (_) => TextField(
                     controller: _controller.textEditingController,
                     minLines: 1,
@@ -53,7 +53,7 @@ class ScriptInputScreen extends StatelessWidget {
                   _controller.getExpectedTime();
                 },
             ),
-            GetX<ScriptInputController>(
+            GetX<ScriptInputCtr>(
               builder: (_) {
                 if(_controller.isLoading.value == true) {
                   return const CircularProgressIndicator();
