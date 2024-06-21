@@ -86,7 +86,7 @@ class ScriptInputScreen extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
                             onPressed: () { Navigator.push(context, MaterialPageRoute(
-                                builder: (_) => const VoiceRecodeScreen()
+                                builder: (_) => VoiceRecodeScreen()
                             )); },
                             child: const Text("연습하러 가기")
                           ),
