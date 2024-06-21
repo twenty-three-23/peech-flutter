@@ -11,6 +11,11 @@ class ScriptInputScreen extends StatelessWidget {
 
     final ScriptInputController _controller = Get.put(ScriptInputController());
 
+    // 화면이 빌드된 후 스크립트 변수를 초기화
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.script.value = ''; // 스크립트 변수 초기화
+    });
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
@@ -27,6 +32,7 @@ class ScriptInputScreen extends StatelessWidget {
               child: Center(
                 child: GetX<ScriptInputController>(
                   builder: (_) => TextField(
+                    controller: _controller.textEditingController,
                     minLines: 1,
                     maxLines: null,
                     onChanged: (value) {
@@ -42,7 +48,7 @@ class ScriptInputScreen extends StatelessWidget {
               ),
             ),
             TextButton(
-                child: const Text("예상 시간 확인"),
+                child: const Text("대본 입력 완료"),
                 onPressed: () {
                   _controller.getExpectedTime();
                 },
