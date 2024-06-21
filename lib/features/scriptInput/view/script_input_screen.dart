@@ -80,7 +80,14 @@ class ScriptInputScreen extends StatelessWidget {
                             );
                           },
                         ),
-
+                        Container(
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: const Text("연습하러 가기")
+                          ),
+                        ),
 
                       ],
                     ),
