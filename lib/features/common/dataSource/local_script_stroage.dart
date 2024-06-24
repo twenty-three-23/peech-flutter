@@ -1,15 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalScriptStroage {
+class LocalScriptStorage {
 
-  static final LocalScriptStroage _instance = LocalScriptStroage._internal();
+  static final LocalScriptStorage _instance = LocalScriptStorage._internal();
   late SharedPreferences _prefs;
 
-  factory LocalScriptStroage() {
+  factory LocalScriptStorage() {
     return _instance;
   }
 
-  LocalScriptStroage._internal();
+  LocalScriptStorage._internal();
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
