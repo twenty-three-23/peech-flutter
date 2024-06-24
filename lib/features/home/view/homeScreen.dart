@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swm_peech_flutter/features/scriptInput/view/script_input_screen.dart';
-
-import '../../voiceRecode/view/voice_recode_screen_no_script.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

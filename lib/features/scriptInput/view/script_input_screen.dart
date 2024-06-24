@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../voiceRecode/view/voice_recode_screen_with_script.dart';
 import '../controller/script_input_controller.dart';
 
 class ScriptInputScreen extends StatelessWidget {
