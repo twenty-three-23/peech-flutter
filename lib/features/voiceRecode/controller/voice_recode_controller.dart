@@ -40,20 +40,19 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> startRecording() async {
-    isRecording.value = true;
     await _recorder!.startRecorder(
       toFile: _path,
       codec: Codec.aacADTS,
     );
+    isRecording.value = true;
   }
 
   Future<void> stopRecording() async {
-    isRecording.value = false;
     await _recorder!.stopRecorder();
+    isRecording.value = false;
   }
 
   Future<void> startPlaying() async {
-    isPlaying.value = true;
     await _player!.startPlayer(
       fromURI: _path,
       codec: Codec.aacADTS,
@@ -61,11 +60,12 @@ class VoiceRecodeCtr extends GetxController {
         isPlaying.value = false;
       },
     );
+    isPlaying.value = true;
   }
 
   Future<void> stopPlaying() async {
-    isPlaying.value = false;
     await _player!.stopPlayer();
+    isPlaying.value = false;
   }
 
 }
