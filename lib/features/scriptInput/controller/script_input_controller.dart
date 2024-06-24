@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/controllers/before_recode_script.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_script_stroage.dart';
 import 'package:swm_peech_flutter/features/scriptInput/dataSource/script_expected_time_data_source.dart';
 
 import '../../common/models/script_expected_time_model.dart';
@@ -9,14 +9,12 @@ import '../../common/models/script_expected_time_model.dart';
 
 class ScriptInputCtr extends GetxController {
 
-  //녹음 연습 전 스크립트 컨트롤러
-  final BeforeRecodeScriptCtr _beforeRecodeScriptCtr = BeforeRecodeScriptCtr();
-
   //대본 예상 시간 데이터 소스
   final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
 
   //대본 입력 데이터
   Rx<String?> script = Rx<String?>(null);
+  String? _script;
 
   //발표 전 대본 기반 에상 시간
   ScriptExpectedTimeModel? _scriptExpectedTime;
@@ -44,8 +42,19 @@ class ScriptInputCtr extends GetxController {
   }
 
   void updateScript(String newScript) {
-    _beforeRecodeScriptCtr.updateScript(newScript);
-    script.value = _beforeRecodeScriptCtr.script;
+    _script = newScript;
+    script.value = _script;
+  }
+
+  Future<void> saveScript() async {
+    await LocalScriptStorage().setScript(_script);
+  }
+
+  Future<void> gotoPractice(BuildContext context) async {
+    await saveScript();
+    if(context.mounted) {
+      Navigator.pushNamed(context, '/voiceRecodeWithScript');
+    }
   }
 
   void getExpectedTime() async {

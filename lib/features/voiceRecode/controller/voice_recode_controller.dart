@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_script_stroage.dart';
 
 class VoiceRecodeCtr extends GetxController {
 
@@ -9,9 +10,11 @@ class VoiceRecodeCtr extends GetxController {
   Rx<bool> isRecording = false.obs;
   Rx<bool> isPlaying = false.obs;
   final String _path = 'audio_recording.aac';
+  late final String? script;
 
   @override
   void onInit() {
+    script = LocalScriptStorage().getScript();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();

@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/script_input_controller.dart';
 
-class ScriptInputScreen extends StatelessWidget {
+class ScriptInputScreen extends StatefulWidget {
   const ScriptInputScreen({super.key});
+
+  @override
+  State<ScriptInputScreen> createState() => _ScriptInputScreenState();
+}
+
+class _ScriptInputScreenState extends State<ScriptInputScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +84,7 @@ class ScriptInputScreen extends StatelessWidget {
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
-                            onPressed: () { Navigator.pushNamed(context, '/voiceRecodeWithScript'); },
+                            onPressed: () { controller.gotoPractice(context); },
                             child: const Text("연습하러 가기")
                           ),
                         ),

@@ -16,7 +16,7 @@ class LocalScriptStorage {
   }
 
 
-  void setScript(String? script) async {
+  Future<void> setScript(String? script) async {
     await _prefs.setString("currentScript", script ?? "");
   }
 

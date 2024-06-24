@@ -41,26 +41,32 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
       appBar: AppBar(
         leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
         title: const Text("음성 녹음"),
+        actions: [
+          GetX<VoiceRecodeCtr>(
+            builder: (_) => ElevatedButton(
+              onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
+              child: Text(_controller.isRecording.value ? '녹음 마치기' : '녹음 시작'),
+            ),
+          ),
+          const SizedBox(width: 8,),
+          ElevatedButton(
+            onPressed: () {  },
+            child: const Text("분석"),
+          ),
+          const SizedBox(width: 8,),
+        ],
       ),
       body: PopScope(
-        child: GetX<VoiceRecodeCtr>(
-          builder: (_) => Center(
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(
-                    color: _controller.isRecording.value ? Colors.black : Colors.grey,
-                    size: 150,
-                    Icons.keyboard_voice_rounded),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(_controller.script ?? ""),
+                ),
                 const SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
-                  child: Text(_controller.isRecording.value ? '녹음 마치기' : '녹음 시작'),
-                ),
-                ElevatedButton(
-                  onPressed: () {  },
-                  child: const Text("녹음본 분석받기"),
-                ),
               ],
             ),
           ),
