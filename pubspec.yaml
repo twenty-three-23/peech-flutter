@@ -38,6 +38,7 @@ dependencies:
   get:
   flutter_sound: ^9.6.0
   permission_handler: ^11.3.0
+  shared_preferences: ^2.2.3
 
 
 dev_dependencies:
