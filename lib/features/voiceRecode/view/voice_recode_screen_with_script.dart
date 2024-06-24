@@ -11,7 +11,7 @@ class VoiceRecodeScreenWithScript extends StatefulWidget {
 
 class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScript> with WidgetsBindingObserver {
 
-  final VoiceRecodeCtr _controller = Get.put(VoiceRecodeCtr());
+  final VoiceRecodeCtr _controller = Get.find<VoiceRecodeCtr>();
 
   @override
   void initState() {
@@ -44,7 +44,6 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
       ),
       body: PopScope(
         child: GetX<VoiceRecodeCtr>(
-          dispose: (_) => Get.delete<VoiceRecodeCtr>(),
           builder: (_) => Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

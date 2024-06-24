@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:swm_peech_flutter/routers/routers.dart';
 import 'features/home/view/homeScreen.dart';
 
 void main() {
@@ -11,8 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
-      home: HomeScreen()
+    return GetMaterialApp(
+      getPages: Routers.routers,
+      initialRoute: Routers.INITIAL,
+      // home: HomeScreen()
     );
   }
 }
