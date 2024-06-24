@@ -27,9 +27,9 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 앱 백그라운드로 전환
     if (state == AppLifecycleState.paused) {
-      // 앱 백그라운드로 전환
-      _controller.onClose();
+      _controller.stopRecording();
     }
   }
 
@@ -43,11 +43,8 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
         title: const Text("음성 녹음"),
       ),
       body: PopScope(
-        onPopInvoked: (_) async {
-          _controller.onClose();
-          return Future.value(true);
-        },
         child: GetX<VoiceRecodeCtr>(
+          dispose: (_) => Get.delete<VoiceRecodeCtr>(),
           builder: (_) => Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

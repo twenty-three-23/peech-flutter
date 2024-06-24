@@ -13,9 +13,9 @@ class ScriptInputScreen extends StatelessWidget {
     final ScriptInputCtr controller = Get.put(ScriptInputCtr());
 
     // 화면이 빌드된 후 스크립트 변수를 초기화
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.script.value = ''; // 스크립트 변수 초기화
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   controller.script.value = ''; // 스크립트 변수 초기화
+    // });
 
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +32,7 @@ class ScriptInputScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: GetX<ScriptInputCtr>(
+                  dispose: (_) => Get.delete<ScriptInputCtr>(),
                   builder: (_) => TextField(
                     controller: controller.textEditingController,
                     minLines: 1,
