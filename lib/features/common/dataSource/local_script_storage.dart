@@ -5,6 +5,8 @@ class LocalScriptStorage {
   static final LocalScriptStorage _instance = LocalScriptStorage._internal();
   late SharedPreferences _prefs;
 
+  static const CURRENT_SCRIPT_KEY = "currentScript";
+
   factory LocalScriptStorage() {
     return _instance;
   }
@@ -17,11 +19,11 @@ class LocalScriptStorage {
 
 
   Future<void> setScript(String? script) async {
-    await _prefs.setString("currentScript", script ?? "");
+    await _prefs.setString(CURRENT_SCRIPT_KEY, script ?? "");
   }
 
   String? getScript() {
-    return _prefs.getString("currentScript");
+    return _prefs.getString(CURRENT_SCRIPT_KEY);
   }
 
 }
