@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swm_peech_flutter/features/common/dataSource/local_practice_mode_stroage.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_practice_mode_storage.dart';
 
 class ThemeInputScreen extends StatelessWidget {
   const ThemeInputScreen({super.key});

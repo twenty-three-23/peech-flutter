@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:swm_peech_flutter/features/common/dataSource/local_script_stroage.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_script_storage.dart';
 
 class VoiceRecodeCtr extends GetxController {
 
