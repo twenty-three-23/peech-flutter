@@ -55,11 +55,7 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                 const SizedBox(height: 30,),
                 ElevatedButton(
                   onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
-                  child: Text(_controller.isRecording.value ? '녹음 마치기' : '녹음 시작'),
-                ),
-                ElevatedButton(
-                  onPressed: () {  },
-                  child: const Text("녹음본 분석받기"),
+                  child: Text(_controller.isRecording.value ? '녹음 완료 및 분석받기' : '녹음 시작'),
                 ),
               ],
             ),

@@ -45,13 +45,8 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
           GetX<VoiceRecodeCtr>(
             builder: (_) => ElevatedButton(
               onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
-              child: Text(_controller.isRecording.value ? '녹음 마치기' : '녹음 시작'),
+              child: Text(_controller.isRecording.value ? '녹음 완료 및 분석받기' : '녹음 시작'),
             ),
-          ),
-          const SizedBox(width: 8,),
-          ElevatedButton(
-            onPressed: () {  },
-            child: const Text("분석"),
           ),
           const SizedBox(width: 8,),
         ],
