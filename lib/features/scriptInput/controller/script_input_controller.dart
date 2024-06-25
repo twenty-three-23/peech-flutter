@@ -13,8 +13,8 @@ class ScriptInputCtr extends GetxController {
   final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
 
   //대본 입력 데이터
-  Rx<String?> script = Rx<String?>(null);
-  String? _script;
+  Rx<List<String>> script = Rx<List<String>>([ '' ]);
+  final List<String> _script = [ '' ];
 
   //발표 전 대본 기반 에상 시간
   ScriptExpectedTimeModel? _scriptExpectedTime;
@@ -23,26 +23,8 @@ class ScriptInputCtr extends GetxController {
   //스크립트 예상시간 로딩 유무
   Rx<bool> isLoading = false.obs;
 
-  //대본 입력 TextField 텍스트 컨트롤러
-  TextEditingController textEditingController = TextEditingController();
-
-  //script에 textfield 연동
-  @override
-  void onInit() {
-    super.onInit();
-    script.listen((value) {
-      textEditingController.text = value ?? '';
-    });
-  }
-
-  @override
-  void onClose() {
-    textEditingController.dispose();
-    super.onClose();
-  }
-
-  void updateScript(String newScript) {
-    _script = newScript;
+  void updateScript(int index, String newScript) {
+    _script[index] = newScript;
     script.value = _script;
   }
 
@@ -59,7 +41,7 @@ class ScriptInputCtr extends GetxController {
 
   void getExpectedTime() async {
     isLoading.value = true;
-    script.value = '';
+    script.value = List.empty(growable: true);
     scriptExpectedTime.value = null;
     _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();
     _scriptExpectedTime?.expectedTimePerParagraphs?.sort((a, b) => (a?.paragraphId ?? 0).compareTo(b?.paragraphId ?? 0));

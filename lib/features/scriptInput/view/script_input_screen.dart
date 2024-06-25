@@ -31,19 +31,25 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: GetX<ScriptInputCtr>(
-                  builder: (_) => TextField(
-                    controller: controller.textEditingController,
-                    minLines: 1,
-                    maxLines: null,
-                    onChanged: (value) {
-                      controller.updateScript(value);
+                  builder: (_) => ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: controller.script.value.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return TextField(
+                        minLines: 1,
+                        maxLines: null,
+                        onChanged: (value) {
+                          controller.updateScript(index, value);
+                        },
+                        decoration: InputDecoration(
+                            hintText: "안녕하세요. 발표 시작하겠습니다...",
+                            border: const OutlineInputBorder(),
+                            counterText: "${controller.script.value[index].length} 자"
+                        ),
+                      );
                     },
-                    decoration: InputDecoration(
-                        hintText: "안녕하세요. 발표 시작하겠습니다...",
-                        border: const OutlineInputBorder(),
-                        counterText: "${controller.script.value?.length ?? 0} 자"
-                    ),
-                  ),
+                  )
                 )
               ),
             ),
