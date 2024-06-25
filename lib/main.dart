@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'features/home/view/homeScreen.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_script_stroage.dart';
+import 'package:swm_peech_flutter/routers/routers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
-      home: HomeScreen()
+    LocalScriptStorage().init();
+    return GetMaterialApp(
+      getPages: Routers.routers,
+      initialRoute: Routers.INITIAL,
     );
   }
 }
