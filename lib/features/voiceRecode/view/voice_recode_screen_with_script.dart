@@ -51,20 +51,20 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
           const SizedBox(width: 8,),
         ],
       ),
-      body: PopScope(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(_controller.script ?? ""),
-                ),
-                const SizedBox(height: 30,),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: _controller.script?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_controller.script?[index] ?? ''),
+                const SizedBox(height: 10,),
               ],
-            ),
-          ),
+            );
+          }
         ),
       ),
     );

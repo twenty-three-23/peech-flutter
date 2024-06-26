@@ -18,12 +18,12 @@ class LocalScriptStorage {
   }
 
 
-  Future<void> setScript(String? script) async {
-    await _prefs.setString(CURRENT_SCRIPT_KEY, script ?? "");
+  Future<void> setScript(List<String> scriptList) async {
+    await _prefs.setStringList(CURRENT_SCRIPT_KEY, scriptList);
   }
 
-  String? getScript() {
-    return _prefs.getString(CURRENT_SCRIPT_KEY);
+  List<String>? getScript() {
+    return _prefs.getStringList(CURRENT_SCRIPT_KEY);
   }
 
 }

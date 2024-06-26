@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../controller/script_input_controller.dart';
 
@@ -31,27 +33,69 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: GetX<ScriptInputCtr>(
-                  builder: (_) => TextField(
-                    controller: controller.textEditingController,
-                    minLines: 1,
-                    maxLines: null,
-                    onChanged: (value) {
-                      controller.updateScript(value);
+                  builder: (_) => ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: controller.script.value.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: controller.script.value[index],
+                                  minLines: 1,
+                                  maxLines: null,
+                                  onChanged: (value) {
+                                    controller.updateScript(index, value);
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "문단을 입력해주세요",
+                                      border: const OutlineInputBorder(),
+                                      counterText: "${controller.script.value[index].text.length} 자"
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "${index + 1}문단",
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  IconButton(
+                                    onPressed: () { controller.removeParagraph(index); },
+                                    icon: const Icon(Icons.close)
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 15,),
+                        ],
+                      );
                     },
-                    decoration: InputDecoration(
-                        hintText: "안녕하세요. 발표 시작하겠습니다...",
-                        border: const OutlineInputBorder(),
-                        counterText: "${controller.script.value?.length ?? 0} 자"
-                    ),
                   ),
                 )
               ),
             ),
             TextButton(
-                child: const Text("대본 입력 완료"),
-                onPressed: () {
-                  controller.getExpectedTime();
-                },
+              onPressed: () { controller.addParagraph(); },
+              child: const Text("문단 추가")
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: const Text("대본 입력 완료"),
+                    onPressed: () {
+                      controller.getExpectedTime();
+                    },
+                ),
+              ),
             ),
             GetX<ScriptInputCtr>(
               builder: (_) {

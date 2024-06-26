@@ -10,7 +10,7 @@ class VoiceRecodeCtr extends GetxController {
   Rx<bool> isRecording = false.obs;
   Rx<bool> isPlaying = false.obs;
   final String _path = 'audio_recording.aac';
-  late final String? script;
+  late final List<String>? script;
 
   @override
   void onInit() {
