@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/practice_history/controller/theme_list_controller.dart';
+import 'package:swm_peech_flutter/features/practice_history/view/theme_list_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
 import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
@@ -45,7 +47,13 @@ class Routers {
         Get.lazyPut<ThemeInputCtr>(() => ThemeInputCtr());
       })
     ),
-
+    GetPage(
+      name: '/historyThemeList',
+      page: () => const ThemeListScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ThemeListCtr>(() => ThemeListCtr());
+      })
+    )
   ];
 
 }

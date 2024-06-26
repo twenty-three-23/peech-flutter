@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Text("대본 입력하지 않고 시작하기")
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                 child: const Text("기록 보기")
             ),
           ],
