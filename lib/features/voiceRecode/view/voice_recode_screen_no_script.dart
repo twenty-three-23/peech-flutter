@@ -42,23 +42,21 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
         leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
         title: const Text("음성 녹음"),
       ),
-      body: PopScope(
-        child: GetX<VoiceRecodeCtr>(
-          builder: (_) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                    color: _controller.isRecording.value ? Colors.black : Colors.grey,
-                    size: 150,
-                    Icons.keyboard_voice_rounded),
-                const SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
-                  child: Text(_controller.isRecording.value ? '녹음 완료 및 분석받기' : '녹음 시작'),
-                ),
-              ],
-            ),
+      body: GetX<VoiceRecodeCtr>(
+        builder: (_) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                  color: _controller.isRecording.value ? Colors.black : Colors.grey,
+                  size: 150,
+                  Icons.keyboard_voice_rounded),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                onPressed: _controller.isRecording.value ? _controller.stopRecording : _controller.startRecording,
+                child: Text(_controller.isRecording.value ? '녹음 완료 및 분석받기' : '녹음 시작'),
+              ),
+            ],
           ),
         ),
       ),
