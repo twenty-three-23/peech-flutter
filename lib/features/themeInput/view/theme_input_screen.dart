@@ -23,8 +23,7 @@ class ThemeInputScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              minLines: 1,
-              maxLines: null,
+              maxLines: 1,
               onChanged: (value) {
                 controller.updateTheme(value);
               },
