@@ -13,7 +13,7 @@ class ScriptInputCtr extends GetxController {
   final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
 
   //대본 입력 데이터
-  Rx<List<String>> script = Rx<List<String>>([ '' ]);
+  Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
   final List<String> _script = [ '' ];
 
   //발표 전 대본 기반 에상 시간
@@ -25,7 +25,21 @@ class ScriptInputCtr extends GetxController {
 
   void updateScript(int index, String newScript) {
     _script[index] = newScript;
-    script.value = _script;
+    script.value[index].text = _script[index];
+    script.value = script.value.toList();
+  }
+
+  void addParagraph() {
+    _script.add('');
+    script.value.add(TextEditingController());
+    script.value = script.value.toList();
+  }
+
+  void removeParagraph(int index) {
+    _script.removeAt(index);
+    script.value[index].dispose();
+    script.value.removeAt(index);
+    script.value = script.value.toList();
   }
 
   Future<void> saveScript() async {
