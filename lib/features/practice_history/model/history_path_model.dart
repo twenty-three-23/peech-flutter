@@ -11,7 +11,7 @@ class HistoryPathModel {
 
   //경로는 Theme/Major/Minor 형식
 
-  HistoryPathState pathState = HistoryPathState.themeList;
+  Rx<HistoryPathState> pathState = HistoryPathState.themeList.obs;
   int? _theme;
   int? _major;
   int? _minor;
@@ -27,6 +27,8 @@ class HistoryPathModel {
     _theme = theme;
     _major = null;
     _minor = null;
+    if(theme == null) { pathState.value = HistoryPathState.themeList; }
+    else { pathState.value = HistoryPathState.majorList; }
     return true;
   }
 
@@ -35,6 +37,8 @@ class HistoryPathModel {
     if(_theme == null) return false;
     _major = major;
     _minor = null;
+    if(major == null) { pathState.value = HistoryPathState.majorList; }
+    else { pathState.value = HistoryPathState.minorList; }
     return true;
   }
 
@@ -43,12 +47,14 @@ class HistoryPathModel {
     if(_theme == null) return false;
     if(_major == null) return false;
     _minor = minor;
+    if(minor == null) { pathState.value = HistoryPathState.minorList; }
+    else { pathState.value = HistoryPathState.minorDetail; }
     return true;
   }
 
   //이전 경로로 돌아가기
   void back() {
-    switch(pathState) {
+    switch(pathState.value) {
       case HistoryPathState.minorDetail:
         setMinor(null);
         break;
