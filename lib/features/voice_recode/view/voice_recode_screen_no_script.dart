@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/voiceRecode/controller/voice_recode_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 
 class VoiceRecodeScreenNoScript extends StatefulWidget {
   const VoiceRecodeScreenNoScript({super.key});

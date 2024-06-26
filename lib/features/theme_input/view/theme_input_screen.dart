@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/themeInput/controller/theme_input_controller.dart';
+import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
 
 class ThemeInputScreen extends StatelessWidget {
   const ThemeInputScreen({super.key});

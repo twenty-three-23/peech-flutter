@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
-import 'package:swm_peech_flutter/features/scriptInput/controller/script_input_controller.dart';
-import 'package:swm_peech_flutter/features/scriptInput/view/script_input_screen.dart';
-import 'package:swm_peech_flutter/features/themeInput/controller/theme_input_controller.dart';
-import 'package:swm_peech_flutter/features/themeInput/view/theme_input_screen.dart';
-import 'package:swm_peech_flutter/features/voiceRecode/controller/voice_recode_controller.dart';
-import 'package:swm_peech_flutter/features/voiceRecode/view/voice_recode_screen_no_script.dart';
-import 'package:swm_peech_flutter/features/voiceRecode/view/voice_recode_screen_with_script.dart';
+import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
+import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
+import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
+import 'package:swm_peech_flutter/features/theme_input/view/theme_input_screen.dart';
+import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_no_script.dart';
+import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_with_script.dart';
 
 class Routers {
 

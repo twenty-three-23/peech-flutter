@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/dataSource/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/scriptInput/dataSource/script_expected_time_data_source.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/script_input/data_source/script_expected_time_data_source.dart';
 
 import '../../common/models/script_expected_time_model.dart';
 
