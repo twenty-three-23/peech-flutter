@@ -30,53 +30,55 @@ class ThemeListScreen extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: controller.themeList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Icon(Icons.file_copy),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 200,
-                                child: Text(
-                                  maxLines: 1,
-                                  controller.themeList[index].title,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    overflow: TextOverflow.ellipsis,
+              child: GetX<ThemeListCtr>(
+                builder: (_) => ListView.builder(
+                  itemCount: controller.themeList.value?.length ?? 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Icon(Icons.file_copy),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(
+                                    maxLines: 1,
+                                    controller.themeList.value?[index].title ?? "unknown",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                controller.themeList[index].timestamp,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey
-                                ),
-                              )
-                            ],
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text("${controller.themeList[index].count}개"),
-                          )
-                        ],
-                      ),
-                      const Divider(height: 1,)
-                    ],
-                  );
-                }
+                                Text(
+                                  controller.themeList.value?[index].timestamp ?? "unknown",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text("${controller.themeList.value?[index].count ?? "unknown"}개"),
+                            )
+                          ],
+                        ),
+                        const Divider(height: 1,)
+                      ],
+                    );
+                  }
+                ),
               ),
             ),
           ),
