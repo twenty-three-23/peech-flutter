@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import '../controller/history_controller.dart';
 import '../widgets/theme_list_view.dart';
 
@@ -31,7 +32,18 @@ class HistoryScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GetX<HistoryCtr>(
-                builder: (_) => themeListView(controller)
+                builder: (_) {
+                  switch(controller.historyPath.value.pathState) {
+                    case HistoryPathState.themeList:
+                      return themeListView(controller);
+                    case HistoryPathState.majorList:
+                      return const Text("majorList");
+                    case HistoryPathState.minorList:
+                      return const Text("minorList");
+                    case HistoryPathState.minorDetail:
+                      return const Text("minorDetail");
+                  }
+                }
               ),
             ),
           ),
