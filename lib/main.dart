@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:swm_peech_flutter/features/common/dataSource/local_script_stroage.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/dataSource/local_script_storage.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 
 void main() {
@@ -13,6 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LocalScriptStorage().init();
+    LocalPracticeModeStorage().init();
+    LocalPracticeThemeStorage().init();
     return GetMaterialApp(
       getPages: Routers.routers,
       initialRoute: Routers.INITIAL,
