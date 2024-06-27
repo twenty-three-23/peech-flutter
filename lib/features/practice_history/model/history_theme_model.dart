@@ -1,8 +1,8 @@
 class HistoryThemeModel {
-  final String title;
-  final String timestamp;
-  final String count;
-  final String id;
+  final String? title;
+  final String? timestamp;
+  final String? count;
+  final String? id;
 
   HistoryThemeModel({
     required this.title,

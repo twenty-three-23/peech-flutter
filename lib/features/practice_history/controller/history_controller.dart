@@ -9,6 +9,8 @@ class HistoryCtr extends GetxController {
 
   final historyThemeDataSource = HistoryThemeDataSource();
 
+
+
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
 
   void getThemeList() async {
