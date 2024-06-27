@@ -8,7 +8,6 @@ Widget themeListView(HistoryCtr controller) {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
-            debugPrint("선택: ${int.parse(controller.themeList.value?[index].id ?? '0')}");
             controller.historyPath.value.setTheme(int.parse(controller.themeList.value?[index].id ?? '0'));
           },
           child: Column(
