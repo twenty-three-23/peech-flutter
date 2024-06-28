@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
-import 'package:swm_peech_flutter/features/practice_history/widgets/major_list_view.dart';
-import 'package:swm_peech_flutter/features/practice_history/widgets/minor_detail_view.dart';
-import 'package:swm_peech_flutter/features/practice_history/widgets/minor_list_view.dart';
+import 'package:swm_peech_flutter/features/practice_history/widgets/history_list_view.dart';
+import 'package:swm_peech_flutter/features/practice_history/widgets/history_path_view.dart';
 import '../controller/history_controller.dart';
-import '../widgets/theme_list_view.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -18,40 +15,27 @@ class HistoryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () { controller.backButton(context); }, icon: const Icon(Icons.arrow_back_ios)),
         title: const Text("발표 기록"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Row(
-              children: [
-                Icon(Icons.arrow_right_rounded),
-                GestureDetector(child: Text("발표 주제 목록"), onTap: () { controller.historyPath.value.back(); },),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GetX<HistoryCtr>(
-                builder: (_) {
-                  switch(controller.historyPath.value.pathState.value) {
-                    case HistoryPathState.themeList:
-                      return themeListView(controller);
-                    case HistoryPathState.majorList:
-                      return majorListView(controller);
-                    case HistoryPathState.minorList:
-                      return minorListView(controller);
-                    case HistoryPathState.minorDetail:
-                      return minorDetailView();
-                  }
-                }
+      body: GetX<HistoryCtr>(
+        builder: (_) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: historyPathView(controller)
               ),
-            ),
-          ),
-        ],
+              Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: historyListView(controller)
+                ),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

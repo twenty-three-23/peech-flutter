@@ -22,6 +22,8 @@ class HistoryCtr extends GetxController {
   ScrollController majorScrollController = ScrollController();
   ScrollController minorScrollController = ScrollController();
 
+  ScrollController pathScrollController = ScrollController();
+
 
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
 
@@ -51,9 +53,22 @@ class HistoryCtr extends GetxController {
     historyPath.value.setMinor(int.parse(minorList.value?[index].scriptId ?? '0'));
   }
 
+  void setPathScrollPosToEndWithAni() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (pathScrollController.hasClients) {
+        pathScrollController.animateTo(
+          pathScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
 
   void addGetCurrentListListener() {
     historyPath.value.pathState.listen((newState) {
+      setPathScrollPosToEndWithAni();
       switch(newState) {
         case HistoryPathState.themeList:
           getThemeList();
@@ -84,6 +99,15 @@ class HistoryCtr extends GetxController {
         minorScrollController.jumpTo(0.0);
       }
     });
+  }
+
+  void backButton(BuildContext context) {
+    if(historyPath.value.pathState.value == HistoryPathState.themeList) {
+      Navigator.of(context).pop();
+    }
+    else {
+      historyPath.value.back();
+    }
   }
 
   @override
