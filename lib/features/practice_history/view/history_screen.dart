@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
@@ -21,12 +22,12 @@ class HistoryScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(15.0),
             child: Row(
               children: [
                 Icon(Icons.arrow_right_rounded),
-                Text("발표 주제 목록"),
+                GestureDetector(child: Text("발표 주제 목록"), onTap: () { controller.historyPath.value.back(); },),
               ],
             ),
           ),

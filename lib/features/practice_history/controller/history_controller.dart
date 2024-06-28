@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/history_minor_data_source.dart';
@@ -17,6 +18,9 @@ class HistoryCtr extends GetxController {
   final historyMajorDataSource = HistoryMajorDataSource();
   final historyMinorDataSource = HistoryMinorDataSource();
 
+  ScrollController themeScrollController = ScrollController();
+  ScrollController majorScrollController = ScrollController();
+  ScrollController minorScrollController = ScrollController();
 
 
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
@@ -32,6 +36,21 @@ class HistoryCtr extends GetxController {
   void getMinorList() async {
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
+
+  void clickThemeList(int index) {
+    historyPath.value.setTheme(int.parse(themeList.value?[index].id ?? '0'));
+    initMajorScrollController();
+  }
+
+  void clickMajorList(int index) {
+    historyPath.value.setMajor(int.parse(majorList.value?[index].scriptId ?? '0'));
+    initMinorScrollController();
+  }
+
+  void clickMinorList(int index) {
+    historyPath.value.setMajor(int.parse(majorList.value?[index].scriptId ?? '0'));
+  }
+
 
   void addGetCurrentListListener() {
     historyPath.value.pathState.listen((newState) {
@@ -51,11 +70,35 @@ class HistoryCtr extends GetxController {
     });
   }
 
+  void initMajorScrollController() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(majorScrollController.hasClients) {
+        majorScrollController.jumpTo(0.0);
+      }
+    });
+  }
+
+  void initMinorScrollController() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(minorScrollController.hasClients) {
+        minorScrollController.jumpTo(0.0);
+      }
+    });
+  }
+
   @override
   void onInit() {
     getThemeList();
     addGetCurrentListListener();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    themeScrollController.dispose();
+    majorScrollController.dispose();
+    minorScrollController.dispose();
+    super.onClose();
   }
 
 }

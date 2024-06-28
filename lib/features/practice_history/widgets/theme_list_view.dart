@@ -4,12 +4,12 @@ import 'package:swm_peech_flutter/features/practice_history/controller/history_c
 
 Widget themeListView(HistoryCtr controller) {
   return ListView.builder(
+     controller: controller.themeScrollController,
+      key: const PageStorageKey("themeListView"),
       itemCount: controller.themeList.value?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
-          onTap: () {
-            controller.historyPath.value.setTheme(int.parse(controller.themeList.value?[index].id ?? '0'));
-          },
+          onTap: () { controller.clickThemeList(index); },
           child: Column(
             children: [
               Row(

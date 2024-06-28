@@ -4,6 +4,8 @@ import 'package:swm_peech_flutter/features/practice_history/controller/history_c
 Widget minorListView(HistoryCtr controller) {
 
   return GridView.builder(
+    key: const PageStorageKey("minorListView"),
+    controller: controller.minorScrollController,
     itemCount: controller.minorList.value?.length ?? 0,
     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,

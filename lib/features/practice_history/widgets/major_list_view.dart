@@ -3,6 +3,8 @@ import 'package:swm_peech_flutter/features/practice_history/controller/history_c
 
 Widget majorListView(HistoryCtr controller) {
   return GridView.builder(
+    key: const PageStorageKey("majorListView"),
+    controller: controller.majorScrollController,
     itemCount: controller.majorList.value?.length ?? 0,
     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,
@@ -12,7 +14,7 @@ Widget majorListView(HistoryCtr controller) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          onTap: () { controller.historyPath.value.setMajor(int.parse(controller.majorList.value?[index].scriptId ?? '0')); },
+          onTap: () { controller.clickMajorList(index); },
           child: Column(
             children: [
               Container(
