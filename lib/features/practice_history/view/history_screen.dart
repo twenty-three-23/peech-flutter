@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/widgets/major_list_view.dart';
+import 'package:swm_peech_flutter/features/practice_history/widgets/minor_detail_view.dart';
 import 'package:swm_peech_flutter/features/practice_history/widgets/minor_list_view.dart';
 import '../controller/history_controller.dart';
 import '../widgets/theme_list_view.dart';
@@ -44,7 +45,7 @@ class HistoryScreen extends StatelessWidget {
                     case HistoryPathState.minorList:
                       return minorListView(controller);
                     case HistoryPathState.minorDetail:
-                      return const Text("minorDetail");
+                      return minorDetailView();
                   }
                 }
               ),

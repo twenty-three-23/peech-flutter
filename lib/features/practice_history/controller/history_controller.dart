@@ -48,7 +48,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMinorList(int index) {
-    historyPath.value.setMajor(int.parse(majorList.value?[index].scriptId ?? '0'));
+    historyPath.value.setMinor(int.parse(minorList.value?[index].scriptId ?? '0'));
   }
 
 
