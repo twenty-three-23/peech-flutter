@@ -23,6 +23,12 @@ class ScriptInputCtr extends GetxController {
   //스크립트 예상시간 로딩 유무
   Rx<bool> isLoading = false.obs;
 
+  @override
+  void onClose() {
+    for (var element in script.value) { element.dispose(); }
+    super.onClose();
+  }
+
   void updateScript(int index, String newScript) {
     _script[index] = newScript;
     script.value[index].text = _script[index];
