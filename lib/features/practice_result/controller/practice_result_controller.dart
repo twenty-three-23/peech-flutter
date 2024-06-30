@@ -28,10 +28,14 @@ class PracticeResultCtr extends GetxController {
   void insertNewParagraph(int index) {
     practiceResult.value?.insert(index, TextEditingController());
     practiceResult.value = practiceResult.value?.toList(growable: true);
-    debugPrint("index: $index, length: ${practiceResult.value?.length}");
     if(index + 1 == practiceResult.value?.length) {
       setScrollToEnd();
     }
+  }
+
+  void removeParagraph(int index) {
+    practiceResult.value?.removeAt(index);
+    practiceResult.value = practiceResult.value?.toList(growable: true);
   }
 
   void setScrollToEnd() {

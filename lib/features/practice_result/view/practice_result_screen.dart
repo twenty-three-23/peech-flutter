@@ -73,7 +73,9 @@ class PracticeResultScreen extends StatelessWidget {
                                         right: 1,
                                         top: 1,
                                         child: GestureDetector(
-                                          onTap: () { },
+                                          onTap: () {
+                                            controller.removeParagraph(index);
+                                          },
                                           child: const Icon(Icons.close,)
                                         )
                                       ),
