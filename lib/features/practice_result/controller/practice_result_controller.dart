@@ -7,8 +7,9 @@ class PracticeResultCtr extends GetxController {
 
   PracticeResultDataSource practiceResultDataSource = PracticeResultDataSource();
 
-  List<PracticeResultModel>? _practiceResult;
+  List<PracticeResultModel>? _practiceResult; //데이터 받아오고, 요청 보낼때만 수정
   Rx<List<TextEditingController>?> practiceResult = Rx<List<TextEditingController>?>(null);
+  ScrollController scrollController = ScrollController();
 
 
   void getPracticeResult() async {
@@ -22,6 +23,27 @@ class PracticeResultCtr extends GetxController {
   void onInit() {
     getPracticeResult();
     super.onInit();
+  }
+
+  void insertNewParagraph(int index) {
+    practiceResult.value?.insert(index, TextEditingController());
+    practiceResult.value = practiceResult.value?.toList(growable: true);
+    debugPrint("index: $index, length: ${practiceResult.value?.length}");
+    if(index + 1 == practiceResult.value?.length) {
+      setScrollToEnd();
+    }
+  }
+
+  void setScrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
 }
