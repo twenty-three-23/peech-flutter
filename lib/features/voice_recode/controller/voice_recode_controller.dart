@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -69,6 +70,11 @@ class VoiceRecodeCtr extends GetxController {
   Future<void> stopPlaying() async {
     await _player!.stopPlayer();
     isPlaying.value = false;
+  }
+
+  void endPractice(BuildContext context) {
+    stopRecording();
+    Navigator.pushNamed(context, '/practiceResult');
   }
 
 }

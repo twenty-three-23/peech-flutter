@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
+import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
+import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
 import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
@@ -53,7 +55,14 @@ class Routers {
       binding: BindingsBuilder(() {
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
       })
-    )
+    ),
+    GetPage(
+        name: '/practiceResult',
+        page: () => const PracticeResultScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
+        })
+    ),
   ];
 
 }
