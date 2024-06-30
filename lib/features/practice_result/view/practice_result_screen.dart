@@ -18,22 +18,43 @@ class PracticeResultScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GetX<PracticeResultCtr>(
-            builder: (_) => SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    primary: false,
-                    itemCount: controller.practiceResult.value?.length ?? 0,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Text(controller.practiceResult.value?[index].content ?? "unknown");
-                    },
-                  ),
-                  ElevatedButton(onPressed: () {}, child: const Text("예상시간 다시 확인")),
-                  ElevatedButton(onPressed: () {}, child: const Text("다시 연습하기")),
-                  ElevatedButton(onPressed: () {}, child: const Text("홈으로 가기")),
-                ],
-              ),
+            builder: (_) => Column(
+              children: [
+                Expanded(
+                  child: controller.practiceResult.value == null
+                      ? const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 30,),
+                            Text("음성 파일을 분석중이에요")
+                          ],
+                        )
+                      : ListView.builder(
+                          itemCount: controller.practiceResult.value?.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: TextField(
+                                minLines: 1,
+                                maxLines: null,
+                                controller: controller.practiceResult.value?[index],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+                const Divider(height: 1,),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(onPressed: () {}, child: const Text("예상시간 재확인")),
+                    ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
+                    ElevatedButton(onPressed: () {}, child: const Text("홈")),
+                  ],
+                )
+              ],
             )
         ),
       ),
