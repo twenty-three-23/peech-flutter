@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeScreenWithScript extends StatefulWidget {
   const VoiceRecodeScreenWithScript({super.key});
@@ -36,37 +37,50 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
   @override
   Widget build(BuildContext context) {
 
-
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("음성 녹음"),
-        actions: [
-          GetX<VoiceRecodeCtr>(
-            builder: (_) => ElevatedButton(
-              onPressed: () => _controller.isRecording.value ? _controller.endPractice(context) : _controller.startRecording(),
-              child: Text(_controller.isRecording.value ? '녹음 완료 및 분석받기' : '녹음 시작'),
+        appBar: AppBar(
+          leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
+          title: const Text("음성 녹음"),
+          actions: [
+            GetX<VoiceRecodeCtr>(
+              builder: (_) {
+                if(_controller.practiceState.value == PracticeState.BEFORETOSTART) {
+                  return ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("녹음 시작"));
+                } else if(_controller.practiceState.value == PracticeState.RECODING) {
+                  return const Text("녹음 중");
+                } else if(_controller.practiceState.value == PracticeState.ENDRECODING) {
+                  return ElevatedButton(onPressed: () { _controller.endPractice(context); }, child: const Text("분석 받기"));
+                } else {
+                  return const Text("error: 진행할 수 없습니다");
+                }
+              }
             ),
-          ),
-          const SizedBox(width: 8,),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: _controller.script?.length ?? 0,
-          itemBuilder: (BuildContext context, int index) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_controller.script?[index] ?? ''),
-                const SizedBox(height: 10,),
-              ],
-            );
-          }
+            const SizedBox(width: 8,),
+          ],
         ),
-      ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: ListView.builder(
+            key: _controller.scriptListViewKey,
+            controller: _controller.scriptScrollController,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(8),
+            itemCount: _controller.script?.length ?? 0,
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10,),
+                  Text(_controller.script?[index] ?? ''),
+                  if(index + 1 == _controller.script?.length)
+                    GetX<VoiceRecodeCtr>(
+                      builder: (_) => Container(height: _controller.scriptListViewSize.value, color: Colors.green,),
+                    ),
+                ],
+              );
+            }
+          ),
+        ),
     );
   }
 }

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
 
@@ -12,6 +15,10 @@ class VoiceRecodeCtr extends GetxController {
   Rx<bool> isPlaying = false.obs;
   final String _path = 'audio_recording.aac';
   late final List<String>? script;
+  ScrollController scriptScrollController = ScrollController();
+  Rx<PracticeState> practiceState = PracticeState.BEFORETOSTART.obs;
+  final GlobalKey scriptListViewKey = GlobalKey();  // GlobalKey 추가
+  Rx<double> scriptListViewSize = Rx<double>(0.0);
 
   @override
   void onInit() {
@@ -19,6 +26,7 @@ class VoiceRecodeCtr extends GetxController {
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();
+    _getListViewHeight();
     super.onInit();
   }
 
@@ -44,6 +52,7 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> startRecording() async {
+    practiceState.value = PracticeState.RECODING;
     await _recorder!.startRecorder(
       toFile: _path,
       codec: Codec.aacADTS,
@@ -52,6 +61,7 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> stopRecording() async {
+    practiceState.value = PracticeState.ENDRECODING;
     await _recorder!.stopRecorder();
     isRecording.value = false;
   }
@@ -76,5 +86,33 @@ class VoiceRecodeCtr extends GetxController {
     stopRecording();
     Navigator.pushNamed(context, '/practiceResult');
   }
+
+  void startPracticeWithScript() async {
+    await startRecording();
+    await startAutoScrolling();
+    await stopRecording();
+  }
+
+  void startPracticeNoScript() {
+    startRecording();
+  }
+
+  Future<void> startAutoScrolling() async {
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
+    await scriptScrollController.animateTo(
+      scriptScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 10000),
+      curve: Curves.linear,
+    );
+  }
+
+  void _getListViewHeight() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox renderBox = scriptListViewKey.currentContext?.findRenderObject() as RenderBox;
+      scriptListViewSize.value = renderBox.size.height;
+    });
+
+  }
+
 
 }
