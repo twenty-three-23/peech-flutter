@@ -48,10 +48,8 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                   return ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("녹음 시작"));
                 } else if(_controller.practiceState.value == PracticeState.RECODING) {
                   return const Text("녹음 중");
-                } else if(_controller.practiceState.value == PracticeState.ENDRECODING) {
-                  return ElevatedButton(onPressed: () { _controller.endPractice(context); }, child: const Text("분석 받기"));
                 } else {
-                  return const Text("error: 진행할 수 없습니다");
+                  return const Text("");
                 }
               }
             ),
@@ -74,7 +72,19 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                   Text(_controller.script?[index] ?? ''),
                   if(index + 1 == _controller.script?.length)
                     GetX<VoiceRecodeCtr>(
-                      builder: (_) => Container(height: _controller.scriptListViewSize.value, color: Colors.green,),
+                      builder: (_) => Container(
+                        height: _controller.scriptListViewSize.value,
+                        alignment: Alignment.center,
+                        child: _controller.practiceState.value == PracticeState.ENDRECODING
+                          ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(onPressed: () { _controller.endPractice(context); }, child: const Text("분석 받기")),
+                              ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("다시 녹음하기")),
+                            ],
+                          )
+                          : const Text(""),
+                      ),
                     ),
                 ],
               );
