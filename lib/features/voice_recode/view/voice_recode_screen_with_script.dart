@@ -30,7 +30,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // 앱 백그라운드로 전환
     if (state == AppLifecycleState.paused) {
-      _controller.stopRecording();
+      _controller.stopPracticeWithScrip();
     }
   }
 
@@ -47,9 +47,20 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                 if(_controller.practiceState.value == PracticeState.BEFORETOSTART) {
                   return ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("녹음 시작"));
                 } else if(_controller.practiceState.value == PracticeState.RECODING) {
-                  return Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10));
+                  return Row(
+                    children: [
+                      Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
+                      const SizedBox(width: 10,),
+                      ElevatedButton(onPressed: () { _controller.stopPracticeWithScrip(); }, child: const Text("녹음 종료")),
+                    ],
+                  );
                 } else {
-                  return Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10));
+                  return Row(
+                    children: [
+                      Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
+                      const SizedBox(width: 10,),
+                    ],
+                  );
                 }
               }
             ),

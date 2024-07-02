@@ -30,7 +30,7 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // 앱 백그라운드로 전환
     if (state == AppLifecycleState.paused) {
-      _controller.stopRecording();
+      _controller.stopPracticeNoScript();
     }
   }
 
@@ -59,7 +59,7 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                 Column(
                   children: [
                     Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
-                    ElevatedButton(onPressed: () { _controller.stopRecording(); }, child: const Text("녹음 종료")),
+                    ElevatedButton(onPressed: () { _controller.stopPracticeNoScript(); }, child: const Text("녹음 종료")),
                   ],
                 )
               else if(_controller.practiceState.value == PracticeState.ENDRECODING)

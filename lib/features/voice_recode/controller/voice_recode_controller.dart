@@ -44,8 +44,8 @@ class VoiceRecodeCtr extends GetxController {
 
   @override
   void onClose() {
-    stopRecording();
-    stopPlaying();
+    _stopRecording();
+    _stopPlaying();
     _recorder!.closeRecorder();
     _player!.closePlayer();
     _recorder = null;
@@ -54,7 +54,7 @@ class VoiceRecodeCtr extends GetxController {
     super.onClose();
   }
 
-  Future<void> startRecording() async {
+  Future<void> _startRecording() async {
     practiceState.value = PracticeState.RECODING;
     recodingStopWatch.value.reset();
     recodingStopWatch.value.start();
@@ -70,7 +70,7 @@ class VoiceRecodeCtr extends GetxController {
     isRecording.value = true;
   }
 
-  Future<void> stopRecording() async {
+  Future<void> _stopRecording() async {
     practiceState.value = PracticeState.ENDRECODING;
     _timer?.cancel();
     recodingStopWatch.value.stop();
@@ -78,7 +78,7 @@ class VoiceRecodeCtr extends GetxController {
     isRecording.value = false;
   }
 
-  Future<void> startPlaying() async {
+  Future<void> _startPlaying() async {
     await _player!.startPlayer(
       fromURI: _path,
       codec: Codec.aacADTS,
@@ -89,33 +89,57 @@ class VoiceRecodeCtr extends GetxController {
     isPlaying.value = true;
   }
 
-  Future<void> stopPlaying() async {
+  Future<void> _stopPlaying() async {
     await _player!.stopPlayer();
     isPlaying.value = false;
   }
 
   void endPractice(BuildContext context) {
-    stopRecording();
+    _stopRecording();
     Navigator.pushNamed(context, '/practiceResult');
   }
 
   void startPracticeWithScript() async {
-    await startRecording();
-    await startAutoScrolling();
-    // await stopRecording();
+    _startRecording();
+    _stopRecodingWhenScrollIsEndListener();
+    _startAutoScrollingAnimation();
   }
 
   void startPracticeNoScript() {
-    startRecording();
+    _startRecording();
   }
 
-  Future<void> startAutoScrolling() async {
+  void stopPracticeWithScrip() {
+    // _stopRecodingWhenScrollIsEndListener()에 의해 자동으로 음성 녹음 중지
+    // 스크롤 위치가 마지막으로 설정되어 _startAutoScrollingAnimation() 자동 종료
+    _setScrollingToEnd();
+  }
+
+  void stopPracticeNoScript() {
+    _stopRecording();
+  }
+
+
+  void _stopRecodingWhenScrollIsEndListener() {
+    scriptScrollController.addListener(() {
+      if(scriptScrollController.position.pixels == scriptScrollController.position.maxScrollExtent) {
+        _stopRecording();
+        scriptScrollController.removeListener(() { });
+      }
+    });
+  }
+
+  Future<void> _startAutoScrollingAnimation() async {
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     await scriptScrollController.animateTo(
       scriptScrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 10000),
       curve: Curves.linear,
     );
+  }
+
+  void _setScrollingToEnd() {
+    scriptScrollController.jumpTo(scriptScrollController.position.maxScrollExtent);
   }
 
   void _getListViewHeight() {
