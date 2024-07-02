@@ -19,6 +19,8 @@ class VoiceRecodeCtr extends GetxController {
   Rx<PracticeState> practiceState = PracticeState.BEFORETOSTART.obs;
   final GlobalKey scriptListViewKey = GlobalKey();  // GlobalKey 추가
   Rx<double> scriptListViewSize = Rx<double>(0.0);
+  Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
+  Timer? _timer;
 
   @override
   void onInit() {
@@ -48,11 +50,19 @@ class VoiceRecodeCtr extends GetxController {
     _player!.closePlayer();
     _recorder = null;
     _player = null;
+    _timer?.cancel();
     super.onClose();
   }
 
   Future<void> startRecording() async {
     practiceState.value = PracticeState.RECODING;
+    recodingStopWatch.value.reset();
+    recodingStopWatch.value.start();
+
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      recodingStopWatch.refresh();
+    });
+
     await _recorder!.startRecorder(
       toFile: _path,
       codec: Codec.aacADTS,
@@ -62,6 +72,8 @@ class VoiceRecodeCtr extends GetxController {
 
   Future<void> stopRecording() async {
     practiceState.value = PracticeState.ENDRECODING;
+    _timer?.cancel();
+    recodingStopWatch.value.stop();
     await _recorder!.stopRecorder();
     isRecording.value = false;
   }
@@ -90,7 +102,7 @@ class VoiceRecodeCtr extends GetxController {
   void startPracticeWithScript() async {
     await startRecording();
     await startAutoScrolling();
-    await stopRecording();
+    // await stopRecording();
   }
 
   void startPracticeNoScript() {

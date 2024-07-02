@@ -47,9 +47,9 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                 if(_controller.practiceState.value == PracticeState.BEFORETOSTART) {
                   return ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("녹음 시작"));
                 } else if(_controller.practiceState.value == PracticeState.RECODING) {
-                  return const Text("녹음 중");
+                  return Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10));
                 } else {
-                  return const Text("");
+                  return Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10));
                 }
               }
             ),

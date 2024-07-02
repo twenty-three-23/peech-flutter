@@ -56,10 +56,16 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
               if(_controller.practiceState.value == PracticeState.BEFORETOSTART)
                 ElevatedButton(onPressed: () { _controller.startPracticeNoScript(); }, child: const Text("녹음 시작"))
               else if(_controller.practiceState.value == PracticeState.RECODING)
-                ElevatedButton(onPressed: () { _controller.stopRecording(); }, child: const Text("녹음 종료"))
+                Column(
+                  children: [
+                    Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
+                    ElevatedButton(onPressed: () { _controller.stopRecording(); }, child: const Text("녹음 종료")),
+                  ],
+                )
               else if(_controller.practiceState.value == PracticeState.ENDRECODING)
                 Column(
                   children: [
+                    Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
                     ElevatedButton(onPressed: () { _controller.startPracticeNoScript(); }, child: const Text("다시 녹음하기")),
                     ElevatedButton(onPressed: () { _controller.endPractice(context); }, child: const Text("분석 받기")),
                   ],
