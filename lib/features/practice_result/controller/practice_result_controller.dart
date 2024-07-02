@@ -50,4 +50,8 @@ class PracticeResultCtr extends GetxController {
     });
   }
 
+  void homeButton(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+  }
+
 }
