@@ -61,7 +61,6 @@ class ScriptInputCtr extends GetxController {
 
   void getExpectedTime() async {
     isLoading.value = true;
-    script.value = List.empty(growable: true);
     scriptExpectedTime.value = null;
     _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();
     _scriptExpectedTime?.expectedTimePerParagraphs?.sort((a, b) => (a?.paragraphId ?? 0).compareTo(b?.paragraphId ?? 0));
