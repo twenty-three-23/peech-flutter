@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalScriptStorage {
@@ -19,10 +20,12 @@ class LocalScriptStorage {
 
 
   Future<void> setScript(List<String> scriptList) async {
+    debugPrint("저장함: ${scriptList.length}줄");
     await _prefs.setStringList(CURRENT_SCRIPT_KEY, scriptList);
   }
 
   List<String>? getScript() {
+    debugPrint("불러옴: ${_prefs.getStringList(CURRENT_SCRIPT_KEY)?.length}줄");
     return _prefs.getStringList(CURRENT_SCRIPT_KEY);
   }
 
