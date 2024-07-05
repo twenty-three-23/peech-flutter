@@ -12,5 +12,5 @@ abstract class UserIdAssignDataSource {
   Future<UserIdAssignModel> postUserId(@Body() Map<String, String> deviceId);
 
   @GET('/user')
-  Future<UserIdAssignModel> getUserId(@Body() Map<String, String> deviceId);
+  Future<UserIdAssignModel> getUserToken(@Body() Map<String, String> deviceId);
 }
