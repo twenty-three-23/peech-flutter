@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
