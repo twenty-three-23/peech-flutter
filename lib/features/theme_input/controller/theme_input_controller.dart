@@ -11,7 +11,7 @@ class ThemeInputCtr extends GetxController {
   }
 
   Future<void> saveTheme() async {
-    await LocalPracticeThemeStorage().setTheme(_theme);
+    await LocalPracticeThemeStorage().setThemeText(_theme);
   }
 
   void finishButton(BuildContext context) async {
