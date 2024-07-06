@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/remote/user_id_assign_data_source.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_id_assign_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/models/device_id_model.dart';
@@ -38,8 +38,8 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         //토큰 재발급받기
         final tokenDio = Dio();
         tokenDio.interceptors.add(AutoTokenRegisterIntercepter(localDeviceUuidStorage: localDeviceUuidStorage));
-        final userTokenDataSource = UserTokenDataSource(tokenDio);
-        final UserTokenModel tokenModel = await userTokenDataSource.getUserToken(deviceIdModel.toJson() as Map<String, String>);
+        final remoteUserTokenDataSource = RemoteUserTokenDataSource(tokenDio);
+        final UserTokenModel tokenModel = await remoteUserTokenDataSource.getUserToken(deviceIdModel.toJson() as Map<String, String>);
         await localUserTokenStorage.setUserToken(tokenModel.token!);
 
         //다시 원래 요청으로 결과 받아오기
