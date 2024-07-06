@@ -31,8 +31,6 @@ class ScriptInputCtr extends GetxController {
 
   void updateScript(int index, String newScript) {
     _script[index] = newScript;
-    script.value[index].text = _script[index];
-    script.value = script.value.toList();
   }
 
   void addParagraph() {
