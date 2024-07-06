@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/user_id_assign_data_source.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/models/device_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_token_model.dart';
@@ -39,12 +40,13 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         tokenDio.interceptors.add(AutoTokenRegisterIntercepter(localDeviceUuidStorage: localDeviceUuidStorage));
         final userTokenDataSource = UserTokenDataSource(tokenDio);
         final UserTokenModel tokenModel = await userTokenDataSource.getUserToken(deviceIdModel.toJson() as Map<String, String>);
-        localUserTokenStorage.setUserToken(tokenModel.token!);
+        await localUserTokenStorage.setUserToken(tokenModel.token!);
 
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
         final reDio = Dio();
-        reDio.interceptors.add(AuthTokenRefreshInterceptor(localDeviceUuidStorage: localDeviceUuidStorage, localUserTokenStorage: localUserTokenStorage));
+        reDio.interceptors.addAll(err.requestOptions.extra["intercepters"] ?? []);
+        reDio.interceptors.removeWhere((i) => i is AuthTokenRefreshInterceptor);
         final response = await reDio.fetch(options);
         return handler.resolve(response);
 
