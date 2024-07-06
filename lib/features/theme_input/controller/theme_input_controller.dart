@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local_practice_theme_storage.dart';
-import '../../common/data_source/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import '../../common/data_source/local/local_practice_mode_storage.dart';
 
 class ThemeInputCtr extends GetxController {
   String? _theme;

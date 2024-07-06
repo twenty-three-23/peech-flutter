@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -19,7 +19,7 @@ class Routers {
   static final routers = [
     GetPage(
       name: '/home',
-      page: () => const HomeScreen()
+      page: () => const HomeScreen(),
     ),
     GetPage(
       name: '/scriptInput',
