@@ -22,8 +22,8 @@ class LocalDeviceUuidStorage {
     await _prefs.setString(DEVICE_UUID_KEY, uuid);
   }
 
-  Future<String?> getDeviceUuid() async {
-    return await _prefs.getString(DEVICE_UUID_KEY);
+  String? getDeviceUuid() {
+    return _prefs.getString(DEVICE_UUID_KEY);
   }
 
 }
