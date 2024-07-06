@@ -45,6 +45,7 @@ dependencies:
   logger: any  #for logging purpose
   json_annotation: ^4.8.1
   device_info_plus: ^10.1.0
+  uuid: ^4.4.0
 
 
 dev_dependencies:
