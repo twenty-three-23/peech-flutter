@@ -18,8 +18,8 @@ class LocalUserTokenStorage {
   }
 
 
-  Future<void> setUserToken(String userId) async {
-    await _prefs.setString(USER_TOKEN_KEY, userId);
+  Future<void> setUserToken(String userToken) async {
+    await _prefs.setString(USER_TOKEN_KEY, userToken);
   }
 
   String? getUserToken() {
