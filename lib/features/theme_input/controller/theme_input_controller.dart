@@ -29,7 +29,7 @@ class ThemeInputCtr extends GetxController {
   Future<ThemeIdModel> getThemeId(String theme) async {
     try {
       Dio dio = Dio();
-      //TODO 동시성 문제 발생하지 않는지 궁금
+      //TODO LocalUserTokenStorage()에 접근할 때 동시성 문제 발생하지 않는지 궁금
       dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
       dio.interceptors.add(AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()));
       final remoteThemeSaveDataSource = RemoteThemeSaveDataSource(dio);
@@ -38,7 +38,7 @@ class ThemeInputCtr extends GetxController {
       return themeIdModel;
     } on DioException catch(e) {
       print("status: ${e.response?.statusCode}, message: ${e.response?.data["message"]}");
-      throw(Exception("bad request"));
+      throw(Exception("[remoteThemeSaveDataSource.postTheme()] Bad Request"));
     }
   }
 
