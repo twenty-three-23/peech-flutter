@@ -6,7 +6,7 @@ Widget themeListView(HistoryCtr controller) {
   return ListView.builder(
      controller: controller.themeScrollController,
       key: const PageStorageKey("themeListView"),
-      itemCount: controller.themeList.value?.length ?? 0,
+      itemCount: controller.themeList.value?.themes?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () { controller.clickThemeList(index); },
@@ -26,7 +26,7 @@ Widget themeListView(HistoryCtr controller) {
                         width: 200,
                         child: Text(
                           maxLines: 1,
-                          controller.themeList.value?[index].title ?? "unknown",
+                          controller.themeList.value?.themes?[index].title ?? "unknown",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -35,7 +35,7 @@ Widget themeListView(HistoryCtr controller) {
                         ),
                       ),
                       Text(
-                        controller.themeList.value?[index].timestamp ?? "unknown",
+                        controller.themeList.value?.themes?[index].timestamp ?? "unknown",
                         style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey
@@ -46,7 +46,7 @@ Widget themeListView(HistoryCtr controller) {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Text("${controller.themeList.value?[index].count ?? "unknown"}개"),
+                    child: Text("${controller.themeList.value?.themes?[index].count ?? "unknown"}개"),
                   )
                 ],
               ),
