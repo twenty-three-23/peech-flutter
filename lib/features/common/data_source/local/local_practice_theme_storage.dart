@@ -6,6 +6,7 @@ class LocalPracticeThemeStorage {
   late SharedPreferences _pref;
 
   static const PRACTICE_THEME_KEY = "practiceThemeKey";
+  static const CURRENT_THEME_KEY = "currentThemeId";
 
   factory LocalPracticeThemeStorage() {
     return _instance;
@@ -17,12 +18,21 @@ class LocalPracticeThemeStorage {
     _pref = await SharedPreferences.getInstance();
   }
 
-  Future<void> setTheme(String? theme) async {
+  Future<void> setThemeText(String? theme) async {
     await _pref.setString(PRACTICE_THEME_KEY, theme ?? '');
   }
 
-  String? getTheme() {
+  String? getThemeText() {
     return _pref.getString(PRACTICE_THEME_KEY);
   }
+
+  Future<void> setThemeId(String themeId) async {
+    await _pref.setString(CURRENT_THEME_KEY, themeId);
+  }
+
+  String? getThemeId() {
+    return _pref.getString(CURRENT_THEME_KEY);
+  }
+
 
 }
