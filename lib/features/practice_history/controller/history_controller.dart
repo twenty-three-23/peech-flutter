@@ -5,7 +5,6 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_device
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
-import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
@@ -21,7 +20,6 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   Rx<List<HistoryMinorModel>?> minorList = Rx<List<HistoryMinorModel>?>(null);
 
-  final historyMajorDataSource = HistoryMajorDataSource();
   final historyMinorDataSource = HistoryMinorDataSource();
 
   ScrollController themeScrollController = ScrollController();
@@ -41,7 +39,7 @@ class HistoryCtr extends GetxController {
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage())
       ]);
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
-      themeList.value = await getThemeListTest();
+      themeList.value = await historyThemeDataSource.getThemeList();
     } on DioException catch(e) {
       print("[getThemeList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
@@ -74,6 +72,7 @@ class HistoryCtr extends GetxController {
       ]);
       final historyMajorDataSource = RemoteMajorListDataSource(dio);
       majorList.value = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
+      print("메이저 리스트 개수: ${majorList.value?.majorScripts?.length}");
     } on DioException catch(e) {
       print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
@@ -93,7 +92,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMajorList(int index) {
-    historyPath.value.setMajor(int.parse(majorList.value?.majors?[index].scriptId ?? '0'));
+    historyPath.value.setMajor(majorList.value?.majorScripts?[index].scriptId ?? 0);
     initMinorScrollController();
   }
 

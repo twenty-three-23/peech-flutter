@@ -6,9 +6,9 @@ part 'history_major_list_model.g.dart';
 @JsonSerializable()
 class HistoryMajorListModel {
 
-  final List<HistoryMajorModel>? majors;
+  final List<HistoryMajorModel>? majorScripts;
 
-  HistoryMajorListModel({required this.majors});
+  HistoryMajorListModel({required this.majorScripts});
 
   factory HistoryMajorListModel.fromJson(Map<String, dynamic> json) => _$HistoryMajorListModelFromJson(json);
 
