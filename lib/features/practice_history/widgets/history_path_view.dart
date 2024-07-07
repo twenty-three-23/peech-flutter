@@ -23,7 +23,7 @@ Widget historyPathView(HistoryCtr controller) {
             ),
           if(controller.historyPath.value.major != null)
             historyPathUnit(
-                text: controller.majorList.value?[controller.historyPath.value.major ?? 0].createdAt.toString() ?? 'unknown',
+                text: controller.majorList.value?.majors?[controller.historyPath.value.major ?? 0].createdAt.toString() ?? 'unknown',
                 onClick: () { controller.historyPath.value.setPrevPath(HistoryPathState.minorList); }
             ),
           if(controller.historyPath.value.minor != null)

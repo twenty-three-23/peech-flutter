@@ -5,7 +5,7 @@ Widget majorListView(HistoryCtr controller) {
   return GridView.builder(
     key: const PageStorageKey("majorListView"),
     controller: controller.majorScrollController,
-    itemCount: controller.majorList.value?.length ?? 0,
+    itemCount: controller.majorList.value?.majors?.length ?? 0,
     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,
       childAspectRatio: 2/3,
@@ -27,7 +27,7 @@ Widget majorListView(HistoryCtr controller) {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    controller.majorList.value?[index].scriptContent ?? "unknown",
+                    controller.majorList.value?.majors?[index].scriptContent ?? "unknown",
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 10,
@@ -38,7 +38,7 @@ Widget majorListView(HistoryCtr controller) {
                 ),
               ),
               Text(
-                controller.majorList.value?[index].createdAt ?? "unknown",
+                controller.majorList.value?.majors?[index].createdAt ?? "unknown",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold
                 ),
