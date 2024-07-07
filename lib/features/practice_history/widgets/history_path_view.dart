@@ -18,7 +18,7 @@ Widget historyPathView(HistoryCtr controller) {
           ),
           if(controller.historyPath.value.theme != null)
             historyPathUnit(
-                text: controller.themeList.value?[controller.historyPath.value.major ?? 0].title.toString() ?? 'unknown',
+                text: controller.themeList.value?.themes?[controller.historyPath.value.major ?? 0].title.toString() ?? 'unknown',
                 onClick: () { controller.historyPath.value.setPrevPath(HistoryPathState.majorList); }
             ),
           if(controller.historyPath.value.major != null)

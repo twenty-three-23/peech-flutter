@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'history_theme_model.g.dart';
+
+@JsonSerializable()
 class HistoryThemeModel {
   final String? title;
   final String? timestamp;
@@ -5,9 +10,13 @@ class HistoryThemeModel {
   final String? id;
 
   HistoryThemeModel({
-    required this.title,
-    required this.timestamp,
-    required this.count,
-    required this.id
+    this.title,
+    this.timestamp,
+    this.count,
+    this.id
   });
+
+
+  factory HistoryThemeModel.fromJson(Map<String, dynamic> json) => _$HistoryThemeModelFromJson(json);
+
 }
