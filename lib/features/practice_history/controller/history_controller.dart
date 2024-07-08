@@ -10,10 +10,10 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/local/hi
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_theme_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_minor_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
 
@@ -83,6 +83,25 @@ class HistoryCtr extends GetxController {
   }
 
   void getMinorList() async {
+    try {
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+      ]);
+      final historyMinorDataSource = RemoteMinorListDataSource(dio);
+      minorList.value = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
+      print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
+    } on DioException catch(e) {
+      print("[getMinorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch(e) {
+      print("[getMinorList] [Exception] $e");
+      rethrow;
+    }
+  }
+
+  void getMinorListTest() async {
     final historyMinorDataSource = HistoryMinorDataSource();
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
