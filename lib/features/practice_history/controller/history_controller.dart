@@ -6,9 +6,9 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_user_t
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
-import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_major_data_source.dart';
-import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
-import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_theme_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_minor_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
@@ -23,7 +23,6 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
 
-  final historyThemeDataSource = HistoryThemeDataSource();
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -54,6 +53,7 @@ class HistoryCtr extends GetxController {
   }
 
   void getThemeListTest() async {
+    final historyThemeDataSource = MockHistoryThemeDataSource();
     themeList.value = await historyThemeDataSource.getThemeListTest();
   }
 
@@ -78,7 +78,7 @@ class HistoryCtr extends GetxController {
   }
 
   void getMajorListTest() async {
-    final historyMajorDataSource = HistoryMajorDataSource();
+    final historyMajorDataSource = MockHistoryMajorDataSource();
     majorList.value = await historyMajorDataSource.getMajorListTest();
   }
 
@@ -102,7 +102,7 @@ class HistoryCtr extends GetxController {
   }
 
   void getMinorListTest() async {
-    final historyMinorDataSource = HistoryMinorDataSource();
+    final historyMinorDataSource = MockHistoryMinorDataSource();
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
 

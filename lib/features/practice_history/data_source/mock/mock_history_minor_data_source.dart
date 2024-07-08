@@ -1,7 +1,7 @@
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_model.dart';
 
-class HistoryMinorDataSource {
+class MockHistoryMinorDataSource {
 
   Future<HistoryMinorListModel?> getMinorListTest() async {
     return HistoryMinorListModel(
