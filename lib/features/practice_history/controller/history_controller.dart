@@ -6,7 +6,9 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_user_t
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_theme_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
@@ -21,7 +23,7 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   Rx<List<HistoryMinorModel>?> minorList = Rx<List<HistoryMinorModel>?>(null);
 
-  final historyMinorDataSource = HistoryMinorDataSource();
+  final historyThemeDataSource = HistoryThemeDataSource();
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -51,6 +53,10 @@ class HistoryCtr extends GetxController {
     }
   }
 
+  void getThemeListTest() async {
+    themeList.value = await historyThemeDataSource.getThemeListTest();
+  }
+
 
   void getMajorList() async {
     try {
@@ -71,7 +77,13 @@ class HistoryCtr extends GetxController {
     }
   }
 
+  void getMajorListTest() async {
+    final historyMajorDataSource = HistoryMajorDataSource();
+    majorList.value = await historyMajorDataSource.getMajorListTest();
+  }
+
   void getMinorList() async {
+    final historyMinorDataSource = HistoryMinorDataSource();
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
 
@@ -86,7 +98,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMinorList(int index) {
-    historyPath.value.setMinor(int.parse(minorList.value?[index].scriptId ?? '0'));
+    historyPath.value.setMinor(minorList.value?[index].scriptId ?? 0);
   }
 
   void setPathScrollPosToEndWithAni() {
@@ -103,14 +115,15 @@ class HistoryCtr extends GetxController {
 
 
   void addGetCurrentListListener() {
+    getThemeListTest();
     historyPath.value.pathState.listen((newState) {
       setPathScrollPosToEndWithAni();
       switch(newState) {
         case HistoryPathState.themeList:
-          getThemeList();
+          getThemeListTest();
           break;
         case HistoryPathState.majorList:
-          getMajorList();
+          getMajorListTest();
           break;
         case HistoryPathState.minorList:
           getMinorList();
@@ -148,7 +161,7 @@ class HistoryCtr extends GetxController {
 
   @override
   void onInit() {
-    getThemeList();
+    getThemeListTest();
     addGetCurrentListListener();
     super.onInit();
   }
