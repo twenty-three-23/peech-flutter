@@ -38,6 +38,7 @@ class HistoryCtr extends GetxController {
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
       themeList.value = await historyThemeDataSource.getThemeList();
@@ -50,19 +51,6 @@ class HistoryCtr extends GetxController {
     }
   }
 
-  Future<HistoryThemeListModel> getThemeListTest() async {
-    Future.delayed(const Duration(seconds: 1));
-    return HistoryThemeListModel(
-        themes: [
-          HistoryThemeModel(
-              title: "test title",
-              timestamp: "test timestamp",
-              count: "1",
-              id: "1"
-          )
-        ]
-    );
-  }
 
   void getMajorList() async {
     try {
@@ -88,7 +76,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickThemeList(int index) {
-    historyPath.value.setTheme(int.parse(themeList.value?.themes?[index].id ?? '0'));
+    historyPath.value.setTheme(themeList.value?.themes?[index].themeId ?? 0);
     initMajorScrollController();
   }
 
