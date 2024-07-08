@@ -46,7 +46,7 @@ Widget themeListView(HistoryCtr controller) {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Text("${controller.themeList.value?.themes?[index].count ?? "unknown"}개"),
+                    child: Text("${controller.themeList.value?.themes?[index].count ?? "0"}개"),
                   )
                 ],
               ),

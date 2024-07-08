@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_device
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
@@ -36,7 +37,7 @@ class HistoryCtr extends GetxController {
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage())
+        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
       ]);
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
       themeList.value = await historyThemeDataSource.getThemeList();
