@@ -5,21 +5,21 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_device
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
-import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_major_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_theme_model.dart';
 
 class HistoryCtr extends GetxController {
 
   Rx<HistoryThemeListModel?> themeList = Rx<HistoryThemeListModel?>(null);
-  Rx<List<HistoryMajorModel>?> majorList = Rx<List<HistoryMajorModel>?>(null);
+  Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   Rx<List<HistoryMinorModel>?> minorList = Rx<List<HistoryMinorModel>?>(null);
 
-  final historyMajorDataSource = HistoryMajorDataSource();
   final historyMinorDataSource = HistoryMinorDataSource();
 
   ScrollController themeScrollController = ScrollController();
@@ -49,8 +49,37 @@ class HistoryCtr extends GetxController {
     }
   }
 
+  Future<HistoryThemeListModel> getThemeListTest() async {
+    Future.delayed(const Duration(seconds: 1));
+    return HistoryThemeListModel(
+        themes: [
+          HistoryThemeModel(
+              title: "test title",
+              timestamp: "test timestamp",
+              count: "1",
+              id: "1"
+          )
+        ]
+    );
+  }
+
   void getMajorList() async {
-    majorList.value = await historyMajorDataSource.getMajorListTest();
+    try {
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+      ]);
+      final historyMajorDataSource = RemoteMajorListDataSource(dio);
+      majorList.value = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
+      print("메이저 리스트 개수: ${majorList.value?.majorScripts?.length}");
+    } on DioException catch(e) {
+      print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch(e) {
+      print("[getMajorList] [Exception] $e");
+      rethrow;
+    }
   }
 
   void getMinorList() async {
@@ -63,7 +92,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMajorList(int index) {
-    historyPath.value.setMajor(int.parse(majorList.value?[index].scriptId ?? '0'));
+    historyPath.value.setMajor(majorList.value?.majorScripts?[index].scriptId ?? 0);
     initMinorScrollController();
   }
 
