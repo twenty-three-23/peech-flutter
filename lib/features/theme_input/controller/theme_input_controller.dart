@@ -23,13 +23,12 @@ class ThemeInputCtr extends GetxController {
     }
     await LocalPracticeThemeStorage().setThemeText(_theme);
     final ThemeIdModel themeIdModel = await getThemeId(_theme ?? "");
-    await LocalPracticeThemeStorage().setThemeId(themeIdModel.themeId);
+    await LocalPracticeThemeStorage().setThemeId(themeIdModel.themeId.toString());
   }
 
   Future<ThemeIdModel> getThemeId(String theme) async {
     try {
       Dio dio = Dio();
-      //TODO LocalUserTokenStorage()에 접근할 때 동시성 문제 발생하지 않는지 궁금
       dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
       dio.interceptors.add(AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()));
       final remoteThemeSaveDataSource = RemoteThemeSaveDataSource(dio);

@@ -5,7 +5,7 @@ part 'theme_id_model.g.dart';
 @JsonSerializable()
 class ThemeIdModel {
 
-  late final themeId;
+  late final int themeId;
 
   ThemeIdModel({required this.themeId});
 
