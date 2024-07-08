@@ -134,15 +134,15 @@ class HistoryCtr extends GetxController {
 
 
   void addGetCurrentListListener() {
-    getThemeListTest();
+    getThemeList();
     historyPath.value.pathState.listen((newState) {
       setPathScrollPosToEndWithAni();
       switch(newState) {
         case HistoryPathState.themeList:
-          getThemeListTest();
+          getThemeList();
           break;
         case HistoryPathState.majorList:
-          getMajorListTest();
+          getMajorList();
           break;
         case HistoryPathState.minorList:
           getMinorList();
@@ -180,7 +180,6 @@ class HistoryCtr extends GetxController {
 
   @override
   void onInit() {
-    getThemeListTest();
     addGetCurrentListListener();
     super.onInit();
   }
