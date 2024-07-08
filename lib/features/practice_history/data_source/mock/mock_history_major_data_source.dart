@@ -1,7 +1,7 @@
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_model.dart';
 
-class HistoryMajorDataSource {
+class MockHistoryMajorDataSource {
 
   Future<HistoryMajorListModel?> getMajorListTest() async {
     return HistoryMajorListModel(

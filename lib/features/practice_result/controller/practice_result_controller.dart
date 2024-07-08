@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/practice_result/data_source/practice_rseult_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/practice_result_model.dart';
 
 class PracticeResultCtr extends GetxController {
 
-  PracticeResultDataSource practiceResultDataSource = PracticeResultDataSource();
+  MockPracticeResultDataSource practiceResultDataSource = MockPracticeResultDataSource();
 
   List<PracticeResultModel>? _practiceResult; //데이터 받아오고, 요청 보낼때만 수정
   Rx<List<TextEditingController>?> practiceResult = Rx<List<TextEditingController>?>(null);

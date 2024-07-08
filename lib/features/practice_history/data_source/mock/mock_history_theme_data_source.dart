@@ -1,7 +1,7 @@
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_model.dart';
 
-class HistoryThemeDataSource {
+class MockHistoryThemeDataSource {
 
   Future<HistoryThemeListModel?> getThemeListTest() async {
     return HistoryThemeListModel(

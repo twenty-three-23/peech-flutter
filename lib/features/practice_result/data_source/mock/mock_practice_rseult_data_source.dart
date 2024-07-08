@@ -1,6 +1,6 @@
 import 'package:swm_peech_flutter/features/practice_result/model/practice_result_model.dart';
 
-class PracticeResultDataSource {
+class MockPracticeResultDataSource {
 
   Future<List<PracticeResultModel>> getPracticeResultListTest() async {
     await Future.delayed(const Duration(seconds: 3));
