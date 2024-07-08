@@ -12,16 +12,16 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/local/hi
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_theme_model.dart';
 
 class HistoryCtr extends GetxController {
 
   Rx<HistoryThemeListModel?> themeList = Rx<HistoryThemeListModel?>(null);
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
-  Rx<List<HistoryMinorModel>?> minorList = Rx<List<HistoryMinorModel>?>(null);
+  Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
 
   final historyThemeDataSource = HistoryThemeDataSource();
 
@@ -98,7 +98,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMinorList(int index) {
-    historyPath.value.setMinor(minorList.value?[index].scriptId ?? 0);
+    historyPath.value.setMinor(minorList.value?.minorScripts?[index].scriptId ?? 0);
   }
 
   void setPathScrollPosToEndWithAni() {
