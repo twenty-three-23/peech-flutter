@@ -6,7 +6,7 @@ Widget minorListView(HistoryCtr controller) {
   return GridView.builder(
     key: const PageStorageKey("minorListView"),
     controller: controller.minorScrollController,
-    itemCount: controller.minorList.value?.length ?? 0,
+    itemCount: controller.minorList.value?.minorScripts?.length ?? 0,
     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
       maxCrossAxisExtent: 200,
       childAspectRatio: 2/3,
@@ -28,7 +28,7 @@ Widget minorListView(HistoryCtr controller) {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    controller.minorList.value?[index].scriptContent ?? "unknown",
+                    controller.minorList.value?.minorScripts?[index].scriptContent ?? "unknown",
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 10,
@@ -39,7 +39,7 @@ Widget minorListView(HistoryCtr controller) {
                 ),
               ),
               Text(
-                controller.minorList.value?[index].createdAt ?? "unknown",
+                controller.minorList.value?.minorScripts?[index].createdAt ?? "unknown",
                 style: const TextStyle(
                     fontWeight: FontWeight.bold
                 ),

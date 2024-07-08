@@ -28,7 +28,7 @@ Widget historyPathView(HistoryCtr controller) {
             ),
           if(controller.historyPath.value.minor != null)
             historyPathUnit(
-                text: controller.minorList.value?[controller.historyPath.value.minor ?? 0].createdAt.toString() ?? 'unknown',
+                text: controller.minorList.value?.minorScripts?[controller.historyPath.value.minor ?? 0].createdAt.toString() ?? 'unknown',
                 onClick: () {  }
             ),
         ],

@@ -6,22 +6,24 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_user_t
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_theme_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_minor_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
-import 'package:swm_peech_flutter/features/practice_history/model/history_theme_model.dart';
 
 class HistoryCtr extends GetxController {
 
   Rx<HistoryThemeListModel?> themeList = Rx<HistoryThemeListModel?>(null);
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
-  Rx<List<HistoryMinorModel>?> minorList = Rx<List<HistoryMinorModel>?>(null);
+  Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
 
-  final historyMinorDataSource = HistoryMinorDataSource();
+  final historyThemeDataSource = HistoryThemeDataSource();
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -51,6 +53,10 @@ class HistoryCtr extends GetxController {
     }
   }
 
+  void getThemeListTest() async {
+    themeList.value = await historyThemeDataSource.getThemeListTest();
+  }
+
 
   void getMajorList() async {
     try {
@@ -71,7 +77,32 @@ class HistoryCtr extends GetxController {
     }
   }
 
+  void getMajorListTest() async {
+    final historyMajorDataSource = HistoryMajorDataSource();
+    majorList.value = await historyMajorDataSource.getMajorListTest();
+  }
+
   void getMinorList() async {
+    try {
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+      ]);
+      final historyMinorDataSource = RemoteMinorListDataSource(dio);
+      minorList.value = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
+      print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
+    } on DioException catch(e) {
+      print("[getMinorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch(e) {
+      print("[getMinorList] [Exception] $e");
+      rethrow;
+    }
+  }
+
+  void getMinorListTest() async {
+    final historyMinorDataSource = HistoryMinorDataSource();
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
 
@@ -86,7 +117,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMinorList(int index) {
-    historyPath.value.setMinor(int.parse(minorList.value?[index].scriptId ?? '0'));
+    historyPath.value.setMinor(minorList.value?.minorScripts?[index].scriptId ?? 0);
   }
 
   void setPathScrollPosToEndWithAni() {
@@ -103,6 +134,7 @@ class HistoryCtr extends GetxController {
 
 
   void addGetCurrentListListener() {
+    getThemeList();
     historyPath.value.pathState.listen((newState) {
       setPathScrollPosToEndWithAni();
       switch(newState) {
@@ -148,7 +180,6 @@ class HistoryCtr extends GetxController {
 
   @override
   void onInit() {
-    getThemeList();
     addGetCurrentListListener();
     super.onInit();
   }
