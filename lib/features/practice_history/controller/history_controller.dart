@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_device
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/local/history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
@@ -36,7 +37,8 @@ class HistoryCtr extends GetxController {
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage())
+        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
       themeList.value = await historyThemeDataSource.getThemeList();
@@ -49,19 +51,6 @@ class HistoryCtr extends GetxController {
     }
   }
 
-  Future<HistoryThemeListModel> getThemeListTest() async {
-    Future.delayed(const Duration(seconds: 1));
-    return HistoryThemeListModel(
-        themes: [
-          HistoryThemeModel(
-              title: "test title",
-              timestamp: "test timestamp",
-              count: "1",
-              id: "1"
-          )
-        ]
-    );
-  }
 
   void getMajorList() async {
     try {
@@ -87,7 +76,7 @@ class HistoryCtr extends GetxController {
   }
 
   void clickThemeList(int index) {
-    historyPath.value.setTheme(int.parse(themeList.value?.themes?[index].id ?? '0'));
+    historyPath.value.setTheme(themeList.value?.themes?[index].themeId ?? 0);
     initMajorScrollController();
   }
 

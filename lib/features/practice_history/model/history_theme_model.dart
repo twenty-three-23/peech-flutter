@@ -4,16 +4,16 @@ part 'history_theme_model.g.dart';
 
 @JsonSerializable()
 class HistoryThemeModel {
-  final String? title;
-  final String? timestamp;
-  final String? count;
-  final String? id;
+  final int? themeId;
+  final String? themeTitle;
+  final String? createdAt;
+  final int? majorVersionCnt;
 
   HistoryThemeModel({
-    this.title,
-    this.timestamp,
-    this.count,
-    this.id
+    this.themeId,
+    this.themeTitle,
+    this.createdAt,
+    this.majorVersionCnt,
   });
 
 
