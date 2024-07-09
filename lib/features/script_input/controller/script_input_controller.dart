@@ -57,7 +57,8 @@ class ScriptInputCtr extends GetxController {
     }
   }
 
-  void getExpectedTime() async {
+  void inputConfirmBtn(BuildContext context) async {
+    Navigator.pushNamed(context, '/scriptInput/result');
     isLoading.value = true;
     scriptExpectedTime.value = null;
     _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();

@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/practice_history/view/history_screen.
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
+import 'package:swm_peech_flutter/features/script_input/view/script_expected_time_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
 import 'package:swm_peech_flutter/features/theme_input/view/theme_input_screen.dart';
@@ -22,11 +23,18 @@ class Routers {
       page: () => const HomeScreen(),
     ),
     GetPage(
-      name: '/scriptInput',
+      name: '/scriptInput/input',
       page: () => const ScriptInputScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
       })
+    ),
+    GetPage(
+        name: '/scriptInput/result',
+        page: () => const ScriptExpectedTimeScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
+        })
     ),
     GetPage(
         name: '/voiceRecodeNoScript',
