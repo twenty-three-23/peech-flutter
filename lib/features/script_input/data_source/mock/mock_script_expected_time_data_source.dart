@@ -1,14 +1,9 @@
+import '../../../common/models/expected_time_per_paragraph_model.dart';
+import '../../../common/models/paragraph_model.dart';
+import '../../../common/models/script_expected_time_model.dart';
 
+class MockScriptExpectedTimeDataSource {
 
-
-import '../../common/models/expected_time_per_paragraph_model.dart';
-import '../../common/models/paragraph_model.dart';
-import '../../common/models/script_expected_time_model.dart';
-
-class ScriptExpectedTimeDataSource {
-
-
-  //테스트용 TODO api요청으로 변경
   Future<ScriptExpectedTimeModel> getExpectedTimeTest() async {
 
     await Future.delayed(const Duration(seconds: 2));

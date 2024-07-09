@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/script_input/data_source/script_expected_time_data_source.dart';
+import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 
 import '../../common/models/script_expected_time_model.dart';
 
@@ -10,7 +10,7 @@ import '../../common/models/script_expected_time_model.dart';
 class ScriptInputCtr extends GetxController {
 
   //대본 예상 시간 데이터 소스
-  final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
+  final MockScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = MockScriptExpectedTimeDataSource();
 
   //대본 입력 데이터
   Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
