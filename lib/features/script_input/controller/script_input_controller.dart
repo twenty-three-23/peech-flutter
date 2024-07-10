@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/script_input/data_source/script_expected_time_data_source.dart';
-
+import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
+import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
+import 'package:dio/dio.dart';
+import 'package:swm_peech_flutter/features/script_input/model/paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/script_id_model.dart';
 import '../../common/models/script_expected_time_model.dart';
 
 
@@ -10,11 +14,11 @@ import '../../common/models/script_expected_time_model.dart';
 class ScriptInputCtr extends GetxController {
 
   //대본 예상 시간 데이터 소스
-  final ScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = ScriptExpectedTimeDataSource();
+  final MockScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = MockScriptExpectedTimeDataSource();
 
   //대본 입력 데이터
   Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
-  final List<String> _script = [ '' ];
+  final ParagraphsModel _script = ParagraphsModel(paragraphs: []);
 
   //발표 전 대본 기반 에상 시간
   ScriptExpectedTimeModel? _scriptExpectedTime;
@@ -30,34 +34,56 @@ class ScriptInputCtr extends GetxController {
   }
 
   void updateScript(int index, String newScript) {
-    _script[index] = newScript;
+    _script.paragraphs?[index] = newScript;
   }
 
   void addParagraph() {
-    _script.add('');
+    _script.paragraphs?.add('');
     script.value.add(TextEditingController());
     script.value = script.value.toList();
   }
 
   void removeParagraph(int index) {
-    _script.removeAt(index);
+    _script.paragraphs?.removeAt(index);
     script.value[index].dispose();
     script.value.removeAt(index);
     script.value = script.value.toList();
   }
 
-  Future<void> saveScript() async {
-    await LocalScriptStorage().setScript(_script);
+  Future<void> saveScriptContent() async {
+    await LocalScriptStorage().setScriptContent(_script.paragraphs ?? List.empty());
   }
 
-  Future<void> gotoPractice(BuildContext context) async {
-    await saveScript();
-    if(context.mounted) {
-      Navigator.pushNamed(context, '/voiceRecodeWithScript');
+  Future<void> saveScriptId(int scriptId) async {
+    await LocalScriptStorage().setScriptId(scriptId);
+  }
+
+  void gotoPracticeBtn(BuildContext context) {
+    Navigator.pushNamed(context, '/voiceRecodeWithScript');
+  }
+
+  Future<ScriptIdModel> postScript() async {
+    try {
+      Dio dio = Dio();
+      LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
+      String? themeId = localPracticeThemeStorage.getThemeId();
+      if(themeId == null) throw(Exception("[postScript] theme id is null!"));
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(int.parse(themeId), _script.toJson());
+      return scriptId;
+    } on DioException catch (e) {
+      print("[postScript] DioException: $e");
+      rethrow;
+    } catch (e) {
+      print("[postScript] Exception: $e");
+      rethrow;
     }
   }
 
   void inputConfirmBtn(BuildContext context) async {
+    ScriptIdModel scriptIdModel = await postScript();
+    await saveScriptContent();
+    await saveScriptId(scriptIdModel.scriptId ?? 0);
     Navigator.pushNamed(context, '/scriptInput/result');
     isLoading.value = true;
     scriptExpectedTime.value = null;
