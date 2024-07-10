@@ -5,9 +5,9 @@ part 'paragraphs_model.g.dart';
 @JsonSerializable()
 class ParagraphsModel {
 
-  final List<String>? paragraps;
+  final List<String>? paragraphs;
 
-  ParagraphsModel({required this.paragraps});
+  ParagraphsModel({required this.paragraphs});
 
   factory ParagraphsModel.fromJson(Map<String, dynamic> json) => _$ParagraphsModelFromJson(json);
 }
