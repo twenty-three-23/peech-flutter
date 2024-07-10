@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
+import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class PracticeResultScreen extends StatelessWidget {
   const PracticeResultScreen({super.key});
@@ -72,11 +74,21 @@ class PracticeResultScreen extends StatelessWidget {
                                               style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16,
+                                                height: 1.4
                                               ),
                                               children: [
                                                 for(int j = 0; j < (controller.practiceResult.value?.script?[index].sentences?.length ?? 0); j++)
                                                   TextSpan(
-                                                    text: "${controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent} "
+                                                    text: "${controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent} ",
+                                                    recognizer: TapGestureRecognizer()..onTap = () {
+                                                      showDialog(context: context, builder: (context) {
+                                                        return editingDialog(
+                                                          initialText: controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent ?? "",
+                                                          onSave: (textEditingController) => controller.editingDialogSaveBtn(textEditingController, context, index, j),
+                                                          onCancel: () => controller.editingDialogCancelBtn(context)
+                                                        );
+                                                      });
+                                                    }
                                                   )
                                               ]
                                           ),

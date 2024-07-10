@@ -54,4 +54,14 @@ class PracticeResultCtr extends GetxController {
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
   }
 
+  void editingDialogCancelBtn(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  void editingDialogSaveBtn(TextEditingController textEditingController, BuildContext context, int paragraphIndex, int sentenceIndex) {
+    practiceResult.value?.script?[paragraphIndex].sentences?[sentenceIndex].sentenceContent = textEditingController.text;
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    Navigator.of(context).pop();
+  }
+
 }
