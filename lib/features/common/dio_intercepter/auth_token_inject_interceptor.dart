@@ -10,7 +10,7 @@ class AuthTokenInjectInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
 
 
-    final token = localUserTokenStorage.getUserToken();
+    final String? token = localUserTokenStorage.getUserToken();
 
     options.headers.addAll({"authorization": "Bearer $token"});
 
