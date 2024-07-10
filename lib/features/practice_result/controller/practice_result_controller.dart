@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
-import 'package:swm_peech_flutter/features/practice_result/model/practice_result_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/paragraph_list_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/paragraph_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
 
 class PracticeResultCtr extends GetxController {
 
   MockPracticeResultDataSource practiceResultDataSource = MockPracticeResultDataSource();
 
-  List<PracticeResultModel>? _practiceResult; //데이터 받아오고, 요청 보낼때만 수정
-  Rx<List<TextEditingController>?> practiceResult = Rx<List<TextEditingController>?>(null);
+  ParagraphListModel? _practiceResult; //데이터 받아오고, 요청 보낼때만 수정
+  Rx<ParagraphListModel?> practiceResult = Rx<ParagraphListModel?>(null);
   ScrollController scrollController = ScrollController();
 
 
   void getPracticeResult() async {
     _practiceResult = await practiceResultDataSource.getPracticeResultListTest();
-    practiceResult.value = List.empty(growable: true);
-    _practiceResult?.forEach((element) { practiceResult.value?.add(TextEditingController(text: element.content)); });
-    practiceResult.value = practiceResult.value?.toList();
+    practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
   }
 
   @override
@@ -26,16 +26,16 @@ class PracticeResultCtr extends GetxController {
   }
 
   void insertNewParagraph(int index) {
-    practiceResult.value?.insert(index, TextEditingController());
-    practiceResult.value = practiceResult.value?.toList(growable: true);
-    if(index + 1 == practiceResult.value?.length) {
+    practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, isCalculated: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "새 문단")]));
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    if(index + 1 == practiceResult.value?.script?.length) {
       setScrollToEnd();
     }
   }
 
   void removeParagraph(int index) {
-    practiceResult.value?.removeAt(index);
-    practiceResult.value = practiceResult.value?.toList(growable: true);
+    practiceResult.value?.script?.removeAt(index);
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
   }
 
   void setScrollToEnd() {
@@ -52,6 +52,16 @@ class PracticeResultCtr extends GetxController {
 
   void homeButton(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+  }
+
+  void editingDialogCancelBtn(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  void editingDialogSaveBtn(TextEditingController textEditingController, BuildContext context, int paragraphIndex, int sentenceIndex) {
+    practiceResult.value?.script?[paragraphIndex].sentences?[sentenceIndex].sentenceContent = textEditingController.text;
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    Navigator.of(context).pop();
   }
 
 }

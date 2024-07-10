@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
+import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class PracticeResultScreen extends StatelessWidget {
   const PracticeResultScreen({super.key});
@@ -36,7 +38,7 @@ class PracticeResultScreen extends StatelessWidget {
                       : ListView.builder(
                           controller: controller.scrollController,
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: controller.practiceResult.value?.length ?? 0,
+                          itemCount: controller.practiceResult.value?.script?.length ?? 0,
                           itemBuilder: (BuildContext context, int index) {
                             return Column(
                               children: [
@@ -60,13 +62,36 @@ class PracticeResultScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                                   child: Stack(
                                     children: [
-                                      TextField(
-                                        minLines: 1,
-                                        maxLines: null,
-                                        controller: controller.practiceResult.value?[index],
-                                        decoration: const InputDecoration(
-                                          hintText: "문단을 입력해주세요",
-                                          border: OutlineInputBorder(),
+                                      Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: RichText(
+                                          text: TextSpan(
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                height: 1.4
+                                              ),
+                                              children: [
+                                                for(int j = 0; j < (controller.practiceResult.value?.script?[index].sentences?.length ?? 0); j++)
+                                                  TextSpan(
+                                                    text: "${controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent} ",
+                                                    recognizer: TapGestureRecognizer()..onTap = () {
+                                                      showDialog(context: context, builder: (context) {
+                                                        return editingDialog(
+                                                          initialText: controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent ?? "",
+                                                          onSave: (textEditingController) => controller.editingDialogSaveBtn(textEditingController, context, index, j),
+                                                          onCancel: () => controller.editingDialogCancelBtn(context)
+                                                        );
+                                                      });
+                                                    }
+                                                  )
+                                              ]
+                                          ),
                                         ),
                                       ),
                                       Positioned(
@@ -76,7 +101,7 @@ class PracticeResultScreen extends StatelessWidget {
                                           onTap: () {
                                             controller.removeParagraph(index);
                                           },
-                                          child: const Icon(Icons.close,)
+                                          child: const Icon(Icons.close,size: 18,)
                                         )
                                       ),
                                     ],
@@ -97,7 +122,7 @@ class PracticeResultScreen extends StatelessWidget {
                                       ],
                                     )
                                 ),
-                                if(index + 1 == controller.practiceResult.value?.length)
+                                if(index + 1 == controller.practiceResult.value?.script?.length)
                                   const SizedBox(height: 20,),
 
                               ],

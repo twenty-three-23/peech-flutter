@@ -42,7 +42,6 @@ class ThemeInputCtr extends GetxController {
   }
 
   void finishButton(BuildContext context) async {
-    Navigator.pushNamed(context, '/scriptInput/input');
     await saveTheme();
     if(context.mounted) {
       if (LocalPracticeModeStorage().getMode() == PracticeMode.withScript) {
