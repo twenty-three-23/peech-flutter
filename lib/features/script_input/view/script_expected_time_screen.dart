@@ -48,7 +48,7 @@ class ScriptExpectedTimeScreen extends StatelessWidget {
                       width: double.infinity,
                       alignment: Alignment.centerRight,
                       child: ElevatedButton(
-                          onPressed: () { controller.gotoPractice(context); },
+                          onPressed: () { controller.gotoPracticeBtn(context); },
                           child: const Text("연습하러 가기")
                       ),
                     ),

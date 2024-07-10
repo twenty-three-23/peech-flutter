@@ -24,7 +24,7 @@ class VoiceRecodeCtr extends GetxController {
 
   @override
   void onInit() {
-    script = LocalScriptStorage().getScript();
+    script = LocalScriptStorage().getScriptContent();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();

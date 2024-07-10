@@ -10,4 +10,5 @@ class ParagraphsModel {
   ParagraphsModel({required this.paragraphs});
 
   factory ParagraphsModel.fromJson(Map<String, dynamic> json) => _$ParagraphsModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ParagraphsModelToJson(this);
 }
