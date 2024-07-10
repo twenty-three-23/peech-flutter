@@ -42,7 +42,6 @@ class ThemeInputCtr extends GetxController {
   }
 
   void finishButton(BuildContext context) async {
-    Navigator.pushNamed(context, '/scriptInput/input'); //TODO 테스트용. push시 삭제 필요.
     await saveTheme();
     if(context.mounted) {
       if (LocalPracticeModeStorage().getMode() == PracticeMode.withScript) {
