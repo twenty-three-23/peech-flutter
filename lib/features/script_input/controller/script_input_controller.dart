@@ -4,6 +4,10 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_practi
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
@@ -25,6 +29,9 @@ class ScriptInputCtr extends GetxController {
 
   //스크립트 예상시간 로딩 유무
   Rx<bool> isLoading = false.obs;
+
+  List<String>? _expectedTimeScript;
+  Rx<List<String>?> expectedTimeScript = Rx<List<String>?>(null);
 
   @override
   void onClose() {
@@ -64,6 +71,7 @@ class ScriptInputCtr extends GetxController {
   Future<ScriptIdModel> postScript(int themeId) async {
     try {
       Dio dio = Dio();
+      dio.interceptors.add(DebugIntercepter());
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
       ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(themeId, _script.toJson());
       return scriptId;
@@ -80,6 +88,12 @@ class ScriptInputCtr extends GetxController {
     Dio dio = Dio();
     final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
     return await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
+  }
+
+  Future<ExpectedTimeModel> getExpectedTimeTest() async {
+    Future.delayed(const Duration(seconds: 2));
+    final MockScriptExpectedTimeDataSource scriptExpectedTimeDataSource = MockScriptExpectedTimeDataSource();
+    return scriptExpectedTimeDataSource.getExpectedTimeTest();
   }
 
   int getThemeId() {
@@ -106,9 +120,17 @@ class ScriptInputCtr extends GetxController {
   Future<void> scriptExpectedTimeScriptInit(int themeId, int scriptId) async {
     isLoading.value = true;
     scriptExpectedTime.value = null;
+    expectedTimeScript.value = null;
+    _expectedTimeScript = getExpectedTimeScript();
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
+    expectedTimeScript.value = _expectedTimeScript;
     scriptExpectedTime.value = _scriptExpectedTime;
     isLoading.value = false;
+  }
+
+  List<String>? getExpectedTimeScript() {
+    LocalScriptStorage localScriptStorage = LocalScriptStorage();
+    return localScriptStorage.getScriptContent();
   }
 
 }
