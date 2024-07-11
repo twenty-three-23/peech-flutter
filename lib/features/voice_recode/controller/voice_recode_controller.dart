@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:swm_peech_flutter/features/common/constant/constant.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
@@ -61,6 +62,7 @@ class VoiceRecodeCtr extends GetxController {
 
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       recodingStopWatch.refresh();
+      recodingTimeLimit(recodingStopWatch.value);
     });
 
     await _recorder!.startRecorder(
@@ -68,6 +70,12 @@ class VoiceRecodeCtr extends GetxController {
       codec: Codec.aacADTS,
     );
     isRecording.value = true;
+  }
+
+  void recodingTimeLimit(Stopwatch recodingStopWatch) {
+    if(recodingStopWatch.elapsedMilliseconds >= Constants.recodeLimitMilliTimes) {
+      _stopRecording();
+    }
   }
 
   Future<void> _stopRecording() async {
