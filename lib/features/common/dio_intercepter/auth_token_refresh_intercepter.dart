@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_id_assign_data_source.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/models/device_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_token_model.dart';
@@ -44,13 +45,12 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
         final reDio = Dio();
-        reDio.interceptors.addAll(err.requestOptions.extra["intercepters"] ?? []);
-        reDio.interceptors.removeWhere((i) => i is AuthTokenRefreshInterceptor);
+        reDio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
         final response = await reDio.fetch(options);
         return handler.resolve(response);
 
       } on DioException catch(e) {
-        print("[AuthTokenRefreshInterceptor] DioException: $e");
+        print("[AuthTokenRefreshInterceptor] message: [${e.response?.data['message']}] DioException: $e");
         return handler.reject(e);
       } catch(e) {
         print("[AuthTokenRefreshInterceptor] Exception: $e");
