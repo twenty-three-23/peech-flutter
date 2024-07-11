@@ -10,7 +10,6 @@ import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/script_id_model.dart';
-import '../../common/models/script_expected_time_model.dart';
 
 
 
