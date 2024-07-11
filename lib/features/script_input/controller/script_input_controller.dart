@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
@@ -18,7 +19,7 @@ class ScriptInputCtr extends GetxController {
 
   //대본 입력 데이터
   Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
-  final ParagraphsModel _script = ParagraphsModel(paragraphs: []);
+  final ParagraphsModel _script = ParagraphsModel(paragraphs: [ '' ]);
 
   //발표 전 대본 기반 에상 시간
   ScriptExpectedTimeModel? _scriptExpectedTime;
@@ -72,7 +73,7 @@ class ScriptInputCtr extends GetxController {
       ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(int.parse(themeId), _script.toJson());
       return scriptId;
     } on DioException catch (e) {
-      print("[postScript] DioException: $e");
+      print("[postScript] request body: [${e.requestOptions.data}] message: [${e.response?.data['message']}] DioException: $e");
       rethrow;
     } catch (e) {
       print("[postScript] Exception: $e");
