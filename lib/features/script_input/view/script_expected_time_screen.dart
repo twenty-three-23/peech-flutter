@@ -28,7 +28,7 @@ class ScriptExpectedTimeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("전체 예상시간: ${controller.scriptExpectedTime.value?.expectedAllTime ?? "전체 예상시간 결과 존재하지 않음"}"),
+                    Text("전체 예상시간: ${controller.scriptExpectedTime.value?.expectedTimeByScript?..hour..minute..second..nano}"),
                     ListView.builder(
                       shrinkWrap: true,
                       primary: false,

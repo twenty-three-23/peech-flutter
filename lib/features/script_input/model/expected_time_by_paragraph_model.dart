@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:swm_peech_flutter/features/script_input/model/expected_time_per_paragraph_model.dart';
 
 part 'expected_time_by_paragraph_model.g.dart';
 
@@ -7,7 +6,7 @@ part 'expected_time_by_paragraph_model.g.dart';
 class ExpectedTimeByParagraphModel {
 
   final int? paragraphId;
-  final ExpectedTimePerParagraphModel? expectedTimePerParagraph;
+  final String? expectedTimePerParagraph;
 
   ExpectedTimeByParagraphModel({required this.paragraphId, required this.expectedTimePerParagraph});
 

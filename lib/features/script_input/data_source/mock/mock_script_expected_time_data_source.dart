@@ -1,7 +1,5 @@
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_by_paragraph_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/expected_time_by_script_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/expected_time_per_paragraph_model.dart';
 
 class MockScriptExpectedTimeDataSource {
 
@@ -10,21 +8,11 @@ class MockScriptExpectedTimeDataSource {
     await Future.delayed(const Duration(seconds: 2));
 
     return ExpectedTimeModel(
-        expectedTimeByScript: ExpectedTimeByScriptModel(
-            hour: 0,
-            minute: 3,
-            second: 10,
-            nano: 2
-        ),
+        expectedTimeByScript: "00:05:10.2",
         expectedTimeByParagraphs: [
           ExpectedTimeByParagraphModel(
               paragraphId: 1,
-              expectedTimePerParagraph: ExpectedTimePerParagraphModel(
-                  hour: 0,
-                  minute: 0,
-                  second: 10,
-                  nano: 2
-              )
+              expectedTimePerParagraph: "00:00:10.2"
           )
         ]
     );
