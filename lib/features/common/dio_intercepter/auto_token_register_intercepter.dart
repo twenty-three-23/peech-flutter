@@ -27,7 +27,7 @@ class AutoTokenRegisterIntercepter extends Interceptor {
         return handler.resolve(response);
 
       } on DioException catch(e) {
-        print("[AutoTokenRegisterIntercepter] DioException: $e");
+        print("[AutoTokenRegisterIntercepter] ${err.requestOptions.headers} ${err.response?.data['message']} DioException: $e");
         return handler.reject(e);
       } catch(e) {
         print("[AutoTokenRegisterIntercepter] Exception: $e");

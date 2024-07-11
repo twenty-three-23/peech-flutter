@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
-import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
@@ -72,6 +70,7 @@ class ScriptInputCtr extends GetxController {
     try {
       Dio dio = Dio();
       dio.interceptors.add(DebugIntercepter());
+      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
       ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(themeId, _script.toJson());
       return scriptId;
