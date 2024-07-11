@@ -12,9 +12,9 @@ class AuthTokenInjectInterceptor extends Interceptor {
 
     final String? token = localUserTokenStorage.getUserToken();
 
-    options.headers.addAll({"authorization": "Bearer $token"});
+    options.headers.addAll({"authorization": "Bearer ${token ?? 'x'}"});
 
-    print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [$token]");
+    print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [${token ?? 'x'}]");
     return super.onRequest(options, handler);
   }
 
