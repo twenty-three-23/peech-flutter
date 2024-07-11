@@ -6,14 +6,19 @@ import 'package:swm_peech_flutter/features/practice_history/widgets/minor_detail
 import 'package:swm_peech_flutter/features/practice_history/widgets/minor_list_view.dart';
 import 'package:swm_peech_flutter/features/practice_history/widgets/theme_list_view.dart';
 
-Widget historyListView(HistoryCtr controller) {
+Widget historyListView(BuildContext context, HistoryCtr controller) {
   switch (controller.historyPath.value.pathState.value) {
     case HistoryPathState.themeList:
       return themeListView(controller);
     case HistoryPathState.majorList:
       return majorListView(controller);
     case HistoryPathState.minorList:
-      return minorListView(controller);
+      return Column(
+        children: [
+          TextButton(onPressed: () { Navigator.pushNamed(context, '/historyMajorDetail'); }, child: const Text("기존 대본 보기")),
+          Expanded(child: minorListView(controller)),
+        ],
+      );
     case HistoryPathState.minorDetail:
       return minorDetailView();
   }

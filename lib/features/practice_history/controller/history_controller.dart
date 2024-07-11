@@ -133,7 +133,6 @@ class HistoryCtr extends GetxController {
     });
   }
 
-
   void addGetCurrentListListener() {
     getThemeList();
     historyPath.value.pathState.listen((newState) {
