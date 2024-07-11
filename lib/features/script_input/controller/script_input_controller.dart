@@ -4,8 +4,10 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_practi
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
+import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
+import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/script_id_model.dart';
 import '../../common/models/script_expected_time_model.dart';
@@ -14,16 +16,13 @@ import '../../common/models/script_expected_time_model.dart';
 
 class ScriptInputCtr extends GetxController {
 
-  //대본 예상 시간 데이터 소스
-  final MockScriptExpectedTimeDataSource _scriptExpectedTimeDataSource = MockScriptExpectedTimeDataSource();
-
   //대본 입력 데이터
   Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
   final ParagraphsModel _script = ParagraphsModel(paragraphs: [ '' ]);
 
   //발표 전 대본 기반 에상 시간
-  ScriptExpectedTimeModel? _scriptExpectedTime;
-  Rx<ScriptExpectedTimeModel?> scriptExpectedTime = Rx<ScriptExpectedTimeModel?>(null);
+  ExpectedTimeModel? _scriptExpectedTime;
+  Rx<ExpectedTimeModel?> scriptExpectedTime = Rx<ExpectedTimeModel?>(null);
 
   //스크립트 예상시간 로딩 유무
   Rx<bool> isLoading = false.obs;
@@ -63,14 +62,11 @@ class ScriptInputCtr extends GetxController {
     Navigator.pushNamed(context, '/voiceRecodeWithScript');
   }
 
-  Future<ScriptIdModel> postScript() async {
+  Future<ScriptIdModel> postScript(int themeId) async {
     try {
       Dio dio = Dio();
-      LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
-      String? themeId = localPracticeThemeStorage.getThemeId();
-      if(themeId == null) throw(Exception("[postScript] theme id is null!"));
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
-      ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(int.parse(themeId), _script.toJson());
+      ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(themeId, _script.toJson());
       return scriptId;
     } on DioException catch (e) {
       print("[postScript] request body: [${e.requestOptions.data}] message: [${e.response?.data['message']}] DioException: $e");
@@ -81,16 +77,37 @@ class ScriptInputCtr extends GetxController {
     }
   }
 
+  Future<ExpectedTimeModel> getExpectedTime(int themeId, int scriptId) async {
+    Dio dio = Dio();
+    final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
+    return await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
+  }
+
+  int getThemeId() {
+    LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
+    String? themeId = localPracticeThemeStorage.getThemeId();
+    if(themeId == null || themeId == "") throw(Exception("[getThemeId] theme id is null or empty string!"));
+    return int.parse(themeId);
+  }
+
   void inputConfirmBtn(BuildContext context) async {
-    ScriptIdModel scriptIdModel = await postScript();
+    int themeId = getThemeId();
+    ScriptIdModel scriptIdModel = await postScript(themeId);
+    int scriptId = scriptIdModel.scriptId ?? 0;
     await saveScriptContent();
-    await saveScriptId(scriptIdModel.scriptId ?? 0);
-    Navigator.pushNamed(context, '/scriptInput/result');
+    await saveScriptId(scriptId);
+
+    if(context.mounted) {
+      Navigator.pushNamed(context, '/scriptInput/result');
+    }
+
+    scriptExpectedTimeScriptInit(themeId, scriptId);
+  }
+
+  Future<void> scriptExpectedTimeScriptInit(int themeId, int scriptId) async {
     isLoading.value = true;
     scriptExpectedTime.value = null;
-    _scriptExpectedTime = await _scriptExpectedTimeDataSource.getExpectedTimeTest();
-    _scriptExpectedTime?.expectedTimePerParagraphs?.sort((a, b) => (a?.paragraphId ?? 0).compareTo(b?.paragraphId ?? 0));
-    _scriptExpectedTime?.paragraphs?.sort((a, b) => (a?.id ?? 0).compareTo(b?.id ?? 0));
+    _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
     scriptExpectedTime.value = _scriptExpectedTime;
     isLoading.value = false;
   }
