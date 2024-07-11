@@ -109,7 +109,7 @@ class VoiceRecodeCtr extends GetxController {
     _startRecording();
   }
 
-  void stopPracticeWithScrip() {
+  void stopPracticeWithScript() {
     // _stopRecodingWhenScrollIsEndListener()에 의해 자동으로 음성 녹음 중지
     // 스크롤 위치가 마지막으로 설정되어 _startAutoScrollingAnimation() 자동 종료
     _setScrollingToEnd();
