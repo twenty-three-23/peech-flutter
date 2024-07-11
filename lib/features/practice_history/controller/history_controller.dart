@@ -107,7 +107,8 @@ class HistoryCtr extends GetxController {
   }
 
   void clickThemeList(int index) {
-    historyPath.value.setTheme(themeList.value?.themes?[index].themeId ?? 0);
+    print("선택 테마: ${themeList.value?.themes?[index].themeId}");
+    historyPath.value.setTheme(themeList.value?.themes?[index].themeId);
     initMajorScrollController();
   }
 
