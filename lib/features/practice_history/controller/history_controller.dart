@@ -133,20 +133,24 @@ class HistoryCtr extends GetxController {
     });
   }
 
-
+  //TODO 테스트 코드 제거하기
   void addGetCurrentListListener() {
-    getThemeList();
+    getThemeListTest();
+    // getThemeList();
     historyPath.value.pathState.listen((newState) {
       setPathScrollPosToEndWithAni();
       switch(newState) {
         case HistoryPathState.themeList:
-          getThemeList();
+          getMajorListTest();
+          // getThemeList();
           break;
         case HistoryPathState.majorList:
-          getMajorList();
+          getMajorListTest();
+          // getMajorList();
           break;
         case HistoryPathState.minorList:
-          getMinorList();
+          getMinorListTest();
+          // getMinorList();
           break;
         case HistoryPathState.minorDetail:
           break;

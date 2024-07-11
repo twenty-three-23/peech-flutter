@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
+import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
@@ -60,6 +61,13 @@ class Routers {
     GetPage(
       name: '/historyThemeList',
       page: () => const HistoryScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HistoryCtr>(() => HistoryCtr());
+      })
+    ),
+    GetPage(
+      name: '/historyMajorDetail',
+      page: () => const HistoryMajorDetailScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
       })
