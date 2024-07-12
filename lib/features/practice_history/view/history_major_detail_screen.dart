@@ -11,7 +11,7 @@ class HistoryMajorDetailScreen extends StatelessWidget {
 
     HistoryCtr controller = Get.find<HistoryCtr>();
     HistoryMajorModel? major = controller.majorList.value?.majorScripts?.firstWhereOrNull((element) => element.majorVersion == controller.historyPath.value.major);
-    print("major: $major");
+    print("major: ${controller.historyPath.value.major}");
 
     return Scaffold(
       appBar: AppBar(

@@ -67,7 +67,7 @@ class HistoryCtr extends GetxController {
       ]);
       final historyMajorDataSource = RemoteMajorListDataSource(dio);
       majorList.value = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
-      print("메이저 리스트 개수: ${majorList.value?.majorScripts?.length}");
+      print("메이저 개수: ${majorList.value?.majorScripts?.length}");
     } on DioException catch(e) {
       print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
@@ -113,12 +113,12 @@ class HistoryCtr extends GetxController {
   }
 
   void clickMajorList(int index) {
-    historyPath.value.setMajor(majorList.value?.majorScripts?[index].scriptId ?? 0);
+    historyPath.value.setMajor(majorList.value?.majorScripts?[index].majorVersion ?? 0);
     initMinorScrollController();
   }
 
   void clickMinorList(int index) {
-    historyPath.value.setMinor(minorList.value?.minorScripts?[index].scriptId ?? 0);
+    historyPath.value.setMinor(minorList.value?.minorScripts?[index].minorVersion ?? 0);
   }
 
   void setPathScrollPosToEndWithAni() {
