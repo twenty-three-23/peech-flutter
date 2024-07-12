@@ -84,9 +84,19 @@ class ScriptInputCtr extends GetxController {
   }
 
   Future<ExpectedTimeModel> getExpectedTime(int themeId, int scriptId) async {
-    Dio dio = Dio();
-    final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
-    return await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
+    try {
+      Dio dio = Dio();
+      dio.interceptors.add(DebugIntercepter());
+      final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
+      ExpectedTimeModel expectedTimeModel = await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
+      return expectedTimeModel;
+    } on DioException catch(e) {
+      print("[getExpectedTime] message:[${e.response?.data['message']}] DioException: $e");
+      rethrow;
+    } catch(e) {
+      print("[getExpectedTime] Exception: $e");
+      rethrow;
+    }
   }
 
   Future<ExpectedTimeModel> getExpectedTimeTest() async {
@@ -113,7 +123,7 @@ class ScriptInputCtr extends GetxController {
       Navigator.pushNamed(context, '/scriptInput/result');
     }
 
-    scriptExpectedTimeScriptInit(themeId, scriptId);
+    await scriptExpectedTimeScriptInit(themeId, scriptId);
   }
 
   Future<void> scriptExpectedTimeScriptInit(int themeId, int scriptId) async {
