@@ -62,8 +62,18 @@ class ScriptInputCtr extends GetxController {
     await LocalScriptStorage().setScriptId(scriptId);
   }
 
-  void gotoPracticeBtn(BuildContext context) {
+  void gotoPracticeBtn(BuildContext context) async {
+    int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
+    await LocalScriptStorage().setScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
     Navigator.pushNamed(context, '/voiceRecodeWithScript');
+  }
+
+  int toMilliSec(String expectedTime) {
+    List<String> timeList = expectedTime.split(":");
+    int hour = int.parse(timeList[0]);
+    int min = int.parse(timeList[1]);
+    int sec = int.parse(timeList[2]);
+    return (hour * 60 * 60 + min * 60 + sec) * 1000;
   }
 
   Future<ScriptIdModel> postScript(int themeId) async {

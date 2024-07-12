@@ -110,7 +110,8 @@ class VoiceRecodeCtr extends GetxController {
   void startPracticeWithScript() async {
     _startRecording();
     _stopRecodingWhenScrollIsEndListener();
-    _startAutoScrollingAnimation();
+    int totalExpectedTime = LocalScriptStorage().getScriptTotalExpectedTimeMilli() ?? 0;
+    _startAutoScrollingAnimation(totalExpectedTime);
   }
 
   void startPracticeNoScript() {
@@ -137,11 +138,11 @@ class VoiceRecodeCtr extends GetxController {
     });
   }
 
-  Future<void> _startAutoScrollingAnimation() async {
+  Future<void> _startAutoScrollingAnimation(int milliSec) async {
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     await scriptScrollController.animateTo(
       scriptScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 10000),
+      duration: Duration(milliseconds: milliSec),
       curve: Curves.linear,
     );
   }
