@@ -52,10 +52,13 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                                   onChanged: (value) {
                                     controller.updateScript(index, value);
                                   },
-                                  decoration: InputDecoration(
+                                  buildCounter: (context,
+                                      {required currentLength, required isFocused, maxLength}) {
+                                    return Text("$currentLength 자");
+                                  },
+                                  decoration: const InputDecoration(
                                       hintText: "문단을 입력해주세요",
-                                      border: const OutlineInputBorder(),
-                                      counterText: "${controller.script.value[index].text.length} 자"
+                                      border: OutlineInputBorder(),
                                   ),
                                 ),
                               ),
