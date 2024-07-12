@@ -62,7 +62,7 @@ class VoiceRecodeCtr extends GetxController {
 
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       recodingStopWatch.refresh();
-      recodingTimeLimit(recodingStopWatch.value);
+      checkRecodingTimeLimit(recodingStopWatch.value);
     });
 
     await _recorder!.startRecorder(
@@ -72,7 +72,7 @@ class VoiceRecodeCtr extends GetxController {
     isRecording.value = true;
   }
 
-  void recodingTimeLimit(Stopwatch recodingStopWatch) {
+  void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
     if(recodingStopWatch.elapsedMilliseconds >= Constants.recodeLimitMilliTimes) {
       _stopRecording();
     }
