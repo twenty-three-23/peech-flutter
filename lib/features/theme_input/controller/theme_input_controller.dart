@@ -26,6 +26,11 @@ class ThemeInputCtr extends GetxController {
     await LocalPracticeThemeStorage().setThemeId(themeIdModel.themeId.toString());
   }
 
+  Future<void> saveThemeTest() async {
+    await LocalPracticeThemeStorage().setThemeText("test theme");
+    await LocalPracticeThemeStorage().setThemeId("1");
+  }
+
   Future<ThemeIdModel> getThemeId(String theme) async {
     try {
       Dio dio = Dio();

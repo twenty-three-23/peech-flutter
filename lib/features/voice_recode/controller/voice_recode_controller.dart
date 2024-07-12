@@ -62,7 +62,7 @@ class VoiceRecodeCtr extends GetxController {
 
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       recodingStopWatch.refresh();
-      recodingTimeLimit(recodingStopWatch.value);
+      checkRecodingTimeLimit(recodingStopWatch.value);
     });
 
     await _recorder!.startRecorder(
@@ -72,7 +72,7 @@ class VoiceRecodeCtr extends GetxController {
     isRecording.value = true;
   }
 
-  void recodingTimeLimit(Stopwatch recodingStopWatch) {
+  void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
     if(recodingStopWatch.elapsedMilliseconds >= Constants.recodeLimitMilliTimes) {
       _stopRecording();
     }
@@ -110,7 +110,8 @@ class VoiceRecodeCtr extends GetxController {
   void startPracticeWithScript() async {
     _startRecording();
     _stopRecodingWhenScrollIsEndListener();
-    _startAutoScrollingAnimation();
+    int totalExpectedTime = LocalScriptStorage().getScriptTotalExpectedTimeMilli() ?? 0;
+    _startAutoScrollingAnimation(totalExpectedTime);
   }
 
   void startPracticeNoScript() {
@@ -137,11 +138,11 @@ class VoiceRecodeCtr extends GetxController {
     });
   }
 
-  Future<void> _startAutoScrollingAnimation() async {
+  Future<void> _startAutoScrollingAnimation(int milliSec) async {
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     await scriptScrollController.animateTo(
       scriptScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 10000),
+      duration: Duration(milliseconds: milliSec),
       curve: Curves.linear,
     );
   }

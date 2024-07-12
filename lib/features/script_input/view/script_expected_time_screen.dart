@@ -17,7 +17,7 @@ class ScriptExpectedTimeScreen extends StatelessWidget {
       body: GetX<ScriptInputCtr>(
         builder: (_) {
           if(controller.isLoading.value == true) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -28,18 +28,18 @@ class ScriptExpectedTimeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("전체 예상시간: ${controller.scriptExpectedTime.value?.expectedAllTime ?? "전체 예상시간 결과 존재하지 않음"}"),
+                    Text("전체 예상시간: ${controller.scriptExpectedTime.value?.expectedTimeByScript ?? "예상 시간 결과 존재하지 않음"}"),
                     ListView.builder(
                       shrinkWrap: true,
                       primary: false,
-                      itemCount: controller.scriptExpectedTime.value?.paragraphs?.length ?? 0,
+                      itemCount: controller.expectedTimeScript.value?.length ?? 0,
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 10,),
-                            Text("${index + 1}번째 문단 - ${controller.scriptExpectedTime.value?.expectedTimePerParagraphs?[index]?.time ?? "예상 시간 결과 존재하지 않음"}"),
-                            Text(controller.scriptExpectedTime.value?.paragraphs?[index]?.paragraph ?? "문단 결과 존재하지 않음"),
+                            Text("${index + 1}번째 문단 - ${controller.scriptExpectedTime.value?.expectedTimeByParagraphs[index].expectedTimePerParagraph ?? "예상 시간 결과 존재하지 않음"}"),
+                            Text(controller.expectedTimeScript.value?[index] ?? "문단 결과 존재하지 않음"),
                           ],
                         );
                       },

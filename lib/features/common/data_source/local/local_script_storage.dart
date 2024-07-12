@@ -8,6 +8,7 @@ class LocalScriptStorage {
 
   static const CURRENT_SCRIPT_CONTENT_KEY = "currentScriptContent";
   static const CURRENT_SCRIPT_ID_KEY = "currentScriptId";
+  static const CURRENT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY = "currentScriptTotalExpectedTime";
 
   factory LocalScriptStorage() {
     return _instance;
@@ -38,6 +39,16 @@ class LocalScriptStorage {
   int? getScriptId() {
     debugPrint("불러옴: scriptId: ${_prefs.getInt(CURRENT_SCRIPT_ID_KEY)}");
     return _prefs.getInt(CURRENT_SCRIPT_ID_KEY);
+  }
+
+  Future<void> setScriptTotalExpectedTimeMilli(int scriptTotalExpectedTime) async {
+    debugPrint("저장함: scriptTotalExpectedTime: ${scriptTotalExpectedTime}");
+    await _prefs.setInt(CURRENT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY, scriptTotalExpectedTime);
+  }
+
+  int? getScriptTotalExpectedTimeMilli() {
+    debugPrint("불러옴: scriptTotalExpectedTime: ${_prefs.getInt(CURRENT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY)}");
+    return _prefs.getInt(CURRENT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY);
   }
 
 }
