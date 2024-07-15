@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:swm_peech_flutter/features/common/constant/constant.dart';
+import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
@@ -14,7 +14,8 @@ class VoiceRecodeCtr extends GetxController {
   FlutterSoundPlayer? _player;
   Rx<bool> isRecording = false.obs;
   Rx<bool> isPlaying = false.obs;
-  final String _path = 'audio_recording.aac';
+
+  late final String _path;
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
   Rx<PracticeState> practiceState = PracticeState.BEFORETOSTART.obs;
@@ -24,8 +25,9 @@ class VoiceRecodeCtr extends GetxController {
   Timer? _timer;
 
   @override
-  void onInit() {
+  void onInit() async {
     script = LocalScriptStorage().getScriptContent();
+    _path = await RecodingFileUtil().getFilePath();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();
