@@ -13,29 +13,38 @@ class HistoryScreen extends StatelessWidget {
 
     final controller = Get.find<HistoryCtr>();
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { controller.backButton(context); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("발표 기록"),
-      ),
-      body: GetX<HistoryCtr>(
-        builder: (_) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: historyPathView(controller)
-              ),
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: historyListView(context, controller)
-                ),
-              ),
-            ],
-          );
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if(!didPop) {
+          controller.backButton(context);
+
         }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(onPressed: () { controller.backButton(context); }, icon: const Icon(Icons.arrow_back_ios)),
+          title: const Text("발표 기록"),
+        ),
+        body: GetX<HistoryCtr>(
+          builder: (_) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: historyPathView(controller)
+                ),
+                Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: historyListView(context, controller)
+                  ),
+                ),
+              ],
+            );
+          }
+        ),
       ),
     );
   }
