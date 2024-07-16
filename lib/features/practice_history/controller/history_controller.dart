@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
@@ -9,10 +11,12 @@ import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_intercep
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_major_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
@@ -32,6 +36,24 @@ class HistoryCtr extends GetxController {
 
 
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
+
+  Rx<HistoryMajorParagraphsModel?> majorDetail = Rx<HistoryMajorParagraphsModel?>(null);
+  HistoryMajorParagraphsModel? _majorDetail;
+
+  Future<void> getMajorDetail(int themeId, int scriptId) async {
+    try {
+      Dio dio = Dio();
+      dio.interceptors.add(DebugIntercepter());
+      final remoteMajorDetailDataSource = RemoteMajorDetailDataSource(dio);
+      _majorDetail = await remoteMajorDetailDataSource.getMajorDetail(themeId, scriptId);
+    } on DioException catch(e) {
+      print("[getMajorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch(e) {
+      print("[getMajorDetail] [Exception] $e");
+      rethrow;
+    }
+  }
 
   void getThemeList() async {
     try {
@@ -176,6 +198,15 @@ class HistoryCtr extends GetxController {
     else {
       historyPath.value.back();
     }
+  }
+
+  void majorDetailButton(BuildContext context) async {
+    majorDetail.value = null;
+    Navigator.pushNamed(context, '/historyMajorDetail');
+    int themeId = historyPath.value.theme ?? 0;
+    int scriptId = majorList.value?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
+    await getMajorDetail(themeId, scriptId); //TODO 이 방식과 _majorDetail = getMajorDetail(themeId, scriptId); 방식 중 옳은 것.
+    majorDetail.value = _majorDetail; //TODO 변수를 매번 화면에 보이는 것과 데이터를 가지고 있는 것으로 나눠야 하는가? 그냥 바로 majorDetail = getMajorDetail(themeId, scriptId); 해도 되는 것 아닌가?
   }
 
   @override
