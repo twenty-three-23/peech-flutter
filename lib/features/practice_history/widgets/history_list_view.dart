@@ -15,7 +15,7 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
     case HistoryPathState.minorList:
       return Column(
         children: [
-          TextButton(onPressed: () { Navigator.pushNamed(context, '/historyMajorDetail'); }, child: const Text("기존 대본 보기")),
+          TextButton(onPressed: () { controller.majorDetailButton(context); }, child: const Text("기존 대본 보기")),
           Expanded(child: minorListView(controller)),
         ],
       );
