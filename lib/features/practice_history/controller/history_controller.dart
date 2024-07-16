@@ -133,6 +133,7 @@ class HistoryCtr extends GetxController {
 
   void getMinorDetail() async {
     try { //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
+      minorDetail.value = null;
       Dio dio = Dio();
       dio.interceptors.addAll([
         DebugIntercepter()
