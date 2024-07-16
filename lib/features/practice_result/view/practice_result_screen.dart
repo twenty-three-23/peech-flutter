@@ -42,22 +42,47 @@ class PracticeResultScreen extends StatelessWidget {
                           itemBuilder: (BuildContext context, int index) {
                             return Column(
                               children: [
-                                if(index == 0)
-                                  GestureDetector(
-                                      onTap: () { controller.insertNewParagraph(0); },
+                                Stack(
+                                  alignment: Alignment.bottomLeft,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "${controller.practiceResult.value?.script?[index].time ?? "??:??:??"}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        const SizedBox(width: 2,),
+                                        const Text(
+                                          "측정",
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      onTap: () { controller.insertNewParagraph(index); },
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.add, color: Colors.grey,),
-                                          Text(
-                                            "문단 추가",
-                                            style: TextStyle(
+                                          children: [
+                                            Icon(Icons.add, color: Colors.grey,),
+                                            Text(
+                                              "문단 추가",
+                                              style: TextStyle(
                                                 color: Colors.grey
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
+                                          ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                                   child: Stack(
@@ -107,23 +132,23 @@ class PracticeResultScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                GestureDetector(
-                                    onTap: () { controller.insertNewParagraph(index + 1); },
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add, color: Colors.grey,),
-                                        Text(
-                                          "문단 추가",
-                                          style: TextStyle(
-                                            color: Colors.grey
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                ),
                                 if(index + 1 == controller.practiceResult.value?.script?.length)
-                                  const SizedBox(height: 20,),
+                                  GestureDetector(
+                                      onTap: () { controller.insertNewParagraph(index + 1); },
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.add, color: Colors.grey,),
+                                          Text(
+                                            "문단 추가",
+                                            style: TextStyle(
+                                                color: Colors.grey
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                  ),
+
 
                               ],
                             );
