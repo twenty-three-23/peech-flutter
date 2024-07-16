@@ -32,6 +32,7 @@ class PracticeResultCtr extends GetxController {
 
   Future<ParagraphListModel> postPracticeResult() async {
    try {
+     print('postPracticeResult() called');
      Dio dio = Dio();
      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
      int themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');

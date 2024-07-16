@@ -11,5 +11,5 @@ abstract class RemotePracticeResultDataSource {
   factory RemotePracticeResultDataSource(Dio dio, {String baseUrl}) = _RemotePracticeResultDataSource;
 
   @POST("themes/{themeId}/scripts/{scriptId}/speech/script")
-  Future<ParagraphListModel> getPracticeResultList(@Path("themeId") int themeId, @Path("scriptId") int scriptId, @Part() File file);
+  Future<ParagraphListModel> getPracticeResultList(@Path("themeId") int themeId, @Path("scriptId") int scriptId, @Part(name: 'file') File file);
 }
