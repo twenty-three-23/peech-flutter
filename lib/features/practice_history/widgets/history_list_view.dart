@@ -20,6 +20,6 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
         ],
       );
     case HistoryPathState.minorDetail:
-      return minorDetailView();
+      return minorDetailView(controller);
   }
 }
