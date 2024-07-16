@@ -11,10 +11,12 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/mock/moc
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/history_minor_detail_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
@@ -37,6 +39,9 @@ class HistoryCtr extends GetxController {
 
   Rx<HistoryMajorParagraphsModel?> majorDetail = Rx<HistoryMajorParagraphsModel?>(null);
   HistoryMajorParagraphsModel? _majorDetail;
+
+  Rx<HistoryMinorDetailModel?> minorDetail = Rx<HistoryMinorDetailModel?>(null);
+  HistoryMinorDetailModel? _minorDetail;
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {
     try {
@@ -126,6 +131,27 @@ class HistoryCtr extends GetxController {
     minorList.value = await historyMinorDataSource.getMinorListTest();
   }
 
+  void getMinorDetail() async {
+    try { //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        DebugIntercepter()
+      ]);
+      final remoteMinorDetailDataSource = RemoteMinorDetailDataSource(dio);
+      final themeId = historyPath.value.theme ?? 0;
+      final majorVersion = historyPath.value.major ?? 0;
+      final minorVersion = historyPath.value.minor ?? 0;
+      _minorDetail = await remoteMinorDetailDataSource.getMinorDetail(themeId, majorVersion, minorVersion);
+      minorDetail.value = _minorDetail; //TODO ui 업데이트를 get함수 내에서 처리해주는게 맞는가? get은 가져오는역할만 하는줄 알았는데 ui가 업데이트되는 사이드 이펙트가 생길수도?
+    } on DioException catch(e) {
+      print("[getMinorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch(e) {
+      print("[getMinorDetail] [Exception] $e");
+      rethrow;
+    }
+}
+
   void clickThemeList(int index) {
     print("선택 테마: ${themeList.value?.themes?[index].themeId}");
     historyPath.value.setTheme(themeList.value?.themes?[index].themeId);
@@ -168,6 +194,7 @@ class HistoryCtr extends GetxController {
           getMinorList();
           break;
         case HistoryPathState.minorDetail:
+          getMinorDetail();
           break;
       }
     });
