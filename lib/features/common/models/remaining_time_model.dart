@@ -4,10 +4,12 @@ part 'remaining_time_model.g.dart';
 
 @JsonSerializable()
 class RemainingTimeModel {
-  final int remainingTime;
+  final String? text;
+  final int? second;
 
   RemainingTimeModel({
-    required this.remainingTime,
+    this.text,
+    this.second
   });
 
   factory RemainingTimeModel.fromJson(Map<String, dynamic> json) => _$RemainingTimeModelFromJson(json);
