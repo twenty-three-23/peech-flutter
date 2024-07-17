@@ -85,60 +85,65 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: ListView.builder(
+          child: CustomScrollView(
             key: _controller.scriptListViewKey,
             controller: _controller.scriptScrollController,
             physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(8),
-            itemCount: _controller.script?.length ?? 0,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10,),
-                  Text(_controller.script?[index] ?? ''),
-                  if(index + 1 == _controller.script?.length)
-                    GetX<VoiceRecodeCtr>(
-                      builder: (_) => Container(
-                        height: _controller.scriptListViewSize.value,
-                        alignment: Alignment.center,
-                        child: _controller.practiceState.value == PracticeState.ENDRECODING
-                          ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () { _controller.endPractice(context); },
-                                  child: const Text("분석 받기")
-                              ),
-                              IntrinsicWidth(
-                                child: ElevatedButton(
-                                    onPressed: () { _controller.startPracticeWithScript(); },
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        const Text("다시 녹음하기"),
-                                        _controller.maxAudioTime.value == null
-                                            ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
-                                            : Text(
-                                          "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                ),
-                              ),
-                            ],
-                          )
-                          : const Text(""),
-                      ),
-                    ),
-                ],
-              );
-            }
-          ),
-        ),
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: 10,),
+                            Text(_controller.script?[index] ?? ''),
+                          ],
+                        );
+                  },
+                  childCount: (_controller.script?.length ?? 0),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: GetX<VoiceRecodeCtr>(
+                  builder: (_) => Container(
+                    height: _controller.scriptListViewSize.value,
+                    alignment: Alignment.center,
+                    child: _controller.practiceState.value == PracticeState.ENDRECODING
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () { _controller.endPractice(context); },
+                            child: const Text("분석 받기")
+                        ),
+                        IntrinsicWidth(
+                          child: ElevatedButton(
+                              onPressed: () { _controller.startPracticeWithScript(); },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text("다시 녹음하기"),
+                                  _controller.maxAudioTime.value == null
+                                      ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
+                                      : Text(
+                                    "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  )
+                                ],
+                              )
+                          ),
+                        ),
+                      ],
+                    )
+                        : const Text(""),
+                  ),
+                ),
+              ),
+            ],
+          )
+      ),
     );
   }
 }
