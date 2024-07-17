@@ -14,20 +14,23 @@ Widget minorDetailView(HistoryCtr controller) {
             itemBuilder: (BuildContext context, int index) {
               return Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.bottomLeft,
+                  if(index == 0)
+                    Text(
+                      "전체: ${controller.minorDetail.value?.totalRealTime}",
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "${controller.minorDetail.value?.paragraphDetails?[index].realTimePerParagraph}",
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "${controller.minorDetail.value?.paragraphDetails?[index].realTimePerParagraph}",
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold
+                        ),
                       ),
                     ],
                   ),
@@ -50,7 +53,7 @@ Widget minorDetailView(HistoryCtr controller) {
                                     height: 1.4
                                 ),
                                 children: [
-                                  for(int j = 0; j < (controller.minorDetail.value?.paragraphDetails?.length ?? 0); j++)
+                                  for(int j = 0; j < (controller.minorDetail.value?.paragraphDetails?[index].sentences?.length ?? 0); j++)
                                     TextSpan(
                                         text: "${controller.minorDetail.value?.paragraphDetails?[index].sentences?[j]} ",
                                     )
