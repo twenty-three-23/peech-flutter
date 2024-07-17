@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
@@ -22,6 +23,9 @@ class Routers {
     GetPage(
       name: '/home',
       page: () => const HomeScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HomeCtr>(() => HomeCtr());
+      })
     ),
     GetPage(
       name: '/scriptInput/input',
