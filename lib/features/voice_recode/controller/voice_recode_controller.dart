@@ -1,10 +1,15 @@
+import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
@@ -24,15 +29,40 @@ class VoiceRecodeCtr extends GetxController {
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
   Timer? _timer;
 
+  MaxAudioTimeModel? _maxAudioTime;
+  Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getScriptContent();
     _path = await RecodingFileUtil().getFilePath();
+    getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();
     _getListViewHeight();
     super.onInit();
+  }
+
+  void getMaxAudioTime() async {
+    try {
+      _maxAudioTime = null;
+      maxAudioTime.value = null;
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
+      ]);
+      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(dio);
+      _maxAudioTime = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
+      maxAudioTime.value = _maxAudioTime;
+    } on DioException catch(e) {
+      print("[getRemainingTime] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      rethrow;
+    } catch(e) {
+      print("[getRemainingTime] Exception: ${e}");
+      rethrow;
+    }
   }
 
 
@@ -75,7 +105,7 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
-    if(recodingStopWatch.elapsedMilliseconds >= Constants.recodeLimitMilliTimes) {
+    if(recodingStopWatch.elapsedMilliseconds >= (_maxAudioTime?.second ?? 0) * 1000) {
       _stopRecording();
     }
   }
@@ -110,6 +140,9 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeWithScript() async {
+    if(_maxAudioTime == null || _maxAudioTime?.second == null) {
+      throw Exception('maxAudioTime is null!');
+    }
     _startRecording();
     _stopRecodingWhenScrollIsEndListener();
     int totalExpectedTime = LocalScriptStorage().getScriptTotalExpectedTimeMilli() ?? 0;
@@ -117,6 +150,9 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeNoScript() {
+    if(_maxAudioTime == null || _maxAudioTime?.second == null) {
+      throw Exception('maxAudioTime is null!');
+    }
     _startRecording();
   }
 
