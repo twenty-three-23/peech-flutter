@@ -2,16 +2,21 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_result_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/usage_time_check_model.dart';
 
 class PracticeResultCtr extends GetxController {
 
@@ -21,8 +26,32 @@ class PracticeResultCtr extends GetxController {
 
 
   void getPracticeResult() async {
+    await checkRecodeFileDuration();
+    //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
     _practiceResult = await postPracticeResult();
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
+  }
+
+  Future<void> checkRecodeFileDuration() async {
+    try {
+      Duration duration = await RecodingFileUtil().getDuration();
+      int seconds = duration.inSeconds;
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        AutoTokenRegisterIntercepter(localDeviceUuidStorage: LocalDeviceUuidStorage()),
+        DebugIntercepter(),
+      ]);
+      RemoteFileDurationCheckDataSource remoteFileDurationCheckDataSource = RemoteFileDurationCheckDataSource(dio);
+      UsageTimeCheckModel usageTimeCheck = await remoteFileDurationCheckDataSource.checkFileDuration(seconds);
+      print("응답: ${usageTimeCheck.message}");
+    } on DioException catch(e) {
+      print("[checkRecodeFileDuration] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      rethrow;
+    } catch(e) {
+      print("[checkRecodeFileDuration] Exception: ${e}");
+      rethrow;
+    }
   }
 
   Future<File> getRecodingFile() async {

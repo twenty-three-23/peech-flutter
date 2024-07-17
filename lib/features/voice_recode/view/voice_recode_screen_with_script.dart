@@ -45,7 +45,23 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
             GetX<VoiceRecodeCtr>(
               builder: (_) {
                 if(_controller.practiceState.value == PracticeState.BEFORETOSTART) {
-                  return ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("녹음 시작"));
+                  return ElevatedButton(
+                      onPressed: () { _controller.startPracticeWithScript(); },
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text("녹음 시작"),
+                          _controller.maxAudioTime.value == null
+                              ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
+                              : Text(
+                                  "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                )
+                        ],
+                      )
+                  );
                 } else if(_controller.practiceState.value == PracticeState.RECODING) {
                   return Row(
                     children: [
@@ -90,8 +106,29 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                           ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton(onPressed: () { _controller.endPractice(context); }, child: const Text("분석 받기")),
-                              ElevatedButton(onPressed: () { _controller.startPracticeWithScript(); }, child: const Text("다시 녹음하기")),
+                              ElevatedButton(
+                                  onPressed: () { _controller.endPractice(context); },
+                                  child: const Text("분석 받기")
+                              ),
+                              IntrinsicWidth(
+                                child: ElevatedButton(
+                                    onPressed: () { _controller.startPracticeWithScript(); },
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        const Text("다시 녹음하기"),
+                                        _controller.maxAudioTime.value == null
+                                            ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
+                                            : Text(
+                                          "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                ),
+                              ),
                             ],
                           )
                           : const Text(""),
