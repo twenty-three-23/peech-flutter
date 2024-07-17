@@ -5,7 +5,14 @@ import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 
 class RecodingFileUtil {
 
-  //TODO 녹음 시작, 종료 등의 기능도 여기다가 구현해 두고 사용해야 하나?
+  //TODO 1. 이런식으로 해도 괜찮을까?
+  //TODO 2. 녹음 시작, 종료 등의 기능도 여기다가 구현해 두고 사용해야 하나?
+
+  FlutterSoundPlayer player = FlutterSoundPlayer();
+
+  RecodingFileUtil() {
+    player.openPlayer();
+  }
 
   Future<String> getFilePath() async {
     String fileName = Constants.recodingFileName;
@@ -17,7 +24,6 @@ class RecodingFileUtil {
 
   Future<Duration> getDuration() async {
     String path = await getFilePath();
-    FlutterSoundPlayer player = FlutterSoundPlayer();
     Duration? duration = await player.startPlayer(
       fromURI: path,
       codec: Codec.defaultCodec,

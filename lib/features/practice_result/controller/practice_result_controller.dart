@@ -26,13 +26,13 @@ class PracticeResultCtr extends GetxController {
 
 
   void getPracticeResult() async {
-    checkRecodeFileDuration();
+    await checkRecodeFileDuration();
     //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
     _practiceResult = await postPracticeResult();
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
   }
 
-  void checkRecodeFileDuration() async {
+  Future<void> checkRecodeFileDuration() async {
     try {
       Duration duration = await RecodingFileUtil().getDuration();
       int seconds = duration.inSeconds;
@@ -44,7 +44,7 @@ class PracticeResultCtr extends GetxController {
       ]);
       RemoteFileDurationCheckDataSource remoteFileDurationCheckDataSource = RemoteFileDurationCheckDataSource(dio);
       UsageTimeCheckModel usageTimeCheck = await remoteFileDurationCheckDataSource.checkFileDuration(seconds);
-      print("응답: usageTimeCheck.message");
+      print("응답: ${usageTimeCheck.message}");
     } on DioException catch(e) {
       print("[checkRecodeFileDuration] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
