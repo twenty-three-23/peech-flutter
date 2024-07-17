@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
@@ -28,7 +29,9 @@ class PracticeResultCtr extends GetxController {
   void getPracticeResult() async {
     await checkRecodeFileDuration();
     //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
-    _practiceResult = await postPracticeResult();
+    PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
+    if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
+    _practiceResult = await postPracticeResult(practiceMode);
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
   }
 
@@ -59,17 +62,27 @@ class PracticeResultCtr extends GetxController {
     return File(filePath);
   }
 
-  Future<ParagraphListModel> postPracticeResult() async {
+  Future<ParagraphListModel> postPracticeResult(PracticeMode practiceMode) async {
    try {
      print('postPracticeResult() called');
      Dio dio = Dio();
      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
-     int themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
-     int scriptId = LocalScriptStorage().getScriptId() ?? 0;
-     File voiceFile = await getRecodingFile();
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
-     ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeResultList(themeId, scriptId, voiceFile);
-     return paragraphListModel;
+
+     int themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+     if(practiceMode == PracticeMode.withScript) {
+       int scriptId = LocalScriptStorage().getScriptId() ?? 0;
+       File voiceFile = await getRecodingFile();
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile);
+       return paragraphListModel;
+     }
+     else {
+       File voiceFile = await getRecodingFile();
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile);
+       return paragraphListModel;
+     }
+
+
    } on DioException catch(e) {
      print("[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
      rethrow;
