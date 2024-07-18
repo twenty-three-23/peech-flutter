@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:swm_peech_flutter/features/common/utils/status_code_util.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_error_dialog.dart';
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
