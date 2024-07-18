@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/now_status.dart';
 import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class PracticeResultScreen extends StatelessWidget {
@@ -56,14 +57,33 @@ class PracticeResultScreen extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(width: 2,),
-                                        const Text(
-                                          "측정",
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        )
+                                        if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.realTime)
+                                          const Text(
+                                            "측정",
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.expectedTime)
+                                          const Text(
+                                            "예상",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.realAndExpectedTime)
+                                            const Text(
+                                              "측정+예상",
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            )
                                       ],
                                     ),
                                     GestureDetector(
