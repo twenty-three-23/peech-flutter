@@ -104,7 +104,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void insertNewParagraph(int index) {
-    practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, isCalculated: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "새 문단")]));
+    practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, nowStatus: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "새 문단")]));
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
     if(index + 1 == practiceResult.value?.script?.length) {
       setScrollToEnd();
