@@ -5,7 +5,7 @@ part 'sentence_model.g.dart';
 @JsonSerializable()
 class SentenceModel {
 
-  int? sentenceId;
+  String? sentenceId;
   int? sentenceOrder;
   String? sentenceContent;
 
