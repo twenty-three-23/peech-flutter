@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/now_status.dart';
 import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class PracticeResultScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class PracticeResultScreen extends StatelessWidget {
             builder: (_) => Column(
               children: [
                 Expanded(
-                  child: controller.practiceResult.value == null
+                  child: controller.isLoading.value == true
                       ? const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -56,14 +57,33 @@ class PracticeResultScreen extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(width: 2,),
-                                        const Text(
-                                          "측정",
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        )
+                                        if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.realTime)
+                                          const Text(
+                                            "측정",
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.expectedTime)
+                                          const Text(
+                                            "예상",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].nowStatus == NowStatus.realAndExpectedTime)
+                                            const Text(
+                                              "측정+예상",
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            )
                                       ],
                                     ),
                                     GestureDetector(
@@ -159,8 +179,13 @@ class PracticeResultScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: const Text("예상시간 재확인")),
-                    ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
+                    if(controller.isLoading.value == false)
+                      ElevatedButton(
+                          onPressed: () { controller.editingFinishBtn();  },
+                          child: const Text("예상시간 재확인")
+                      ),
+                    if(controller.isLoading.value == false)
+                      ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
                     ElevatedButton(
                       onPressed: () { controller.homeButton(context); },
                       child: const Text("홈")

@@ -1,3 +1,4 @@
+import 'package:swm_peech_flutter/features/practice_result/model/now_status.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
@@ -12,7 +13,7 @@ class MockPracticeResultDataSource {
           paragraphId: 1,
           paragraphOrder: 1,
           time: "00:00:00",
-          isCalculated: false,
+          nowStatus: NowStatus.realTime,
           sentences: [
             SentenceModel(
               sentenceId: 1,
@@ -60,7 +61,7 @@ class MockPracticeResultDataSource {
             paragraphId: 1,
             paragraphOrder: 1,
             time: "00:00:00",
-            isCalculated: false,
+            nowStatus: NowStatus.realTime,
             sentences: [
               SentenceModel(
                   sentenceId: 1,
@@ -73,7 +74,7 @@ class MockPracticeResultDataSource {
             paragraphId: 1,
             paragraphOrder: 1,
             time: "00:00:00",
-            isCalculated: false,
+            nowStatus: NowStatus.realTime,
             sentences: [
               SentenceModel(
                   sentenceId: 1,
@@ -86,7 +87,7 @@ class MockPracticeResultDataSource {
             paragraphId: 1,
             paragraphOrder: 1,
             time: "00:00:00",
-            isCalculated: false,
+            nowStatus: NowStatus.realTime,
             sentences: [
               SentenceModel(
                   sentenceId: 1,
@@ -99,7 +100,7 @@ class MockPracticeResultDataSource {
             paragraphId: 1,
             paragraphOrder: 1,
             time: "00:00:00",
-            isCalculated: false,
+            nowStatus: NowStatus.realTime,
             sentences: [
               SentenceModel(
                   sentenceId: 1,
