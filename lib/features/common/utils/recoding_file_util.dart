@@ -22,15 +22,13 @@ class RecodingFileUtil {
     return filePath;
   }
 
+  //TODO 이런식으로 구하는게 맞나?
   Future<Duration> getDuration() async {
     String path = await getFilePath();
     Duration? duration = await player.startPlayer(
       fromURI: path,
-      codec: Codec.defaultCodec,
-      whenFinished: () {
-        print('Finished playing');
-      },
     );
+    player.stopPlayer();
     if(duration == null) throw Exception("[getDuration] duration is null!");
     print("[getDuration] duration: $duration");
     return duration;
