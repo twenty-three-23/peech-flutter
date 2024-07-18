@@ -91,6 +91,10 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                 child: const Text("기록 보기")
             ),
+            TextButton(
+                onPressed: () { Navigator.pushNamed(context, '/practiceResult'); },
+                child: const Text("test")
+            ),
           ],
         ),
       ),

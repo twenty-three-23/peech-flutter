@@ -26,7 +26,7 @@ class PracticeResultScreen extends StatelessWidget {
             builder: (_) => Column(
               children: [
                 Expanded(
-                  child: controller.practiceResult.value == null
+                  child: controller.isLoading.value == true
                       ? const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -159,8 +159,13 @@ class PracticeResultScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: const Text("예상시간 재확인")),
-                    ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
+                    if(controller.isLoading.value == false)
+                      ElevatedButton(
+                          onPressed: () { controller.editingFinishBtn();  },
+                          child: const Text("예상시간 재확인")
+                      ),
+                    if(controller.isLoading.value == false)
+                      ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
                     ElevatedButton(
                       onPressed: () { controller.homeButton(context); },
                       child: const Text("홈")
