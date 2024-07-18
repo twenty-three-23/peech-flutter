@@ -31,6 +31,7 @@ class RecodingFileUtil {
         print('Finished playing');
       },
     );
+    player.stopPlayer();
     if(duration == null) throw Exception("[getDuration] duration is null!");
     print("[getDuration] duration: $duration");
     return duration;
