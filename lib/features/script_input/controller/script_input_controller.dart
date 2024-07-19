@@ -7,11 +7,11 @@ import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inj
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
-import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/script_input_paragraphs_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/script_id_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
 
 
 
@@ -69,11 +69,13 @@ class ScriptInputCtr extends GetxController {
   }
 
   int toMilliSec(String expectedTime) {
-    List<String> timeList = expectedTime.split(":");
+    List<String> time = expectedTime.split(".");
+    List<String> timeList = time[0].split(":");
     int hour = int.parse(timeList[0]);
     int min = int.parse(timeList[1]);
     int sec = int.parse(timeList[2]);
-    return (hour * 60 * 60 + min * 60 + sec) * 1000;
+    int milli = int.parse(time[1]);
+    return (hour * 60 * 60 + min * 60 + sec) * 1000 + milli;
   }
 
   Future<ScriptIdModel> postScript(int themeId, ScriptInputParagraphsModel script) async {
