@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
@@ -42,6 +44,22 @@ class HistoryCtr extends GetxController {
 
   Rx<HistoryMinorDetailModel?> minorDetail = Rx<HistoryMinorDetailModel?>(null);
   HistoryMinorDetailModel? _minorDetail;
+
+  Rx<bool> isLoading = false.obs;
+
+  @override
+  void onInit() {
+    addGetCurrentListListener();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    themeScrollController.dispose();
+    majorScrollController.dispose();
+    minorScrollController.dispose();
+    super.onClose();
+  }
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {
     try {
@@ -235,18 +253,20 @@ class HistoryCtr extends GetxController {
     majorDetail.value = _majorDetail; //TODO 변수를 매번 화면에 보이는 것과 데이터를 가지고 있는 것으로 나눠야 하는가? 그냥 바로 majorDetail = getMajorDetail(themeId, scriptId); 해도 되는 것 아닌가?
   }
 
-  @override
-  void onInit() {
-    addGetCurrentListListener();
-    super.onInit();
+  void startWithThemeWithScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
+    await LocalPracticeModeStorage().setMode(PracticeMode.withScript);
+    Navigator.pushNamed(context, '/scriptInput/input');
+    isLoading.value = false;
   }
 
-  @override
-  void onClose() {
-    themeScrollController.dispose();
-    majorScrollController.dispose();
-    minorScrollController.dispose();
-    super.onClose();
+  void startWithThemeNoScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
+    await LocalPracticeModeStorage().setMode(PracticeMode.noScript);
+    Navigator.pushNamed(context, '/voiceRecodeNoScript');
+    isLoading.value = false;
   }
 
 }
