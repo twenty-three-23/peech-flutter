@@ -185,7 +185,10 @@ class PracticeResultScreen extends StatelessWidget {
                           child: const Text("예상시간 재확인")
                       ),
                     if(controller.isLoading.value == false)
-                      ElevatedButton(onPressed: () {}, child: const Text("연습하기")),
+                      ElevatedButton(
+                          onPressed: () {},
+                          child: const Text("연습하기")
+                      ),
                     ElevatedButton(
                       onPressed: () { controller.homeButton(context); },
                       child: const Text("홈")

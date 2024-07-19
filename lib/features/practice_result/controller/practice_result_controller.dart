@@ -105,7 +105,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   int getScriptId() {
-    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
+    int scriptId = LocalScriptStorage().getInputScriptId() ?? 0;
     return scriptId;
   }
 
@@ -186,10 +186,10 @@ class PracticeResultCtr extends GetxController {
       int scriptId = getScriptId();
       _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, reqParagraphListModel);
     } on DioException catch(e) {
-      print("[editingFinishBtn] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[getEditingResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
     } catch(e) {
-      print("[editingFinishBtn] Exception: ${e}");
+      print("[getEditingResult] Exception: ${e}");
       rethrow;
     }
   }
