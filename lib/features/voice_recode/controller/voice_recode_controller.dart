@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
@@ -40,7 +41,7 @@ class VoiceRecodeCtr extends GetxController {
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();
-    _getListViewHeight();
+    _getListViewHeightOnWithScript();
     super.onInit();
   }
 
@@ -189,7 +190,10 @@ class VoiceRecodeCtr extends GetxController {
     scriptScrollController.jumpTo(scriptScrollController.position.maxScrollExtent);
   }
 
-  void _getListViewHeight() {
+  void _getListViewHeightOnWithScript() {
+    LocalPracticeModeStorage localPracticeModeStorage = LocalPracticeModeStorage();
+    PracticeMode? practiceMode = localPracticeModeStorage.getMode();
+    if(practiceMode != PracticeMode.withScript) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox = scriptListViewKey.currentContext?.findRenderObject() as RenderBox;
       scriptListViewSize.value = renderBox.size.height;
