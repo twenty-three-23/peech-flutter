@@ -10,7 +10,7 @@ import 'package:swm_peech_flutter/features/script_input/data_source/remote/remot
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/script_input_paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
 
 
@@ -84,7 +84,8 @@ class ScriptInputCtr extends GetxController {
       dio.interceptors.add(DebugIntercepter());
       dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
-      ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
+      ScriptIdModel? scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
+      if(scriptId == null) throw(Exception("[postScript] scriptId is null!"));
       return scriptId;
     } on DioException catch (e) {
       print("[postScript] request body: [${e.requestOptions.data}] message: [${e.response?.data['message']}] DioException: $e");

@@ -9,5 +9,5 @@ abstract class RemoteScriptInputDataSource {
   factory RemoteScriptInputDataSource(Dio dio, {String baseUrl}) = _RemoteScriptInputDataSource;
 
   @POST('themes/{themeId}/script')
-  Future<ScriptIdModel> postScript(@Path() int themeId, @Body() Map<String, dynamic> body);
+  Future<ScriptIdModel?> postScript(@Path() int themeId, @Body() Map<String, dynamic> body);
 }

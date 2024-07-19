@@ -9,6 +9,6 @@ class ScriptInputParagraphsModel {
 
   ScriptInputParagraphsModel({required this.paragraphs});
 
-  factory ScriptInputParagraphsModel.fromJson(Map<String, dynamic> json) => _$ParagraphsModelFromJson(json);
-  Map<String, dynamic> toJson() => _$ParagraphsModelToJson(this);
+  factory ScriptInputParagraphsModel.fromJson(Map<String, dynamic> json) => _$ScriptInputParagraphsModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ScriptInputParagraphsModelToJson(this);
 }

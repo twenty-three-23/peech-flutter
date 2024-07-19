@@ -6,9 +6,12 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_practi
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
@@ -284,11 +287,58 @@ class HistoryCtr extends GetxController {
     isLoading.value = true;
     await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
     await LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-    if(_majorDetail == null) throw Exception("[startWithMajorScriptBtn] major detail is null!");
+    if(_majorDetail == null) {
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] major detail is null!");
+    }
     List<String> scriptList = _majorDetail?.paragraphs?.map((e) => e.paragraphContent ?? '').toList() ?? [];
     await LocalScriptStorage().setScriptContent(scriptList);
     int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
     await LocalScriptStorage().setScriptId(scriptId);
+    Navigator.pushNamed(context, 'scriptInput/result');
+    isLoading.value = false;
+  }
+
+  void startWithMinorScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    int themeId = historyPath.value.theme ?? 0;
+    if(_minorDetail == null) {
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] minor detail is null!");
+    }
+    List<String> scriptList = [];
+    _minorDetail?.paragraphDetails?.forEach((element) {
+      String sentence = '';
+      element.sentences?.forEach((sentenceElement) {
+        sentence += sentenceElement;
+      });
+      scriptList.add(sentence);
+    });
+    ScriptInputParagraphsModel scriptInputParagraphsModel = ScriptInputParagraphsModel(paragraphs: scriptList);
+    ScriptIdModel? scriptIdModel;
+    // 대본 생성하기
+    try {
+      Dio dio = Dio();
+      dio.interceptors.add(DebugIntercepter());
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      scriptIdModel = await remoteScriptInputDataSource.postScript(themeId, scriptInputParagraphsModel.toJson());
+    } on DioException catch(e) {
+      print("[startWithMinorScriptBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
+      rethrow;
+    } catch(e) {
+      print("[startWithMinorScriptBtn] [Exception] $e");
+      isLoading.value = false;
+      rethrow;
+    }
+    if(scriptIdModel == null || scriptIdModel.scriptId == null) { //TODO 데이터 받아왔을 때 null인 경우를 매번 이렇게 처리해줘야 하는지. 아니면 인터셉터에서 처리?
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] scriptIdModel or scriptIdModel.scriptId is null!");
+    }
+    await LocalScriptStorage().setScriptId(scriptIdModel.scriptId ?? 0);
+    await LocalScriptStorage().setScriptContent(scriptList);
+    await LocalPracticeThemeStorage().setThemeId(themeId.toString()); //테마 아이디 current 테마 아이디로 로컬에 저장
+    await LocalPracticeModeStorage().setMode(PracticeMode.withScript); //연습 모드 스크립트 기반 모드로 저장
     Navigator.pushNamed(context, 'scriptInput/result');
     isLoading.value = false;
   }

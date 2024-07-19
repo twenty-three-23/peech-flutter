@@ -32,6 +32,11 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
         ],
       );
     case HistoryPathState.minorDetail:
-      return minorDetailView(controller);
+      return Column(
+        children: [
+          TextButton(onPressed: () { controller.startWithMinorScriptBtn(context); }, child: const Text("이 대본으로 시작하기")),
+          Expanded(child: minorDetailView(controller)),
+        ],
+      );
   }
 }
