@@ -116,6 +116,7 @@ class HistoryCtr extends GetxController {
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyMajorDataSource = RemoteMajorListDataSource(dio);
       _majorList = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
@@ -142,6 +143,7 @@ class HistoryCtr extends GetxController {
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyMinorDataSource = RemoteMinorListDataSource(dio);
       _minorList = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
