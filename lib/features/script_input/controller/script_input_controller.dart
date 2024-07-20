@@ -7,11 +7,11 @@ import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inj
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
-import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_input_data_source.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/paragraphs_model.dart';
-import 'package:swm_peech_flutter/features/script_input/model/script_id_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
 
 
 
@@ -19,7 +19,7 @@ class ScriptInputCtr extends GetxController {
 
   //대본 입력 데이터
   Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
-  final ParagraphsModel _script = ParagraphsModel(paragraphs: [ '' ]);
+  final ScriptInputParagraphsModel _script = ScriptInputParagraphsModel(paragraphs: [ '' ]);
 
   //발표 전 대본 기반 에상 시간
   ExpectedTimeModel? _scriptExpectedTime;
@@ -69,20 +69,23 @@ class ScriptInputCtr extends GetxController {
   }
 
   int toMilliSec(String expectedTime) {
-    List<String> timeList = expectedTime.split(":");
+    List<String> time = expectedTime.split(".");
+    List<String> timeList = time[0].split(":");
     int hour = int.parse(timeList[0]);
     int min = int.parse(timeList[1]);
     int sec = int.parse(timeList[2]);
-    return (hour * 60 * 60 + min * 60 + sec) * 1000;
+    int milli = int.parse(time[1]);
+    return (hour * 60 * 60 + min * 60 + sec) * 1000 + milli;
   }
 
-  Future<ScriptIdModel> postScript(int themeId) async {
+  Future<ScriptIdModel> postScript(int themeId, ScriptInputParagraphsModel script) async {
     try {
       Dio dio = Dio();
       dio.interceptors.add(DebugIntercepter());
       dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
-      ScriptIdModel scriptId = await remoteScriptInputDataSource.postScript(themeId, _script.toJson());
+      ScriptIdModel? scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
+      if(scriptId == null) throw(Exception("[postScript] scriptId is null!"));
       return scriptId;
     } on DioException catch (e) {
       print("[postScript] request body: [${e.requestOptions.data}] message: [${e.response?.data['message']}] DioException: $e");
@@ -124,7 +127,7 @@ class ScriptInputCtr extends GetxController {
 
   void inputConfirmBtn(BuildContext context) async {
     int themeId = getThemeId();
-    ScriptIdModel scriptIdModel = await postScript(themeId);
+    ScriptIdModel scriptIdModel = await postScript(themeId, _script);
     int scriptId = scriptIdModel.scriptId ?? 0;
     await saveScriptContent();
     await saveScriptId(scriptId);
@@ -132,15 +135,15 @@ class ScriptInputCtr extends GetxController {
     if(context.mounted) {
       Navigator.pushNamed(context, '/scriptInput/result');
     }
-
-    await scriptExpectedTimeScriptInit(themeId, scriptId);
   }
 
-  Future<void> scriptExpectedTimeScriptInit(int themeId, int scriptId) async {
+  Future<void> scriptExpectedTimeScriptInit() async {
     isLoading.value = true;
     scriptExpectedTime.value = null;
     expectedTimeScript.value = null;
     _expectedTimeScript = getExpectedTimeScript();
+    int themeId = getThemeId();
+    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
     expectedTimeScript.value = _expectedTimeScript;
     scriptExpectedTime.value = _scriptExpectedTime;
