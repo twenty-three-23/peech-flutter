@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
@@ -30,6 +29,8 @@ class PracticeResultCtr extends GetxController {
   ScrollController scrollController = ScrollController();
   Rx<bool> isLoading = true.obs;
 
+  int? resultScriptId;
+
 
   void getPracticeResult() async {
     isLoading.value = true;
@@ -38,6 +39,7 @@ class PracticeResultCtr extends GetxController {
     PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
     if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
     _practiceResult = await postPracticeResult(practiceMode);
+    resultScriptId = _practiceResult?.scriptId;
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
     isLoading.value = false;
   }
@@ -78,9 +80,9 @@ class PracticeResultCtr extends GetxController {
 
      int themeId = getThemeId();
      if(practiceMode == PracticeMode.withScript) {
-       int scriptId = getScriptId();
        File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile);
+       if(resultScriptId == null) throw Exception("[postPracticeResult] resultScriptId is null!");
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, voiceFile);
        return paragraphListModel;
      }
      else {
@@ -104,10 +106,6 @@ class PracticeResultCtr extends GetxController {
     return themeId;
   }
 
-  int getScriptId() {
-    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
-    return scriptId;
-  }
 
   Future<ParagraphListModel> postPracticeResultTest() async {
     MockPracticeResultDataSource practiceResultDataSource = MockPracticeResultDataSource();
@@ -183,8 +181,8 @@ class PracticeResultCtr extends GetxController {
       ]);
       RemotePracticeEditingResultDataSource remotePracticeEditingResultDataSource = RemotePracticeEditingResultDataSource(dio);
       int themeId = getThemeId();
-      int scriptId = getScriptId();
-      _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, reqParagraphListModel);
+      if(resultScriptId == null) throw Exception("[getEditingResult] resultScriptId is null!");
+      _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, reqParagraphListModel);
     } on DioException catch(e) {
       print("[editingFinishBtn] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
