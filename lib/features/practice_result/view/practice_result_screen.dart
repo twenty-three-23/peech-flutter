@@ -123,18 +123,33 @@ class PracticeResultScreen extends StatelessWidget {
                                               ),
                                               children: [
                                                 for(int j = 0; j < (controller.practiceResult.value?.script?[index].sentences?.length ?? 0); j++)
-                                                  TextSpan(
-                                                    text: "${controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent} ",
-                                                    recognizer: TapGestureRecognizer()..onTap = () {
-                                                      showDialog(context: context, builder: (context) {
-                                                        return editingDialog(
-                                                          initialText: controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent ?? "",
-                                                          onSave: (textEditingController) => controller.editingDialogSaveBtn(textEditingController, context, index, j),
-                                                          onCancel: () => controller.editingDialogCancelBtn(context)
-                                                        );
-                                                      });
-                                                    }
-                                                  )
+                                                  (controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent == null
+                                                  || controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent == "")
+                                                      ? TextSpan(
+                                                          text: "빈 문장 ",
+                                                          style: const TextStyle(color: Colors.grey),
+                                                          recognizer: TapGestureRecognizer()..onTap = () {
+                                                            showDialog(context: context, builder: (context) {
+                                                              return editingDialog(
+                                                                  initialText: controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent ?? "",
+                                                                  onSave: (textEditingController) => controller.editingDialogSaveBtn(textEditingController, context, index, j),
+                                                                  onCancel: () => controller.editingDialogCancelBtn(context)
+                                                              );
+                                                            });
+                                                          }
+                                                      )
+                                                      : TextSpan(
+                                                          text: "${controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent} ",
+                                                          recognizer: TapGestureRecognizer()..onTap = () {
+                                                            showDialog(context: context, builder: (context) {
+                                                              return editingDialog(
+                                                                initialText: controller.practiceResult.value?.script?[index].sentences?[j].sentenceContent ?? "",
+                                                                onSave: (textEditingController) => controller.editingDialogSaveBtn(textEditingController, context, index, j),
+                                                                onCancel: () => controller.editingDialogCancelBtn(context)
+                                                              );
+                                                            });
+                                                          }
+                                                        )
                                               ]
                                           ),
                                         ),
