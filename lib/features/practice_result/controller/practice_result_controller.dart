@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
@@ -40,6 +41,7 @@ class PracticeResultCtr extends GetxController {
     if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
     _practiceResult = await postPracticeResult(practiceMode);
     resultScriptId = _practiceResult?.scriptId;
+    print("테스트: ${resultScriptId}");
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
     isLoading.value = false;
   }
@@ -75,13 +77,15 @@ class PracticeResultCtr extends GetxController {
      print('postPracticeResult() called');
      Dio dio = Dio();
      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
+     dio.interceptors.add(DebugIntercepter());
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
      int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
+     int? scriptId = LocalScriptStorage().getScriptId();
+     if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
      if(practiceMode == PracticeMode.withScript) {
        File voiceFile = await getRecodingFile();
-       if(resultScriptId == null) throw Exception("[postPracticeResult] resultScriptId is null!");
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, voiceFile, seconds);
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile, seconds);
        return paragraphListModel;
      }
      else {
