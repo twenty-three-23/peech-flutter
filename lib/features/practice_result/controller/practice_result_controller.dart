@@ -44,8 +44,7 @@ class PracticeResultCtr extends GetxController {
 
   Future<void> checkRecodeFileDuration() async {
     try {
-      Duration duration = await RecodingFileUtil().getDuration();
-      int seconds = duration.inSeconds;
+      int seconds = await getRecodeSeconds();
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
@@ -75,17 +74,17 @@ class PracticeResultCtr extends GetxController {
      Dio dio = Dio();
      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
-
+     int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
      if(practiceMode == PracticeMode.withScript) {
        int scriptId = getScriptId();
        File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile);
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile, seconds);
        return paragraphListModel;
      }
      else {
        File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile);
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile, seconds);
        return paragraphListModel;
      }
 
@@ -97,6 +96,11 @@ class PracticeResultCtr extends GetxController {
      print("[postPracticeResult] Exception: ${e}");
      rethrow;
    }
+  }
+
+  Future<int> getRecodeSeconds() async {
+    Duration duration = await RecodingFileUtil().getDuration();
+    return duration.inSeconds;
   }
 
   int getThemeId() {
