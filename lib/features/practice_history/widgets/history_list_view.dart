@@ -11,7 +11,19 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
     case HistoryPathState.themeList:
       return themeListView(controller);
     case HistoryPathState.majorList:
-      return majorListView(controller);
+      return Column(
+        children: [
+          TextButton(
+              onPressed: () { controller.startWithThemeWithScriptBtn(context); },
+              child: const Text("이 주제로 시작하기(대본 입력 O)")
+          ),
+          TextButton(
+              onPressed: () { controller.startWithThemeNoScriptBtn(context); },
+              child: const Text("이 주제로 시작하기(대본 입력 X)")
+          ),
+          Expanded(child: majorListView(controller)),
+        ],
+      );
     case HistoryPathState.minorList:
       return Column(
         children: [
@@ -20,6 +32,11 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
         ],
       );
     case HistoryPathState.minorDetail:
-      return minorDetailView(controller);
+      return Column(
+        children: [
+          TextButton(onPressed: () { controller.startWithMinorScriptBtn(context); }, child: const Text("이 대본으로 시작하기")),
+          Expanded(child: minorDetailView(controller)),
+        ],
+      );
   }
 }

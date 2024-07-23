@@ -2,10 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
+import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
@@ -23,8 +29,11 @@ import 'package:swm_peech_flutter/features/practice_history/model/history_theme_
 
 class HistoryCtr extends GetxController {
 
+  HistoryThemeListModel? _themeList;
   Rx<HistoryThemeListModel?> themeList = Rx<HistoryThemeListModel?>(null);
+  HistoryMajorListModel? _majorList;
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
+  HistoryMinorListModel? _minorList;
   Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
 
 
@@ -42,6 +51,22 @@ class HistoryCtr extends GetxController {
 
   Rx<HistoryMinorDetailModel?> minorDetail = Rx<HistoryMinorDetailModel?>(null);
   HistoryMinorDetailModel? _minorDetail;
+
+  Rx<bool> isLoading = false.obs;
+
+  @override
+  void onInit() {
+    addGetCurrentListListener();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    themeScrollController.dispose();
+    majorScrollController.dispose();
+    minorScrollController.dispose();
+    super.onClose();
+  }
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {
     try {
@@ -67,7 +92,8 @@ class HistoryCtr extends GetxController {
         DebugIntercepter(),
       ]);
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
-      themeList.value = await historyThemeDataSource.getThemeList();
+      _themeList = await historyThemeDataSource.getThemeList();
+      themeList.value = _themeList;
     } on DioException catch(e) {
       print("[getThemeList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
@@ -79,7 +105,8 @@ class HistoryCtr extends GetxController {
 
   void getThemeListTest() async {
     final historyThemeDataSource = MockHistoryThemeDataSource();
-    themeList.value = await historyThemeDataSource.getThemeListTest();
+    _themeList = await historyThemeDataSource.getThemeListTest();
+    themeList.value = _themeList;
   }
 
 
@@ -89,9 +116,11 @@ class HistoryCtr extends GetxController {
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyMajorDataSource = RemoteMajorListDataSource(dio);
-      majorList.value = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
+      _majorList = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
+      majorList.value = _majorList;
       print("메이저 개수: ${majorList.value?.majorScripts?.length}");
     } on DioException catch(e) {
       print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
@@ -104,7 +133,8 @@ class HistoryCtr extends GetxController {
 
   void getMajorListTest() async {
     final historyMajorDataSource = MockHistoryMajorDataSource();
-    majorList.value = await historyMajorDataSource.getMajorListTest();
+    _majorList = await historyMajorDataSource.getMajorListTest();
+    majorList.value = _majorList;
   }
 
   void getMinorList() async {
@@ -113,9 +143,11 @@ class HistoryCtr extends GetxController {
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
         AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
+        DebugIntercepter(),
       ]);
       final historyMinorDataSource = RemoteMinorListDataSource(dio);
-      minorList.value = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
+      _minorList = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
+      minorList.value = _minorList;
       print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
     } on DioException catch(e) {
       print("[getMinorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
@@ -128,12 +160,14 @@ class HistoryCtr extends GetxController {
 
   void getMinorListTest() async {
     final historyMinorDataSource = MockHistoryMinorDataSource();
-    minorList.value = await historyMinorDataSource.getMinorListTest();
+    _minorList = await historyMinorDataSource.getMinorListTest();
+    minorList.value = _minorList;
   }
 
   void getMinorDetail() async {
     try { //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
       minorDetail.value = null;
+      _minorList = null;
       Dio dio = Dio();
       dio.interceptors.addAll([
         DebugIntercepter()
@@ -230,23 +264,85 @@ class HistoryCtr extends GetxController {
     majorDetail.value = null;
     Navigator.pushNamed(context, '/historyMajorDetail');
     int themeId = historyPath.value.theme ?? 0;
-    int scriptId = majorList.value?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
+    int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
     await getMajorDetail(themeId, scriptId); //TODO 이 방식과 _majorDetail = getMajorDetail(themeId, scriptId); 방식 중 옳은 것.
     majorDetail.value = _majorDetail; //TODO 변수를 매번 화면에 보이는 것과 데이터를 가지고 있는 것으로 나눠야 하는가? 그냥 바로 majorDetail = getMajorDetail(themeId, scriptId); 해도 되는 것 아닌가?
   }
 
-  @override
-  void onInit() {
-    addGetCurrentListListener();
-    super.onInit();
+  void startWithThemeWithScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
+    await LocalPracticeModeStorage().setMode(PracticeMode.withScript);
+    Navigator.pushNamed(context, '/scriptInput/input');
+    isLoading.value = false;
   }
 
-  @override
-  void onClose() {
-    themeScrollController.dispose();
-    majorScrollController.dispose();
-    minorScrollController.dispose();
-    super.onClose();
+  void startWithThemeNoScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
+    await LocalPracticeModeStorage().setMode(PracticeMode.noScript);
+    Navigator.pushNamed(context, '/voiceRecodeNoScript');
+    isLoading.value = false;
+  }
+
+  void startWithMajorScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
+    await LocalPracticeModeStorage().setMode(PracticeMode.withScript);
+    if(_majorDetail == null) {
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] major detail is null!");
+    }
+    List<String> scriptList = _majorDetail?.paragraphs?.map((e) => e.paragraphContent ?? '').toList() ?? [];
+    await LocalScriptStorage().setScriptContent(scriptList);
+    int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
+    await LocalScriptStorage().setScriptId(scriptId);
+    Navigator.pushNamed(context, 'scriptInput/result');
+    isLoading.value = false;
+  }
+
+  void startWithMinorScriptBtn(BuildContext context) async {
+    isLoading.value = true;
+    int themeId = historyPath.value.theme ?? 0;
+    if(_minorDetail == null) {
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] minor detail is null!");
+    }
+    List<String> scriptList = [];
+    _minorDetail?.paragraphDetails?.forEach((element) {
+      String sentence = '';
+      element.sentences?.forEach((sentenceElement) {
+        sentence += sentenceElement;
+      });
+      scriptList.add(sentence);
+    });
+    ScriptInputParagraphsModel scriptInputParagraphsModel = ScriptInputParagraphsModel(paragraphs: scriptList);
+    ScriptIdModel? scriptIdModel;
+    // 대본 생성하기
+    try {
+      Dio dio = Dio();
+      dio.interceptors.add(DebugIntercepter());
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      scriptIdModel = await remoteScriptInputDataSource.postScript(themeId, scriptInputParagraphsModel.toJson());
+    } on DioException catch(e) {
+      print("[startWithMinorScriptBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
+      rethrow;
+    } catch(e) {
+      print("[startWithMinorScriptBtn] [Exception] $e");
+      isLoading.value = false;
+      rethrow;
+    }
+    if(scriptIdModel == null || scriptIdModel.scriptId == null) { //TODO 데이터 받아왔을 때 null인 경우를 매번 이렇게 처리해줘야 하는지. 아니면 인터셉터에서 처리?
+      isLoading.value = false;
+      throw Exception("[startWithMajorScriptBtn] scriptIdModel or scriptIdModel.scriptId is null!");
+    }
+    await LocalScriptStorage().setScriptId(scriptIdModel.scriptId ?? 0);
+    await LocalScriptStorage().setScriptContent(scriptList);
+    await LocalPracticeThemeStorage().setThemeId(themeId.toString()); //테마 아이디 current 테마 아이디로 로컬에 저장
+    await LocalPracticeModeStorage().setMode(PracticeMode.withScript); //연습 모드 스크립트 기반 모드로 저장
+    Navigator.pushNamed(context, 'scriptInput/result');
+    isLoading.value = false;
   }
 
 }

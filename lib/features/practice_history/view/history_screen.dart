@@ -28,21 +28,23 @@ class HistoryScreen extends StatelessWidget {
         ),
         body: GetX<HistoryCtr>(
           builder: (_) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: historyPathView(controller)
-                ),
-                Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: historyListView(context, controller)
-                  ),
-                ),
-              ],
-            );
+            return controller.isLoading == true
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: historyPathView(controller)
+                    ),
+                    Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: historyListView(context, controller)
+                      ),
+                    ),
+                  ],
+                );
           }
         ),
       ),

@@ -29,6 +29,10 @@ class HistoryMajorDetailScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: 10,),
+                      TextButton(
+                          onPressed: () { controller.startWithMajorScriptBtn(context); },
+                          child: const Text("이 대본으로 시작하기")
+                      ),
                       Align(
                         alignment: Alignment.topLeft,
                         child: Text("날짜: ${major?.createdAt ?? "unknown"}")

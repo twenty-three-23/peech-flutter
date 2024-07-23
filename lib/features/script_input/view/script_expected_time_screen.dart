@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
 
-class ScriptExpectedTimeScreen extends StatelessWidget {
+class ScriptExpectedTimeScreen extends StatefulWidget {
   const ScriptExpectedTimeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ScriptExpectedTimeScreen> createState() => _ScriptExpectedTimeScreenState();
+}
 
-    final controller = Get.find<ScriptInputCtr>();
+class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
+
+  final controller = Get.find<ScriptInputCtr>();
+
+  @override
+  void initState() {
+    controller.scriptExpectedTimeScriptInit();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
