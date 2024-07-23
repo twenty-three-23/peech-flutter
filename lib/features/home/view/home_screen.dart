@@ -18,16 +18,9 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Peech - 당신의 발표 연습 도우미",
+              "Peech - 발표 속도 조절, 기록 관리",
               style: TextStyle(
                 fontSize: 23,
-              ),
-            ),
-            const SizedBox(height: 30,),
-            const Text(
-              "1. 발표 속도 조절 \n2. 자동 대본 생성 \n3. 연습 기록 관리",
-              style: TextStyle(
-                fontSize: 20,
               ),
             ),
             const SizedBox(height: 50,),
@@ -87,22 +80,22 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 50,),
-            ElevatedButton(
+            const SizedBox(height: 30,),
+            TextButton(
                 onPressed: () {
                     LocalPracticeModeStorage().setMode(PracticeMode.withScript);
                     Navigator.pushNamed(context, '/themeInput');
                   },
                 child: const Text("대본 입력하고 시작하기")
             ),
-            ElevatedButton(
+            TextButton(
                 onPressed: () {
                     LocalPracticeModeStorage().setMode(PracticeMode.noScript);
                     Navigator.pushNamed(context, '/themeInput');
                   },
                 child: const Text("대본 입력하지 않고 시작하기")
             ),
-            ElevatedButton(
+            TextButton(
                 onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                 child: const Text("기록 보기")
             ),
