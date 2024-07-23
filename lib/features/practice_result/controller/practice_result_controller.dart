@@ -15,12 +15,14 @@ import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_editing_result_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_result_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_store_edited_script_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_sentence_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/store_edited_script_result.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/usage_time_check_model.dart';
 
 class PracticeResultCtr extends GetxController {
@@ -81,7 +83,7 @@ class PracticeResultCtr extends GetxController {
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
      int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
-     int? scriptId = LocalScriptStorage().getScriptId();
+     int? scriptId = LocalScriptStorage().getInputScriptId();
      if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
      if(practiceMode == PracticeMode.withScript) {
        File voiceFile = await getRecodingFile();
@@ -151,8 +153,29 @@ class PracticeResultCtr extends GetxController {
     });
   }
 
-  void homeButton(BuildContext context) {
+  void homeBtn(BuildContext context) {
+    isLoading.value = true;
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    isLoading.value = false;
+  }
+
+  Future<StoreEditedScriptResult> putEditedScript() async {
+    try {
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        DebugIntercepter(),
+      ]);
+      int themeId = getThemeId();
+      RemoteStoreEditedScriptDataSource remoteStoreEditedScriptDataSource = RemoteStoreEditedScriptDataSource(dio);
+      if(resultScriptId == null) throw Exception("[putEditedScript] resultScriptId is null!");
+      return await remoteStoreEditedScriptDataSource.storeEditedScript(themeId, resultScriptId!);
+    } on DioException catch(e) {
+      print("[putEditedScript] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      rethrow;
+    } catch(e) {
+      print("[putEditedScript] Exception: ${e}");
+      rethrow;
+    }
   }
 
   void editingDialogCancelBtn(BuildContext context) {
@@ -192,10 +215,10 @@ class PracticeResultCtr extends GetxController {
       if(resultScriptId == null) throw Exception("[getEditingResult] resultScriptId is null!");
       _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, reqParagraphListModel);
     } on DioException catch(e) {
-      print("[editingFinishBtn] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[getEditingResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
     } catch(e) {
-      print("[editingFinishBtn] Exception: ${e}");
+      print("[getEditingResult] Exception: ${e}");
       rethrow;
     }
   }
