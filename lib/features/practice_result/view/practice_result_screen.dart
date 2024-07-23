@@ -25,6 +25,17 @@ class PracticeResultScreen extends StatelessWidget {
         child: GetX<PracticeResultCtr>(
             builder: (_) => Column(
               children: [
+                if(controller.isLoading.value == false)
+                  Text(
+                    "전체 시간: ${controller.practiceResult.value?.totalTime == null
+                    ? controller.practiceResult.value?.totalRealTime ?? "??:??:??"
+                    : controller.practiceResult.value?.totalTime ?? "??:??:??"}",
+                    style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: controller.isLoading.value == true
                       ? const Column(
