@@ -64,9 +64,11 @@ class ScriptInputCtr extends GetxController {
   }
 
   void gotoPracticeBtn(BuildContext context) async {
+    expectedTimeIsLoading.value = true;
     int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
     await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
     Navigator.pushNamed(context, '/voiceRecodeWithScript');
+    expectedTimeIsLoading.value = false;
   }
 
   int toMilliSec(String expectedTime) {
