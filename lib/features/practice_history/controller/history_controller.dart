@@ -85,6 +85,7 @@ class HistoryCtr extends GetxController {
 
   void getThemeList() async {
     try {
+      isLoading.value = true;
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
@@ -94,11 +95,14 @@ class HistoryCtr extends GetxController {
       final historyThemeDataSource = RemoteThemeListDataSource(dio);
       _themeList = await historyThemeDataSource.getThemeList();
       themeList.value = _themeList;
+      isLoading.value = false;
     } on DioException catch(e) {
       print("[getThemeList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
       rethrow;
     } catch(e) {
       print("[getThemeList] [Exception] $e");
+      isLoading.value = false;
       rethrow;
     }
   }
@@ -112,6 +116,7 @@ class HistoryCtr extends GetxController {
 
   void getMajorList() async {
     try {
+      isLoading.value = true;
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
@@ -122,11 +127,14 @@ class HistoryCtr extends GetxController {
       _majorList = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
       majorList.value = _majorList;
       print("메이저 개수: ${majorList.value?.majorScripts?.length}");
+      isLoading.value = false;
     } on DioException catch(e) {
       print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
       rethrow;
     } catch(e) {
       print("[getMajorList] [Exception] $e");
+      isLoading.value = false;
       rethrow;
     }
   }
@@ -139,6 +147,7 @@ class HistoryCtr extends GetxController {
 
   void getMinorList() async {
     try {
+      isLoading.value = true;
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
@@ -149,11 +158,14 @@ class HistoryCtr extends GetxController {
       _minorList = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
       minorList.value = _minorList;
       print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
+      isLoading.value = false;
     } on DioException catch(e) {
       print("[getMinorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
       rethrow;
     } catch(e) {
       print("[getMinorList] [Exception] $e");
+      isLoading.value = false;
       rethrow;
     }
   }
@@ -166,6 +178,7 @@ class HistoryCtr extends GetxController {
 
   void getMinorDetail() async {
     try { //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
+      isLoading.value = true;
       minorDetail.value = null;
       _minorList = null;
       Dio dio = Dio();
@@ -178,11 +191,14 @@ class HistoryCtr extends GetxController {
       final minorVersion = historyPath.value.minor ?? 0;
       _minorDetail = await remoteMinorDetailDataSource.getMinorDetail(themeId, majorVersion, minorVersion);
       minorDetail.value = _minorDetail; //TODO ui 업데이트를 get함수 내에서 처리해주는게 맞는가? get은 가져오는역할만 하는줄 알았는데 ui가 업데이트되는 사이드 이펙트가 생길수도?
+      isLoading.value = false;
     } on DioException catch(e) {
       print("[getMinorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
       rethrow;
     } catch(e) {
       print("[getMinorDetail] [Exception] $e");
+      isLoading.value = false;
       rethrow;
     }
 }

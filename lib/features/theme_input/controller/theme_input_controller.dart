@@ -13,6 +13,8 @@ import '../../common/data_source/local/local_practice_mode_storage.dart';
 class ThemeInputCtr extends GetxController {
   String? _theme;
 
+  Rx<bool> isLoading = false.obs;
+
   void updateTheme(String? newTheme) {
     _theme = newTheme;
   }
@@ -47,13 +49,16 @@ class ThemeInputCtr extends GetxController {
   }
 
   void finishButton(BuildContext context) async {
+    isLoading.value = true;
     await saveTheme();
     if(context.mounted) {
       if (LocalPracticeModeStorage().getMode() == PracticeMode.withScript) {
         Navigator.pushNamed(context, '/scriptInput/input');
+        isLoading.value = false;
       }
       else if (LocalPracticeModeStorage().getMode() == PracticeMode.noScript) {
         Navigator.pushNamed(context, '/voiceRecodeNoScript');
+        isLoading.value = false;
       }
     }
   }

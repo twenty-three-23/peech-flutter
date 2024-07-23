@@ -43,8 +43,8 @@ class PracticeResultCtr extends GetxController {
     if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
     _practiceResult = await postPracticeResult(practiceMode);
     resultScriptId = _practiceResult?.scriptId;
-    print("테스트: ${resultScriptId}");
-    practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
+    print("테스트: ${_practiceResult?.totalRealTime}");
+    practiceResult.value = ParagraphListModel(script: _practiceResult?.script, scriptId: _practiceResult?.scriptId, totalRealTime: _practiceResult?.totalRealTime, totalTime: _practiceResult?.totalTime);
     isLoading.value = false;
   }
 
@@ -129,8 +129,8 @@ class PracticeResultCtr extends GetxController {
   }
 
   void insertNewParagraph(int index) {
-    practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, nowStatus: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "새 문단")]));
-    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, nowStatus: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "")]));
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     if(index + 1 == practiceResult.value?.script?.length) {
       setScrollToEnd();
     }
@@ -138,7 +138,7 @@ class PracticeResultCtr extends GetxController {
 
   void removeParagraph(int index) {
     practiceResult.value?.script?.removeAt(index);
-    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
   }
 
   void setScrollToEnd() {
@@ -153,8 +153,9 @@ class PracticeResultCtr extends GetxController {
     });
   }
 
-  void homeBtn(BuildContext context) {
+  void homeBtn(BuildContext context) async {
     isLoading.value = true;
+    await putEditedScript();
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
     isLoading.value = false;
   }
@@ -163,6 +164,8 @@ class PracticeResultCtr extends GetxController {
     try {
       Dio dio = Dio();
       dio.interceptors.addAll([
+        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
+        AutoTokenRegisterIntercepter(localDeviceUuidStorage: LocalDeviceUuidStorage()),
         DebugIntercepter(),
       ]);
       int themeId = getThemeId();
@@ -184,7 +187,7 @@ class PracticeResultCtr extends GetxController {
 
   void editingDialogSaveBtn(TextEditingController textEditingController, BuildContext context, int paragraphIndex, int sentenceIndex) {
     practiceResult.value?.script?[paragraphIndex].sentences?[sentenceIndex].sentenceContent = textEditingController.text;
-    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script);
+    practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     Navigator.of(context).pop();
   }
 

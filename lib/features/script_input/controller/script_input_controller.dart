@@ -26,7 +26,8 @@ class ScriptInputCtr extends GetxController {
   Rx<ExpectedTimeModel?> scriptExpectedTime = Rx<ExpectedTimeModel?>(null);
 
   //스크립트 예상시간 로딩 유무
-  Rx<bool> isLoading = false.obs;
+  Rx<bool> expectedTimeIsLoading = false.obs;
+  Rx<bool> scriptInputIsLoading = false.obs;
 
   List<String>? _expectedTimeScript;
   Rx<List<String>?> expectedTimeScript = Rx<List<String>?>(null);
@@ -63,9 +64,11 @@ class ScriptInputCtr extends GetxController {
   }
 
   void gotoPracticeBtn(BuildContext context) async {
+    expectedTimeIsLoading.value = true;
     int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
     await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
     Navigator.pushNamed(context, '/voiceRecodeWithScript');
+    expectedTimeIsLoading.value = false;
   }
 
   int toMilliSec(String expectedTime) {
@@ -126,6 +129,7 @@ class ScriptInputCtr extends GetxController {
   }
 
   void inputConfirmBtn(BuildContext context) async {
+    scriptInputIsLoading.value = true;
     int themeId = getThemeId();
     ScriptIdModel scriptIdModel = await postScript(themeId, _script);
     int scriptId = scriptIdModel.scriptId ?? 0;
@@ -134,11 +138,12 @@ class ScriptInputCtr extends GetxController {
 
     if(context.mounted) {
       Navigator.pushNamed(context, '/scriptInput/result');
+      scriptInputIsLoading.value = false;
     }
   }
 
   Future<void> scriptExpectedTimeScriptInit() async {
-    isLoading.value = true;
+    expectedTimeIsLoading.value = true;
     scriptExpectedTime.value = null;
     expectedTimeScript.value = null;
     _expectedTimeScript = getExpectedTimeScript();
@@ -147,7 +152,7 @@ class ScriptInputCtr extends GetxController {
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
     expectedTimeScript.value = _expectedTimeScript;
     scriptExpectedTime.value = _scriptExpectedTime;
-    isLoading.value = false;
+    expectedTimeIsLoading.value = false;
   }
 
   List<String>? getExpectedTimeScript() {

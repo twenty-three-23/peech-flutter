@@ -94,6 +94,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 10,),
                             Text(_controller.script?[index] ?? ''),
