@@ -28,7 +28,7 @@ class ThemeInputScreen extends StatelessWidget {
                 controller.updateTheme(value);
               },
               decoration: const InputDecoration(
-                  hintText: "6월 25일 발표 연습",
+                  hintText: "발표 주제",
                   border: OutlineInputBorder(),
               ),
             ),
@@ -38,7 +38,11 @@ class ThemeInputScreen extends StatelessWidget {
               onPressed: () {
                 controller.finishButton(context);
               },
-              child: const Text("입력 완료")
+              child: GetX<ThemeInputCtr>(
+                  builder: (_) => controller.isLoading.value == true
+                      ? const CircularProgressIndicator()
+                      : const Text("입력 완료")
+              )
           ),
           const SizedBox(height: 100,),
         ],
