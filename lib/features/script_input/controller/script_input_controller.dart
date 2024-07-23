@@ -55,16 +55,16 @@ class ScriptInputCtr extends GetxController {
   }
 
   Future<void> saveScriptContent() async {
-    await LocalScriptStorage().setScriptContent(_script.paragraphs ?? List.empty());
+    await LocalScriptStorage().setInputScriptContent(_script.paragraphs ?? List.empty());
   }
 
   Future<void> saveScriptId(int scriptId) async {
-    await LocalScriptStorage().setScriptId(scriptId);
+    await LocalScriptStorage().setInputScriptId(scriptId);
   }
 
   void gotoPracticeBtn(BuildContext context) async {
     int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
-    await LocalScriptStorage().setScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
+    await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
     Navigator.pushNamed(context, '/voiceRecodeWithScript');
   }
 
@@ -143,7 +143,7 @@ class ScriptInputCtr extends GetxController {
     expectedTimeScript.value = null;
     _expectedTimeScript = getExpectedTimeScript();
     int themeId = getThemeId();
-    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
+    int scriptId = LocalScriptStorage().getInputScriptId() ?? 0;
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
     expectedTimeScript.value = _expectedTimeScript;
     scriptExpectedTime.value = _scriptExpectedTime;
@@ -152,7 +152,7 @@ class ScriptInputCtr extends GetxController {
 
   List<String>? getExpectedTimeScript() {
     LocalScriptStorage localScriptStorage = LocalScriptStorage();
-    return localScriptStorage.getScriptContent();
+    return localScriptStorage.getInputScriptContent();
   }
 
 }

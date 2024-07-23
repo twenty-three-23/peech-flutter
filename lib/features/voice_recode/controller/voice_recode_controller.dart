@@ -35,7 +35,7 @@ class VoiceRecodeCtr extends GetxController {
 
   @override
   void onInit() async {
-    script = LocalScriptStorage().getScriptContent();
+    script = LocalScriptStorage().getInputScriptContent();
     _path = await RecodingFileUtil().getFilePath();
     getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
@@ -146,7 +146,7 @@ class VoiceRecodeCtr extends GetxController {
     }
     _startRecording();
     _stopRecodingWhenScrollIsEndListener();
-    int totalExpectedTime = LocalScriptStorage().getScriptTotalExpectedTimeMilli() ?? 0;
+    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
     _startAutoScrollingAnimation(totalExpectedTime);
   }
 

@@ -294,9 +294,9 @@ class HistoryCtr extends GetxController {
       throw Exception("[startWithMajorScriptBtn] major detail is null!");
     }
     List<String> scriptList = _majorDetail?.paragraphs?.map((e) => e.paragraphContent ?? '').toList() ?? [];
-    await LocalScriptStorage().setScriptContent(scriptList);
+    await LocalScriptStorage().setInputScriptContent(scriptList);
     int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
-    await LocalScriptStorage().setScriptId(scriptId);
+    await LocalScriptStorage().setInputScriptId(scriptId);
     Navigator.pushNamed(context, 'scriptInput/result');
     isLoading.value = false;
   }
@@ -337,8 +337,8 @@ class HistoryCtr extends GetxController {
       isLoading.value = false;
       throw Exception("[startWithMajorScriptBtn] scriptIdModel or scriptIdModel.scriptId is null!");
     }
-    await LocalScriptStorage().setScriptId(scriptIdModel.scriptId ?? 0);
-    await LocalScriptStorage().setScriptContent(scriptList);
+    await LocalScriptStorage().setInputScriptId(scriptIdModel.scriptId ?? 0);
+    await LocalScriptStorage().setInputScriptContent(scriptList);
     await LocalPracticeThemeStorage().setThemeId(themeId.toString()); //테마 아이디 current 테마 아이디로 로컬에 저장
     await LocalPracticeModeStorage().setMode(PracticeMode.withScript); //연습 모드 스크립트 기반 모드로 저장
     Navigator.pushNamed(context, 'scriptInput/result');

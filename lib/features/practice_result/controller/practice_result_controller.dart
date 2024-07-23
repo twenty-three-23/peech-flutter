@@ -15,12 +15,14 @@ import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_editing_result_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_result_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_store_edited_script_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_paragraph_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_paragraph_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/req_sentence_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
+import 'package:swm_peech_flutter/features/practice_result/model/store_edited_script_result.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/usage_time_check_model.dart';
 
 class PracticeResultCtr extends GetxController {
@@ -30,6 +32,8 @@ class PracticeResultCtr extends GetxController {
   ScrollController scrollController = ScrollController();
   Rx<bool> isLoading = true.obs;
 
+  int? resultScriptId;
+
 
   void getPracticeResult() async {
     isLoading.value = true;
@@ -38,14 +42,15 @@ class PracticeResultCtr extends GetxController {
     PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
     if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
     _practiceResult = await postPracticeResult(practiceMode);
+    resultScriptId = _practiceResult?.scriptId;
+    print("테스트: ${resultScriptId}");
     practiceResult.value = ParagraphListModel(script: _practiceResult?.script);
     isLoading.value = false;
   }
 
   Future<void> checkRecodeFileDuration() async {
     try {
-      Duration duration = await RecodingFileUtil().getDuration();
-      int seconds = duration.inSeconds;
+      int seconds = await getRecodeSeconds();
       Dio dio = Dio();
       dio.interceptors.addAll([
         AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
@@ -74,18 +79,20 @@ class PracticeResultCtr extends GetxController {
      print('postPracticeResult() called');
      Dio dio = Dio();
      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
+     dio.interceptors.add(DebugIntercepter());
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
-
+     int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
+     int? scriptId = LocalScriptStorage().getInputScriptId();
+     if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
      if(practiceMode == PracticeMode.withScript) {
-       int scriptId = getScriptId();
        File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile);
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile, seconds);
        return paragraphListModel;
      }
      else {
        File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile);
+       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile, seconds);
        return paragraphListModel;
      }
 
@@ -99,15 +106,16 @@ class PracticeResultCtr extends GetxController {
    }
   }
 
+  Future<int> getRecodeSeconds() async {
+    Duration duration = await RecodingFileUtil().getDuration();
+    return duration.inSeconds;
+  }
+
   int getThemeId() {
     int themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
     return themeId;
   }
 
-  int getScriptId() {
-    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
-    return scriptId;
-  }
 
   Future<ParagraphListModel> postPracticeResultTest() async {
     MockPracticeResultDataSource practiceResultDataSource = MockPracticeResultDataSource();
@@ -145,8 +153,29 @@ class PracticeResultCtr extends GetxController {
     });
   }
 
-  void homeButton(BuildContext context) {
+  void homeBtn(BuildContext context) {
+    isLoading.value = true;
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    isLoading.value = false;
+  }
+
+  Future<StoreEditedScriptResult> putEditedScript() async {
+    try {
+      Dio dio = Dio();
+      dio.interceptors.addAll([
+        DebugIntercepter(),
+      ]);
+      int themeId = getThemeId();
+      RemoteStoreEditedScriptDataSource remoteStoreEditedScriptDataSource = RemoteStoreEditedScriptDataSource(dio);
+      if(resultScriptId == null) throw Exception("[putEditedScript] resultScriptId is null!");
+      return await remoteStoreEditedScriptDataSource.storeEditedScript(themeId, resultScriptId!);
+    } on DioException catch(e) {
+      print("[putEditedScript] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      rethrow;
+    } catch(e) {
+      print("[putEditedScript] Exception: ${e}");
+      rethrow;
+    }
   }
 
   void editingDialogCancelBtn(BuildContext context) {
@@ -183,13 +212,13 @@ class PracticeResultCtr extends GetxController {
       ]);
       RemotePracticeEditingResultDataSource remotePracticeEditingResultDataSource = RemotePracticeEditingResultDataSource(dio);
       int themeId = getThemeId();
-      int scriptId = getScriptId();
-      _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, reqParagraphListModel);
+      if(resultScriptId == null) throw Exception("[getEditingResult] resultScriptId is null!");
+      _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, reqParagraphListModel);
     } on DioException catch(e) {
-      print("[editingFinishBtn] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[getEditingResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
     } catch(e) {
-      print("[editingFinishBtn] Exception: ${e}");
+      print("[getEditingResult] Exception: ${e}");
       rethrow;
     }
   }

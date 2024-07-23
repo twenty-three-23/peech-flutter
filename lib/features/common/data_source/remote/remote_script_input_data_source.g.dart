@@ -21,7 +21,7 @@ class _RemoteScriptInputDataSource implements RemoteScriptInputDataSource {
   String? baseUrl;
 
   @override
-  Future<ScriptIdModel> postScript(
+  Future<ScriptIdModel?> postScript(
     int themeId,
     Map<String, dynamic> body,
   ) async {
@@ -31,7 +31,7 @@ class _RemoteScriptInputDataSource implements RemoteScriptInputDataSource {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<ScriptIdModel>(Options(
+        .fetch<Map<String, dynamic>?>(_setStreamType<ScriptIdModel>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -47,7 +47,8 @@ class _RemoteScriptInputDataSource implements RemoteScriptInputDataSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ScriptIdModel.fromJson(_result.data!);
+    final value =
+        _result.data == null ? null : ScriptIdModel.fromJson(_result.data!);
     return value;
   }
 
