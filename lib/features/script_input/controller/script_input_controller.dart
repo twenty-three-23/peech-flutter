@@ -143,7 +143,7 @@ class ScriptInputCtr extends GetxController {
     expectedTimeScript.value = null;
     _expectedTimeScript = getExpectedTimeScript();
     int themeId = getThemeId();
-    int scriptId = LocalScriptStorage().getScriptId() ?? 0;
+    int scriptId = LocalScriptStorage().getInputScriptId() ?? 0;
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
     expectedTimeScript.value = _expectedTimeScript;
     scriptExpectedTime.value = _scriptExpectedTime;
