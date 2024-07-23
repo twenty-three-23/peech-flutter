@@ -153,8 +153,10 @@ class PracticeResultCtr extends GetxController {
     });
   }
 
-  void homeButton(BuildContext context) {
+  void homeBtn(BuildContext context) {
+    isLoading.value = true;
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    isLoading.value = false;
   }
 
   Future<StoreEditedScriptResult> putEditedScript() async {

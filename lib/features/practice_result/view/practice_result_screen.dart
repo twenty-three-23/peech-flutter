@@ -182,15 +182,42 @@ class PracticeResultScreen extends StatelessWidget {
                     if(controller.isLoading.value == false)
                       ElevatedButton(
                           onPressed: () { controller.editingFinishBtn();  },
-                          child: const Text("예상시간 재확인")
-                      ),
-                    if(controller.isLoading.value == false)
-                      ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("연습하기")
+                          child: const Text("수정사항 반영하기")
                       ),
                     ElevatedButton(
-                      onPressed: () { controller.homeButton(context); },
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("홈으로 나가기"),
+                                content: const IntrinsicHeight(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("반영되지 않은 수정사항은 저장되지 않습니다. 수정 사항이 있다면 [수정사항 반영하기] 버튼을 눌러주세요"),
+                                      SizedBox(height: 10,),
+                                      Text("연습한 기록은 홈 화면의 [기록 보기] 에서 확인하실 수 있습니다."),
+                                      SizedBox(height: 10,),
+                                      Text("홈으로 나가시겠습니까?")
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () { Navigator.of(context).pop(); },
+                                    child: const Text("취소"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () { controller.homeBtn(context); },
+                                    child: const Text("홈으로 나가기"),
+                                  )
+                                ],
+
+                              );
+                            }
+                        );
+                      },
                       child: const Text("홈")
                     ),
                   ],
