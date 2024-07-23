@@ -28,7 +28,7 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
       ),
       body: GetX<ScriptInputCtr>(
         builder: (_) {
-          if(controller.isLoading.value == true) {
+          if(controller.expectedTimeIsLoading.value == true) {
             return const Center(
               child: CircularProgressIndicator(),
             );
