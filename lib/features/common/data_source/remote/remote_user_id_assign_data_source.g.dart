@@ -13,7 +13,7 @@ class _RemoteUserTokenDataSource implements RemoteUserTokenDataSource {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://43.203.55.241:8080/api/v1/';
+    baseUrl ??= 'http://43.203.55.241:8080/';
   }
 
   final Dio _dio;
@@ -35,7 +35,7 @@ class _RemoteUserTokenDataSource implements RemoteUserTokenDataSource {
     )
             .compose(
               _dio.options,
-              '/user',
+              'api/v1/user',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -63,7 +63,7 @@ class _RemoteUserTokenDataSource implements RemoteUserTokenDataSource {
     )
             .compose(
               _dio.options,
-              '/user',
+              'api/v1/user',
               queryParameters: queryParameters,
               data: _data,
             )

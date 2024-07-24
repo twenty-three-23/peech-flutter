@@ -13,7 +13,7 @@ class _RemoteScriptInputDataSource implements RemoteScriptInputDataSource {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://43.203.55.241:8080/api/v1/';
+    baseUrl ??= 'http://43.203.55.241:8080/';
   }
 
   final Dio _dio;
@@ -38,7 +38,7 @@ class _RemoteScriptInputDataSource implements RemoteScriptInputDataSource {
     )
             .compose(
               _dio.options,
-              'themes/${themeId}/script',
+              'api/v1/themes/${themeId}/script',
               queryParameters: queryParameters,
               data: _data,
             )
