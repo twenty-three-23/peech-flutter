@@ -5,7 +5,7 @@ class LocalDeviceUuidStorage {
   static final LocalDeviceUuidStorage _instance = LocalDeviceUuidStorage._internal();
   late SharedPreferences _prefs;
 
-  static const DEVICE_UUID_KEY = "deviceUuid";
+  final _deviceUuidKey = "deviceUuid";
 
   factory LocalDeviceUuidStorage() {
     return _instance;
@@ -19,11 +19,11 @@ class LocalDeviceUuidStorage {
 
 
   Future<void> setDeviceUuid(String uuid) async {
-    await _prefs.setString(DEVICE_UUID_KEY, uuid);
+    await _prefs.setString(_deviceUuidKey, uuid);
   }
 
   String? getDeviceUuid() {
-    return _prefs.getString(DEVICE_UUID_KEY);
+    return _prefs.getString(_deviceUuidKey);
   }
 
 }

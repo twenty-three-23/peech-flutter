@@ -6,9 +6,9 @@ class LocalScriptStorage {
   static final LocalScriptStorage _instance = LocalScriptStorage._internal();
   late SharedPreferences _prefs;
 
-  static const INPUT_SCRIPT_CONTENT_KEY = "inputScriptContent";
-  static const INPUT_SCRIPT_ID_KEY = "inputScriptId";
-  static const INPUT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY = "inputScriptTotalExpectedTime";
+  final _inputScriptContentKey = "inputScriptContent";
+  final _inputScriptIdKey = "inputScriptId";
+  final _inputScriptTotalExpectedTimeMilliKey = "inputScriptTotalExpectedTime";
 
   factory LocalScriptStorage() {
     return _instance;
@@ -23,32 +23,32 @@ class LocalScriptStorage {
 
   Future<void> setInputScriptContent(List<String> scriptList) async {
     debugPrint("저장함: ${scriptList.length}줄");
-    await _prefs.setStringList(INPUT_SCRIPT_CONTENT_KEY, scriptList);
+    await _prefs.setStringList(_inputScriptContentKey, scriptList);
   }
 
   List<String>? getInputScriptContent() {
-    debugPrint("불러옴: ${_prefs.getStringList(INPUT_SCRIPT_CONTENT_KEY)?.length}줄");
-    return _prefs.getStringList(INPUT_SCRIPT_CONTENT_KEY);
+    debugPrint("불러옴: ${_prefs.getStringList(_inputScriptContentKey)?.length}줄");
+    return _prefs.getStringList(_inputScriptContentKey);
   }
 
   Future<void> setInputScriptId(int scriptId) async {
     debugPrint("저장함: scriptId: ${scriptId}");
-    await _prefs.setInt(INPUT_SCRIPT_ID_KEY, scriptId);
+    await _prefs.setInt(_inputScriptIdKey, scriptId);
   }
 
   int? getInputScriptId() {
-    debugPrint("불러옴: scriptId: ${_prefs.getInt(INPUT_SCRIPT_ID_KEY)}");
-    return _prefs.getInt(INPUT_SCRIPT_ID_KEY);
+    debugPrint("불러옴: scriptId: ${_prefs.getInt(_inputScriptIdKey)}");
+    return _prefs.getInt(_inputScriptIdKey);
   }
 
   Future<void> setInputScriptTotalExpectedTimeMilli(int scriptTotalExpectedTime) async {
     debugPrint("저장함: scriptTotalExpectedTime: ${scriptTotalExpectedTime}");
-    await _prefs.setInt(INPUT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY, scriptTotalExpectedTime);
+    await _prefs.setInt(_inputScriptTotalExpectedTimeMilliKey, scriptTotalExpectedTime);
   }
 
   int? getInputScriptTotalExpectedTimeMilli() {
-    debugPrint("불러옴: scriptTotalExpectedTime: ${_prefs.getInt(INPUT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY)}");
-    return _prefs.getInt(INPUT_SCRIPT_TOTAL_EXPECTED_TIME_MILLI_KEY);
+    debugPrint("불러옴: scriptTotalExpectedTime: ${_prefs.getInt(_inputScriptTotalExpectedTimeMilliKey)}");
+    return _prefs.getInt(_inputScriptTotalExpectedTimeMilliKey);
   }
 
 }

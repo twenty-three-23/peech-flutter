@@ -10,7 +10,7 @@ class LocalPracticeModeStorage {
   static final _instance = LocalPracticeModeStorage._internal();
   late SharedPreferences _pref;
 
-  static const PRACTICE_MODE_KEY = "practiceMode";
+  final _practiceModeKey = "practiceMode";
 
   factory LocalPracticeModeStorage() {
     return _instance;
@@ -23,11 +23,11 @@ class LocalPracticeModeStorage {
   }
 
   Future<void> setMode(PracticeMode? mode) async {
-    await _pref.setString(PRACTICE_MODE_KEY, mode?.name ?? '');
+    await _pref.setString(_practiceModeKey, mode?.name ?? '');
   }
 
   PracticeMode? getMode() {
-    final modeString = _pref.getString(PRACTICE_MODE_KEY);
+    final modeString = _pref.getString(_practiceModeKey);
     if (modeString != null && modeString.isNotEmpty) {
       try {
         return PracticeMode.values.firstWhere((e) => e.name == modeString);

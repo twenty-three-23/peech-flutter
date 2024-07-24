@@ -5,7 +5,7 @@ class LocalUserTokenStorage {
   static final LocalUserTokenStorage _instance = LocalUserTokenStorage._internal();
   late SharedPreferences _prefs;
 
-  static const USER_TOKEN_KEY = "userToken";
+  final _userTokenKey = "userToken";
 
   factory LocalUserTokenStorage() {
     return _instance;
@@ -19,11 +19,11 @@ class LocalUserTokenStorage {
 
 
   Future<void> setUserToken(String userToken) async {
-    await _prefs.setString(USER_TOKEN_KEY, userToken);
+    await _prefs.setString(_userTokenKey, userToken);
   }
 
   String? getUserToken() {
-    return _prefs.getString(USER_TOKEN_KEY);
+    return _prefs.getString(_userTokenKey);
   }
 
 }
