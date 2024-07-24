@@ -95,6 +95,14 @@ class PracticeResultScreen extends StatelessWidget {
                                         //           fontWeight: FontWeight.bold
                                         //       ),
                                         //     )
+                                        const SizedBox(width: 10,),
+                                        Text(
+                                          "${controller.practiceResult.value?.script?[index].measurementResult ?? ""}",
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     GestureDetector(

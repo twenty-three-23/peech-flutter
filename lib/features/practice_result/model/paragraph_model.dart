@@ -8,6 +8,7 @@ part 'paragraph_model.g.dart';
 class ParagraphModel {
   int? paragraphId;
   int? paragraphOrder;
+  String? measurementResult;
   String? time;
   @JsonKey(
     fromJson: _parseNowStatus
