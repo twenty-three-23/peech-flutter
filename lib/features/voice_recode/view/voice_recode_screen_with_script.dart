@@ -84,20 +84,29 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: CustomScrollView(
             key: _controller.scriptListViewKey,
             controller: _controller.scriptScrollController,
             physics: const NeverScrollableScrollPhysics(),
             slivers: [
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20,),
+              ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 10,),
-                            Text(_controller.script?[index] ?? ''),
+                            const SizedBox(height: 20,),
+                            Text(
+                                _controller.script?[index] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 21,
+                                  height: 2.5,
+                                )
+                            ),
                           ],
                         );
                   },

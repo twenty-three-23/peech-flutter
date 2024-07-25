@@ -60,7 +60,7 @@ class PracticeResultScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "${controller.practiceResult.value?.script?[index].time ?? "??:??:??"}",
+                                          controller.practiceResult.value?.script?[index].time ?? "??:??:??",
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold
@@ -95,14 +95,43 @@ class PracticeResultScreen extends StatelessWidget {
                                         //           fontWeight: FontWeight.bold
                                         //       ),
                                         //     )
-                                        const SizedBox(width: 10,),
-                                        Text(
-                                          "${controller.practiceResult.value?.script?[index].measurementResult ?? ""}",
-                                          style: const TextStyle(
+                                        const SizedBox(width: 5,),
+                                        if(controller.practiceResult.value?.script?[index].measurementResult == '적정')
+                                          Text(
+                                            controller.practiceResult.value?.script?[index].measurementResult ?? "",
+                                            style: const TextStyle(
                                               fontSize: 14,
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.green
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].measurementResult == '빠름')
+                                          Text(
+                                            controller.practiceResult.value?.script?[index].measurementResult ?? "",
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.red
+                                            ),
+                                          )
+                                        else if(controller.practiceResult.value?.script?[index].measurementResult == '느림')
+                                          Text(
+                                            controller.practiceResult.value?.script?[index].measurementResult ?? "",
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.orange
+                                            ),
+                                          )
+                                        else
+                                          Text(
+                                            controller.practiceResult.value?.script?[index].measurementResult ?? "",
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black
+                                            ),
                                           ),
-                                        ),
                                       ],
                                     ),
                                     GestureDetector(
