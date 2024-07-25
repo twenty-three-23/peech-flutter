@@ -13,7 +13,7 @@ class AutoTokenRegisterIntercepter extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
 
     final isStatus500 = err.response?.statusCode == 500;
-    final isGetToken = err.requestOptions.path == "/user";
+    final isGetToken = err.requestOptions.path == "api/v1/user";
     final isGetMethod = err.requestOptions.method == "GET";
 
     if(isStatus500 && isGetToken && isGetMethod) {
