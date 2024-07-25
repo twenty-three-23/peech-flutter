@@ -23,50 +23,43 @@ class HistoryMajorDetailScreen extends StatelessWidget {
           builder: (_) => SizedBox(
             child: controller.majorDetail.value == null
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10,),
-                      TextButton(
-                          onPressed: () { controller.startWithMajorScriptBtn(context); },
-                          child: const Text("이 대본으로 시작하기")
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("날짜: ${major?.createdAt ?? "unknown"}")
-                      ),
-                      const SizedBox(height: 10,),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: controller.majorDetail.value?.paragraphs?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey, width: 0.5),
-                                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  controller.majorDetail.value?.paragraphs?[index].paragraphContent ?? '이 정보를 불러올 수 없습니다.',
-                                  style: const TextStyle(
-                                    height: 1.5,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      )
-                    ],
+            : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: ListView(
+                children: [
+                  const SizedBox(height: 10,),
+                  TextButton(
+                      onPressed: () { controller.startWithMajorScriptBtn(context); },
+                      child: const Text("이 대본으로 시작하기")
                   ),
-                ),
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: Text("날짜: ${major?.createdAt ?? "unknown"}")
+                  ),
+                  const SizedBox(height: 10,),
+                  for(int i = 0; i < (controller.majorDetail.value?.paragraphs?.length ?? 0); i++)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 0.5),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            controller.majorDetail.value?.paragraphs?[i].paragraphContent ?? '이 정보를 불러올 수 없습니다.',
+                            style: const TextStyle(
+                              height: 1.5,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                ]
               ),
+            ),
           ),
         ),
     );
