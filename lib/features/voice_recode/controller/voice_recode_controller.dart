@@ -161,6 +161,7 @@ class VoiceRecodeCtr extends GetxController {
     // _stopRecodingWhenScrollIsEndListener()에 의해 자동으로 음성 녹음 중지
     // 스크롤 위치가 마지막으로 설정되어 _startAutoScrollingAnimation() 자동 종료
     _setScrollingToEnd();
+    _stopRecording();
   }
 
   void stopPracticeNoScript() {
@@ -171,6 +172,7 @@ class VoiceRecodeCtr extends GetxController {
   void _stopRecodingWhenScrollIsEndListener() {
     scriptScrollController.addListener(() {
       if(scriptScrollController.position.pixels == scriptScrollController.position.maxScrollExtent) {
+        _setScrollingToEnd();
         _stopRecording();
         scriptScrollController.removeListener(() { });
       }
