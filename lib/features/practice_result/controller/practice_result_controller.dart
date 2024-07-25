@@ -34,6 +34,7 @@ class PracticeResultCtr extends GetxController {
 
   int? resultScriptId;
 
+  bool isEdited = false;
 
   void getPracticeResult() async {
     isLoading.value = true;
@@ -155,7 +156,9 @@ class PracticeResultCtr extends GetxController {
 
   void homeBtn(BuildContext context) async {
     isLoading.value = true;
-    await putEditedScript();
+    if(isEdited) {
+      await putEditedScript();
+    }
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
     isLoading.value = false;
   }
@@ -194,6 +197,7 @@ class PracticeResultCtr extends GetxController {
   void editingFinishBtn() async {
     try {
       isLoading.value = true;
+      isEdited = true;
       _practiceResult = practiceResult.value;
       await getEditingResult();
       practiceResult.value = _practiceResult;
