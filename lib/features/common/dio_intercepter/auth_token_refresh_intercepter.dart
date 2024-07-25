@@ -23,7 +23,7 @@ class AuthTokenRefreshInterceptor extends Interceptor {
     print("[ERR] [${err.requestOptions.method}] [${err.requestOptions.path}]");
 
     final isStatus401 = err.response?.statusCode == 401;
-    final isGetToken = err.requestOptions.path == "/user";
+    final isGetToken = err.requestOptions.path == "api/v1/user";
 
     if(isStatus401 && !isGetToken) {
       DeviceIdModel deviceIdModel = DeviceIdModel();
