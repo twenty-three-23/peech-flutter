@@ -1,4 +1,4 @@
-package com.example.swm_peech_flutter
+package com.twenty_three.swm_peech_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 
