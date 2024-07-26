@@ -50,16 +50,21 @@ class ThemeInputCtr extends GetxController {
 
   void finishButton(BuildContext context) async {
     isLoading.value = true;
-    await saveTheme();
+    try {
+      await saveTheme();
+    } catch(e) {
+      print(e);
+      isLoading.value = false;
+      rethrow;
+    }
     if(context.mounted) {
       if (LocalPracticeModeStorage().getMode() == PracticeMode.withScript) {
-        Navigator.pushNamed(context, '/scriptInput/input');
-        isLoading.value = false;
+        await Navigator.pushNamed(context, '/scriptInput/input');
       }
       else if (LocalPracticeModeStorage().getMode() == PracticeMode.noScript) {
-        Navigator.pushNamed(context, '/voiceRecodeNoScript');
-        isLoading.value = false;
+        await Navigator.pushNamed(context, '/voiceRecodeNoScript');
       }
     }
+    isLoading.value = false;
   }
 }
