@@ -47,7 +47,10 @@ dependencies:
   uuid: ^4.4.0
 
   path_provider: ^2.0.9
+
   kakao_flutter_sdk: ^1.9.5
+
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +72,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  assets:
+    - assets/config/keys.env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
