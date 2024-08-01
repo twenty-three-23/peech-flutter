@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -99,6 +100,10 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                 child: const Text("기록 보기")
             ),
+            TextButton(onPressed: () { showSocialLoginBottomSheet(context); }, child: Text("바텀시트")),
+            TextButton(onPressed: () { controller.kakaoLogin(); }, child: Text("로그인")),
+            TextButton(onPressed: () { controller.kakaoLogout(); }, child: Text("로그아웃")),
+            TextButton(onPressed: () { controller.kakaoUnlink(); }, child: Text("연결 끊기"))
           ],
         ),
       ),
