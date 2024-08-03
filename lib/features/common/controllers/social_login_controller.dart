@@ -11,6 +11,7 @@ import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
 
 class SocialLoginCtr extends GetxController {
 
+  bool isShowed = false;
   Rx<LoginViewState> loginState = Rx<LoginViewState>(LoginViewState.waitingToLogin);
   Rx<bool> isLoginFailed = Rx<bool>(false);
 

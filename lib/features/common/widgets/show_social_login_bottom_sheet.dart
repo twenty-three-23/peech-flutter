@@ -6,6 +6,8 @@ import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
 void showSocialLoginBottomSheet(BuildContext context) {
 
   SocialLoginCtr controller = Get.put(SocialLoginCtr());
+  if(controller.isShowed == true) return;
+  controller.isShowed = true;
 
   showModalBottomSheet<void>(
     context: context,
