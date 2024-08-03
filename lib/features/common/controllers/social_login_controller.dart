@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/models/login_token_model.dart';
+import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
 
 class SocialLoginCtr extends GetxController {
@@ -11,7 +16,16 @@ class SocialLoginCtr extends GetxController {
     loginState.value = LoginViewState.loading;
     if (await isKakaoTalkInstalled()) {
       try {
-        await UserApi.instance.loginWithKakaoTalk();
+        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
+        print("토큰: ${token.accessToken}");
+        SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
+        Dio dio = Dio();
+        dio.interceptors.addAll([
+          DebugIntercepter(),
+        ]);
+        RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(dio);
+        LoginTokenModel loginTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
+        print(loginTokenModel);
         loginState.value = LoginViewState.success;
         print('카카오톡으로 로그인 성공');
         await Future.delayed(Duration(milliseconds: 500));
@@ -22,6 +36,12 @@ class SocialLoginCtr extends GetxController {
         if(context.mounted) {
           Navigator.pop(context);
         }
+      } on DioException catch (error) {
+        loginState.value = LoginViewState.waitingToLogin;
+        print('카카오톡으로 로그인 실패 $error');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("로그인 실패 $error"),
+        ));
       } catch (error) {
         loginState.value = LoginViewState.waitingToLogin;
         print('카카오톡으로 로그인 실패 $error');
