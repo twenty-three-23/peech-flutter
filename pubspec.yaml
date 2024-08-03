@@ -52,6 +52,7 @@ dependencies:
 
   flutter_dotenv: ^5.0.2
   event_bus: ^2.0.0
+  dio: ^5.5.0+1
 
 dev_dependencies:
   flutter_test:
