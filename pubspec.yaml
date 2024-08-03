@@ -51,6 +51,7 @@ dependencies:
   kakao_flutter_sdk: ^1.9.5
 
   flutter_dotenv: ^5.0.2
+  event_bus: ^2.0.0
 
 dev_dependencies:
   flutter_test:
