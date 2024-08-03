@@ -4,7 +4,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_device
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_id_assign_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
+import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_register_interceptor.dart';
 import 'package:swm_peech_flutter/features/common/models/device_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_token_model.dart';
 
