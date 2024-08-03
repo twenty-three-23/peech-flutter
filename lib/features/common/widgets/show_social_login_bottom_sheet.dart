@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
 
@@ -36,13 +35,28 @@ void showSocialLoginBottomSheet(BuildContext context) {
                           fontSize: 15,
                         ),
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
+                      if(controller.isLoginFailed.value == true)
+                        const Column(
+                          children: [
+                            Text(
+                              '로그인에 실패했습니다. 다시 시도해주세요.',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.red,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                          ],
+                        )
+                      else
+                        const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () async {
                           controller.loginWithKakao(context);
                         },
                         child: Image.asset('assets/images/kakao_login_medium_wide.png'),
-                      )
+                      ),
                     ],
                   )
                 else if(controller.loginState == LoginViewState.success)

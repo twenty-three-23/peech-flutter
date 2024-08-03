@@ -11,6 +11,7 @@ import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
 class SocialLoginCtr extends GetxController {
 
   Rx<LoginViewState> loginState = Rx<LoginViewState>(LoginViewState.waitingToLogin);
+  Rx<bool> isLoginFailed = Rx<bool>(false);
 
   void loginWithKakao(BuildContext context) async {
     loginState.value = LoginViewState.loading;
@@ -38,16 +39,20 @@ class SocialLoginCtr extends GetxController {
         }
       } on DioException catch (error) {
         loginState.value = LoginViewState.waitingToLogin;
+        isLoginFailed.value = true;
         print('카카오톡으로 로그인 실패 $error');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("로그인 실패 $error"),
         ));
+        rethrow;
       } catch (error) {
         loginState.value = LoginViewState.waitingToLogin;
+        isLoginFailed.value = true;
         print('카카오톡으로 로그인 실패 $error');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("로그인 실패 $error"),
         ));
+        rethrow;
       }
     } else {
       loginState.value = LoginViewState.waitingToLogin;
