@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/login_token_model.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/login_view_state.dart';
@@ -20,14 +20,11 @@ class SocialLoginCtr extends GetxController {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print("토큰: ${token.accessToken}");
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
-        Dio dio = Dio();
-        dio.interceptors.addAll([
-          DebugIntercepter(),
-        ]);
-        RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(dio);
+        RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
         LoginTokenModel loginTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
         print(loginTokenModel);
         loginState.value = LoginViewState.success;
+        isLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
         await Future.delayed(Duration(milliseconds: 500));
         ScaffoldMessenger.of(context).showSnackBar(

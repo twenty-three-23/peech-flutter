@@ -1,11 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/theme_id_model.dart';
 import 'package:swm_peech_flutter/features/theme_input/data_source/remote/remote_theme_save_data_source.dart';
 import '../../common/data_source/local/local_practice_mode_storage.dart';
@@ -35,10 +32,7 @@ class ThemeInputCtr extends GetxController {
 
   Future<ThemeIdModel> getThemeId(String theme) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
-      dio.interceptors.add(AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()));
-      final remoteThemeSaveDataSource = RemoteThemeSaveDataSource(dio);
+      final remoteThemeSaveDataSource = RemoteThemeSaveDataSource(AuthDioFactory().dio);
       final ThemeIdModel themeIdModel = await remoteThemeSaveDataSource.postTheme({"themeTitle": theme});
       print("테마id: ${themeIdModel.themeId}");
       return themeIdModel;

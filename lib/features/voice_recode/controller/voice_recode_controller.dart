@@ -6,10 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
@@ -49,12 +47,7 @@ class VoiceRecodeCtr extends GetxController {
     try {
       _maxAudioTime = null;
       maxAudioTime.value = null;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(dio);
+      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
       _maxAudioTime = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
       maxAudioTime.value = _maxAudioTime;
     } on DioException catch(e) {
