@@ -100,10 +100,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                 child: const Text("기록 보기")
             ),
-            TextButton(onPressed: () { showSocialLoginBottomSheet(context); }, child: Text("바텀시트")),
-            TextButton(onPressed: () { controller.kakaoLogin(); }, child: Text("로그인")),
-            TextButton(onPressed: () { controller.kakaoLogout(); }, child: Text("로그아웃")),
-            TextButton(onPressed: () { controller.kakaoUnlink(); }, child: Text("연결 끊기"))
+            TextButton(onPressed: () { showSocialLoginBottomSheet(context); }, child: const Text("소셜 로그인")),
           ],
         ),
       ),
