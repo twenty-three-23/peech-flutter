@@ -1,18 +1,18 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalDeviceUuidStorage {
+class LocalAuthTokenStorage {
 
-  static final LocalDeviceUuidStorage _instance = LocalDeviceUuidStorage._internal();
+  static final LocalAuthTokenStorage _instance = LocalAuthTokenStorage._internal();
   late SharedPreferences _prefs;
 
   final _accessTokenKey = "accessTokenKey";
   final _refreshTokenKey = "refreshTokenKey";
 
-  factory LocalDeviceUuidStorage() {
+  factory LocalAuthTokenStorage() {
     return _instance;
   }
 
-  LocalDeviceUuidStorage._internal();
+  LocalAuthTokenStorage._internal();
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();

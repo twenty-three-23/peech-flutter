@@ -19,7 +19,7 @@ void showSocialLoginBottomSheet(BuildContext context) {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Text(
-                  '간편 로그인 후 계속하기',
+                  '3초 간편 로그인 후 계속하기',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

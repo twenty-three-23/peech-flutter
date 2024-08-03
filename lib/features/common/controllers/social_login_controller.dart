@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/login_token_model.dart';
@@ -20,13 +21,11 @@ class SocialLoginCtr extends GetxController {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print("토큰: ${token.accessToken}");
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
-        RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
-        LoginTokenModel loginTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
-        print(loginTokenModel);
+        await postUserToken(kakaoLoginInfo);
         loginState.value = LoginViewState.success;
         isLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("카카오톡 로그인 성공!"),
@@ -58,5 +57,13 @@ class SocialLoginCtr extends GetxController {
         content: Text("카카오톡이 깔려있지 않습니다"),
       ));
     }
+  }
+
+  Future<void> postUserToken(SocialLoginInfo kakaoLoginInfo) async {
+    RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
+    LoginTokenModel loginTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
+    LocalAuthTokenStorage localAuthTokenStorage = LocalAuthTokenStorage();
+    localAuthTokenStorage.setAccessToken(loginTokenModel.accessToken ?? "");
+    localAuthTokenStorage.setRefreshToken(loginTokenModel.refreshToken ?? "");
   }
 }
