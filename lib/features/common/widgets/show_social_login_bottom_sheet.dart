@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
-import 'package:swm_peech_flutter/features/common/widgets/social_login_screen.dart';
+import 'package:swm_peech_flutter/features/common/widgets/social_login_choice_view.dart';
 
 void showSocialLoginBottomSheet(BuildContext context, SocialLoginBottomSheetState state) {
 
@@ -16,7 +16,7 @@ void showSocialLoginBottomSheet(BuildContext context, SocialLoginBottomSheetStat
     builder: (BuildContext context) {
       return GetX<SocialLoginCtr>(
         builder: (_) => controller.socialLoginBottomSheetState.value == SocialLoginBottomSheetState.choiceView
-            ? socialLoginScreen(context, controller)
+            ? socialLoginChoiceView(context, controller)
             : Container(),
       );
     },
