@@ -7,16 +7,18 @@ import 'package:swm_peech_flutter/features/common/widgets/social_login_screen.da
 void showSocialLoginBottomSheet(BuildContext context, SocialLoginBottomSheetState state) {
 
   SocialLoginCtr controller = Get.put(SocialLoginCtr());
+  controller.socialLoginBottomSheetState.value = state;
   if(controller.isShowed == true) return; // 한 번에 한개의 바텀 시트만 띄워지도록
   controller.isShowed = true;
-  controller.socialLoginBottomSheetState.value = state;
 
   showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
-      return controller.socialLoginBottomSheetState.value == SocialLoginBottomSheetState.choiceView
-          ? socialLoginScreen(context, controller)
-          : Container();
+      return GetX<SocialLoginCtr>(
+        builder: (_) => controller.socialLoginBottomSheetState.value == SocialLoginBottomSheetState.choiceView
+            ? socialLoginScreen(context, controller)
+            : Container(),
+      );
     },
   ).whenComplete(() {
     Get.delete<SocialLoginCtr>();

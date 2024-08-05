@@ -8,7 +8,7 @@ import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bott
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 
-import 'features/common/events/social_login_event.dart';
+import 'features/common/events/social_login_bottom_sheet_open_event.dart';
 
 void main() async {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -16,9 +16,9 @@ void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await AppInitializer().initialize();
-    AppEventBus.instance.on<SocialLoginEvent>().listen((_) {
+    AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
       print("SocialLoginEvent");
-      showSocialLoginBottomSheet(navigatorKey.currentContext!, SocialLoginBottomSheetState.choiceView);
+      showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
     });
     FlutterError.onError = (FlutterErrorDetails details) {
       print("에러 발생: ${details.exception}");
