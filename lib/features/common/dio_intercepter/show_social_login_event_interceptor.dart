@@ -9,13 +9,13 @@ class ShowSocialLoginEventInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
 
     final isStatus401 = err.response?.statusCode == 401;
-    final isStatus411 = err.response?.statusCode == 401;
+    final isStatus411 = err.response?.statusCode == 411;
 
     //소셜 로그인 바텀 시트(소셜 로그인 선택 뷰) 띄우기
     if(isStatus401) {
       try {
         print("[ShowSocialLoginEventInterceptor] [ERR] [${err.requestOptions.method}] [${err.requestOptions.path}]");
-        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.choiceView));
+        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.choiceView, fromWhere: 'ShowSocialLoginEventInterceptor-is401'));
       } catch(e) {
         print("[ShowSocialLoginEventInterceptor] Exception: $e");
       }
@@ -25,7 +25,7 @@ class ShowSocialLoginEventInterceptor extends Interceptor {
     if(isStatus411) {
       try {
         print("[ShowSocialLoginEventInterceptor] [ERR] [${err.requestOptions.method}] [${err.requestOptions.path}]");
-        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView));
+        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'ShowSocialLoginEventInterceptor-is411'));
       } catch(e) {
         print("[ShowSocialLoginEventInterceptor] Exception: $e");
       }

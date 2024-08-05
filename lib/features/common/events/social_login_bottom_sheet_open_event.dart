@@ -2,5 +2,7 @@ import 'package:swm_peech_flutter/features/common/models/social_login_bottom_she
 
 class SocialLoginBottomSheetOpenEvent {
   SocialLoginBottomSheetState socialLoginBottomSheetState;
-  SocialLoginBottomSheetOpenEvent({required this.socialLoginBottomSheetState});
+  String fromWhere;
+
+  SocialLoginBottomSheetOpenEvent({required this.socialLoginBottomSheetState, this.fromWhere = 'unknwon'});
 }

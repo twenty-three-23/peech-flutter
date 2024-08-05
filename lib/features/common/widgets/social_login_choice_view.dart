@@ -18,7 +18,7 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
             ),
           ),
           const SizedBox(height: 20),
-          if(controller.loginState.value == SocialLoginChoiceViewState.waitingToLogin)
+          if(controller.loginChoiceViewState.value == SocialLoginChoiceViewState.waitingToLogin)
             Column(
               children: [
                 const Text(
@@ -28,7 +28,7 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                   ),
                 ),
                 const SizedBox(height: 20),
-                if(controller.isLoginFailed.value == true)
+                if(controller.loginChoiceViewLoginFailed.value == true)
                   const Column(
                     children: [
                       Text(
@@ -51,14 +51,14 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                 ),
               ],
             )
-          else if(controller.loginState.value == SocialLoginChoiceViewState.success)
+          else if(controller.loginChoiceViewState.value == SocialLoginChoiceViewState.success)
             const Text(
                 '로그인 성공!',
                 style: TextStyle(
                   fontSize: 15,
                 )
             )
-          else if(controller.loginState.value == SocialLoginChoiceViewState.loading)
+          else if(controller.loginChoiceViewState.value == SocialLoginChoiceViewState.loading)
               const CircularProgressIndicator(),
         ],
       ),

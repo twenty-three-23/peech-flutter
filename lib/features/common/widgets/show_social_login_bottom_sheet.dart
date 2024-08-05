@@ -8,6 +8,7 @@ import 'social_getting_additional_info_view.dart';
 void showSocialLoginBottomSheet(BuildContext context, SocialLoginBottomSheetState state) {
   SocialLoginCtr controller = Get.put(SocialLoginCtr());
   controller.socialLoginBottomSheetState.value = state;
+  controller.initialViewState();
   if (controller.isShowed) return; // 한 번에 한개의 바텀 시트만 띄워지도록
   controller.isShowed = true;
 

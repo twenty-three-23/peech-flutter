@@ -16,16 +16,16 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await AppInitializer().initialize();
     AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
-      print("SocialLoginEvent");
+      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
       showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
     });
     FlutterError.onError = (FlutterErrorDetails details) {
-      print("에러 발생: ${details.exception}");
+      print("[FlutterError] 에러 발생: ${details.exception}");
     };
     runApp(MyApp(navigatorKey: navigatorKey));
   },
     (Object error, StackTrace stack) {
-      print("에러 발생: $error");
+      print("[runZonedGuarded] 에러 발생: $error");
     }
   );
 }
