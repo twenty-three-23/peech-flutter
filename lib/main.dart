@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
+import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
@@ -17,7 +18,7 @@ void main() async {
     await AppInitializer().initialize();
     AppEventBus.instance.on<SocialLoginEvent>().listen((_) {
       print("SocialLoginEvent");
-      showSocialLoginBottomSheet(navigatorKey.currentContext!);
+      showSocialLoginBottomSheet(navigatorKey.currentContext!, SocialLoginBottomSheetState.choiceView);
     });
     FlutterError.onError = (FlutterErrorDetails details) {
       print("에러 발생: ${details.exception}");
