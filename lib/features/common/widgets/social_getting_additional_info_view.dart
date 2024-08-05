@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 
 Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr controller) {
-  return SingleChildScrollView(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height,
-      ),
-      child: Center(
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 9 / 10,
+    child: Center(
+      child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(

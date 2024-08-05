@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
 
