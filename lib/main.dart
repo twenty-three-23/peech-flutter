@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
-import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
 
@@ -43,6 +42,14 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       getPages: Routers.routers,
       initialRoute: Routers.INITIAL,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko','KR'),
+      ],
     );
   }
 }
