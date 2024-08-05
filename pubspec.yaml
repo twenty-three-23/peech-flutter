@@ -48,6 +48,12 @@ dependencies:
 
   path_provider: ^2.0.9
 
+  kakao_flutter_sdk: ^1.9.5
+
+  flutter_dotenv: ^5.0.2
+  event_bus: ^2.0.0
+  dio: ^5.5.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +74,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  assets:
+    - assets/images/
+    - assets/config/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

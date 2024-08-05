@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
@@ -83,10 +81,7 @@ class ScriptInputCtr extends GetxController {
 
   Future<ScriptIdModel> postScript(int themeId, ScriptInputParagraphsModel script) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
-      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(AuthDioFactory().dio);
       ScriptIdModel? scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
       if(scriptId == null) throw(Exception("[postScript] scriptId is null!"));
       return scriptId;
@@ -101,9 +96,7 @@ class ScriptInputCtr extends GetxController {
 
   Future<ExpectedTimeModel> getExpectedTime(int themeId, int scriptId) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
+      final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(AuthDioFactory().dio);
       ExpectedTimeModel expectedTimeModel = await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
       return expectedTimeModel;
     } on DioException catch(e) {
