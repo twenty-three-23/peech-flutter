@@ -26,7 +26,7 @@ class SocialLoginCtr extends GetxController {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print("토큰: ${token.accessToken}");
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
-        await postUserToken(kakaoLoginInfo);
+        await postSocialToken(kakaoLoginInfo);
         loginState.value = SocialLoginChoiceViewState.success;
         isLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
@@ -40,6 +40,7 @@ class SocialLoginCtr extends GetxController {
         }
       } on DioException catch (error) {
 
+        //TODO 테스트용 코드. 나중에 제거하기. ---
         if(error.response?.statusCode == 411) {
           loginState.value = SocialLoginChoiceViewState.success;
           isLoginFailed.value = false;
@@ -52,6 +53,7 @@ class SocialLoginCtr extends GetxController {
           AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView));
           return;
         }
+        //--- 테스트용 코드
 
         loginState.value = SocialLoginChoiceViewState.waitingToLogin;
         isLoginFailed.value = true;
@@ -78,7 +80,7 @@ class SocialLoginCtr extends GetxController {
     }
   }
 
-  Future<void> postUserToken(SocialLoginInfo kakaoLoginInfo) async {
+  Future<void> postSocialToken(SocialLoginInfo kakaoLoginInfo) async {
     RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
     LoginTokenModel loginTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
     LocalAuthTokenStorage localAuthTokenStorage = LocalAuthTokenStorage();
