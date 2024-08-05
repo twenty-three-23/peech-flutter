@@ -54,7 +54,8 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                 children: [
                   Column(
                     children: [
-                      const Text('생년월일'),
+                      const Text('생년월일 (birthday)'),
+                      const SizedBox(height: 5,),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -78,7 +79,8 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                   ),
                   Column(
                     children: [
-                      const Text('성별'),
+                      const Text('성별 (gender)'),
+                      const SizedBox(height: 5,),
                       DropdownButton<UserGender?>(
                         value: controller.gender.value,
                         onChanged: (UserGender? newValue) {
