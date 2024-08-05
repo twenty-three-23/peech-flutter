@@ -11,6 +11,7 @@ import 'package:swm_peech_flutter/features/common/models/login_token_model.dart'
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
+import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 
 class SocialLoginCtr extends GetxController {
 
@@ -18,6 +19,12 @@ class SocialLoginCtr extends GetxController {
   Rx<SocialLoginChoiceViewState> loginState = Rx<SocialLoginChoiceViewState>(SocialLoginChoiceViewState.waitingToLogin);
   Rx<bool> isLoginFailed = Rx<bool>(false);
   Rx<SocialLoginBottomSheetState> socialLoginBottomSheetState = Rx<SocialLoginBottomSheetState>(SocialLoginBottomSheetState.choiceView);
+  Rx<String> firstName = Rx<String>('');
+  Rx<String> lastName = Rx<String>('');
+  Rx<DateTime> birthday = Rx<DateTime>(DateTime(2000, 1, 1));
+  Rx<UserGender> gender = Rx<UserGender>(UserGender.unknown);
+  Rx<String> nickname = Rx<String>('');
+
 
   void loginWithKakao(BuildContext context) async {
     loginState.value = SocialLoginChoiceViewState.loading;
