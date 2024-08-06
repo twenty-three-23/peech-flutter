@@ -69,3 +69,5 @@ lib/generated_plugin_registrant.dart
 
 # KeyStore
 *.env
+
+firebase_options.dart
