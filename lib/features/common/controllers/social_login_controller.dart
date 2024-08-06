@@ -7,8 +7,6 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_t
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_additional_info_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
-import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
-import 'package:swm_peech_flutter/features/common/events/social_login_bottom_sheet_open_event.dart';
 import 'package:swm_peech_flutter/features/common/models/auth_token_model.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
@@ -29,6 +27,7 @@ class SocialLoginCtr extends GetxController {
   Rx<UserGender> gender = Rx<UserGender>(UserGender.unknown);
   Rx<String> nickname = Rx<String>('');
   Rx<UserAdditionalInfoViewState> userAdditionalInfoViewState = Rx<UserAdditionalInfoViewState>(UserAdditionalInfoViewState.input);
+  Rx<bool> userAdditionalInfoViewLoginFailed = Rx<bool>(false);
 
 
   void loginWithKakao(BuildContext context) async {
@@ -75,16 +74,16 @@ class SocialLoginCtr extends GetxController {
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
         print('카카오톡으로 로그인 실패 $error');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("로그인 실패 $error"),
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("카카오톡 로그인 실패: 서버 에러"),
         ));
         rethrow;
       } catch (error) {
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
         print('카카오톡으로 로그인 실패 $error');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("로그인 실패 $error"),
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("카카오톡 로그인 실패: 클라이언트 에러"),
         ));
         rethrow;
       }
@@ -113,6 +112,7 @@ class SocialLoginCtr extends GetxController {
     userAdditionalInfoViewState.value = UserAdditionalInfoViewState.loading;
     if(firstName.value.isEmpty || lastName.value.isEmpty || nickname.value.isEmpty) {
       userAdditionalInfoViewState.value = UserAdditionalInfoViewState.input;
+      userAdditionalInfoViewLoginFailed.value = true;
       return;
     }
     try {
@@ -161,5 +161,6 @@ class SocialLoginCtr extends GetxController {
     userAdditionalInfoViewState.value = UserAdditionalInfoViewState.input;
     loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
     loginChoiceViewLoginFailed.value = false;
+    userAdditionalInfoViewLoginFailed.value = false;
   }
 }

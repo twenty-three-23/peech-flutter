@@ -123,7 +123,17 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                         )
                       ],
                     ),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 65),
+                    if(controller.userAdditionalInfoViewLoginFailed.value)
+                      const Text(
+                        '입력하지 않은 정보가 있습니다. 다시 확인해주세요.',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.red,
+                        ),
+                      )
+                    else
+                      const SizedBox(height: 22),
                     Row(
                       children: [
                         Expanded(
