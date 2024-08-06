@@ -1,0 +1,4 @@
+enum SocialLoginBottomSheetState {
+  choiceView,
+  gettingAdditionalDataView,
+}

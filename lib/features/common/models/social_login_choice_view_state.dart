@@ -1,4 +1,4 @@
-enum LoginViewState {
+enum SocialLoginChoiceViewState {
   waitingToLogin,
   loading,
   success,
