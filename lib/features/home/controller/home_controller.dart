@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
@@ -79,6 +80,10 @@ class HomeCtr extends GetxController {
       print('로그아웃 실패, SDK에서 토큰 삭제 $error');
     }
 
+  }
+
+  void logOut() async {
+    LocalAuthTokenStorage().removeAllAuthToken();
   }
 
 }
