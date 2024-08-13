@@ -7,7 +7,10 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_t
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_additional_info_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
+import 'package:swm_peech_flutter/features/common/events/social_login_bottom_sheet_open_event.dart';
 import 'package:swm_peech_flutter/features/common/models/auth_token_model.dart';
+import 'package:swm_peech_flutter/features/common/models/auth_token_response_model.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
@@ -37,43 +40,28 @@ class SocialLoginCtr extends GetxController {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print("토큰: ${token.accessToken}");
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
-        await postSocialToken(kakaoLoginInfo);
+        AuthTokenResponseModel authTokenResponseModel = await postSocialToken(kakaoLoginInfo);
         loginChoiceViewState.value = SocialLoginChoiceViewState.success;
         loginChoiceViewLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
         await Future.delayed(const Duration(milliseconds: 500));
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("카카오톡 로그인 성공!"),
-            ));
-        if(context.mounted) {
-          Navigator.pop(context);
+        if(authTokenResponseModel.statusCode == 411) {
+          AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("카카오톡 로그인 성공!"),
+              ));
+          if(context.mounted) {
+            Navigator.pop(context);
+          }
         }
       } on DioException catch (error) {
 
-        //TODO 테스트용 코드. 나중에 제거하기. ---
-        if(error.response?.statusCode == 411) {
-        //   loginChoiceViewState.value = SocialLoginChoiceViewState.success;
-        //   loginChoiceViewLoginFailed.value = false;
-          AuthTokenModel authTokenModel = AuthTokenModel(
-            accessToken: error.response?.data['accessToken'],
-            refreshToken: error.response?.data['refreshToken'],
-          );
-          saveUserToken(authTokenModel);
-        //   print('카카오톡으로 로그인 성공');
-        //   await Future.delayed(const Duration(milliseconds: 500));
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //       const SnackBar(
-        //         content: Text("카카오톡 로그인 성공!"),
-        //       ));
-        //   AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'loginWithKakao-error'));
-        //   return;
-        }
-        //--- 테스트용 코드
-
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
-        print('카카오톡으로 로그인 실패 $error');
+        print('카카오톡으로 로그인 실패(dio exception) $error');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("카카오톡 로그인 실패: 서버 에러"),
         ));
@@ -81,7 +69,7 @@ class SocialLoginCtr extends GetxController {
       } catch (error) {
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
-        print('카카오톡으로 로그인 실패 $error');
+        print('카카오톡으로 로그인 실패(exception) $error');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("카카오톡 로그인 실패: 클라이언트 에러"),
         ));
@@ -96,14 +84,17 @@ class SocialLoginCtr extends GetxController {
     }
   }
 
-  Future<void> postSocialToken(SocialLoginInfo kakaoLoginInfo) async {
+  Future<AuthTokenResponseModel> postSocialToken(SocialLoginInfo kakaoLoginInfo) async {
     RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
-    AuthTokenModel authTokenModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
-    await saveUserToken(authTokenModel);
+    AuthTokenResponseModel authTokenResponseModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
+    await saveUserToken(authTokenResponseModel.responseBody ?? AuthTokenModel());
+    return authTokenResponseModel;
   }
 
   Future<void> saveUserToken(AuthTokenModel authTokenModel) async {
     LocalAuthTokenStorage localAuthTokenStorage = LocalAuthTokenStorage();
+    print('accessToken 저장 -> ${authTokenModel.accessToken}');
+    print('refreshToken 저장 -> ${authTokenModel.refreshToken}');
     localAuthTokenStorage.setAccessToken(authTokenModel.accessToken ?? "");
     localAuthTokenStorage.setRefreshToken(authTokenModel.refreshToken ?? "");
   }
