@@ -35,4 +35,17 @@ class LocalAuthTokenStorage {
     return _prefs.getString(_refreshTokenKey);
   }
 
+  void removeAccessToken() async {
+    await _prefs.remove(_accessTokenKey);
+  }
+
+  void removeRefreshToken() async {
+    await _prefs.remove(_refreshTokenKey);
+  }
+
+  void removeAllAuthToken() async {
+    await _prefs.remove(_accessTokenKey);
+    await _prefs.remove(_refreshTokenKey);
+  }
+
 }

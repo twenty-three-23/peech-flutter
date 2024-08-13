@@ -15,5 +15,6 @@ abstract class RemoteUserAudioTimeDataSource {
   Future<RemainingTimeModel> getUserRemainingTime();
 
   @retrofit.GET('api/v1/max-audio-time')
+  @retrofit.Headers({'accessToken' : 'true'})
   Future<MaxAudioTimeModel> getUserMaxAudioTime();
 }

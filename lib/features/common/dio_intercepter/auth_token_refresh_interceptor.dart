@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_auth_token_refresh_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/models/auth_token_model.dart';
+import 'package:swm_peech_flutter/features/common/models/refresh_token_model.dart';
 
 class AuthTokenRefreshInterceptor extends Interceptor {
 
@@ -26,8 +29,12 @@ class AuthTokenRefreshInterceptor extends Interceptor {
           throw Exception("refreshToken is null!");
         }
 
-        //TODO 토큰 재발급받기
-        throw Exception("토큰 재발급받기");
+        //토큰 재발급받기
+        RefreshTokenModel refreshTokenModel = RefreshTokenModel(refreshToken: refreshToken);
+        RemoteAuthTokenRefreshDataSource remoteAuthTokenRefreshDataSource = RemoteAuthTokenRefreshDataSource(AuthDioFactory().dio);
+        AuthTokenModel authTokenModel = await remoteAuthTokenRefreshDataSource.refreshToken(refreshTokenModel.toJson());
+        LocalAuthTokenStorage().setAccessToken(authTokenModel.accessToken ?? '');
+        LocalAuthTokenStorage().setRefreshToken(authTokenModel.refreshToken ?? '');
 
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
