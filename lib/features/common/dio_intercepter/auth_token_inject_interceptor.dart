@@ -11,9 +11,12 @@ class AuthTokenInjectInterceptor extends Interceptor {
 
     if(options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken');
-      final String? token = localAuthTokenStorage.getAccessToken();
-      options.headers.addAll({"authorization": "Bearer ${token ?? 'x'}"});
-      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [${token ?? 'x'}]");
+      String? token = localAuthTokenStorage.getAccessToken();
+      if(token == '' || token == null) {
+        token = 'x';
+      }
+      options.headers.addAll({"authorization": "Bearer $token"});
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [$token]");
     }
 
     return super.onRequest(options, handler);
