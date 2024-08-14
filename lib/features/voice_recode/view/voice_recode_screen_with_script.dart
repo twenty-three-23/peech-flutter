@@ -83,77 +83,81 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
             const SizedBox(width: 8,),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: CustomScrollView(
-            key: _controller.scriptListViewKey,
-            controller: _controller.scriptScrollController,
-            physics: const NeverScrollableScrollPhysics(),
-            slivers: [
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 20,),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 20,),
-                            Text(
-                                _controller.script?[index] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 21,
-                                  height: 2.5,
-                                )
-                            ),
-                          ],
-                        );
-                  },
-                  childCount: (_controller.script?.length ?? 0),
+        body: GetX<VoiceRecodeCtr>(
+          builder: (_) => Stack(
+            children: [
+              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART)
+                Column(
+                  children: [
+                    Container(height: _controller.scriptListViewSize.value * 4/10),
+                    const Divider(height: 2, color: Colors.red,),
+                  ],
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: GetX<VoiceRecodeCtr>(
-                  builder: (_) => Container(
-                    height: _controller.scriptListViewSize.value,
-                    alignment: Alignment.center,
-                    child: _controller.practiceState.value == PracticeState.ENDRECODING
-                        ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () { _controller.endPractice(context); },
-                            child: const Text("분석 받기")
-                        ),
-                        IntrinsicWidth(
-                          child: ElevatedButton(
-                              onPressed: () { _controller.startPracticeWithScript(); },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: CustomScrollView(
+                  key: _controller.scriptListViewKey,
+                  controller: _controller.scriptScrollController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Container(height: _controller.scriptListViewSize.value * 5/10),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("다시 녹음하기"),
-                                  _controller.maxAudioTime.value == null
-                                      ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
-                                      : Text(
-                                    "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                    ),
-                                  )
+                                  Text(
+                                      _controller.script?[index] ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 21,
+                                        height: 2.5,
+                                      )
+                                  ),
+                                  const SizedBox(height: 40,),
                                 ],
-                              )
-                          ),
+                              );
+                        },
+                        childCount: (_controller.script?.length ?? 0),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: GetX<VoiceRecodeCtr>(
+                        builder: (_) => Container(
+                          height: _controller.scriptListViewSize.value,
+                          alignment: Alignment.center,
+                          child: _controller.practiceState.value == PracticeState.ENDRECODING
+                              ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () { _controller.endPractice(context); },
+                                  child: const Text("분석 받기")
+                              ),
+                              IntrinsicWidth(
+                                child: ElevatedButton(
+                                    // onPressed: () { _controller.startPracticeWithScript(); },
+                                    onPressed: () {
+                                      _controller.resetRecoding();
+                                    },
+                                    child: const Text("다시 녹음하기")
+                                ),
+                              ),
+                            ],
+                          )
+                              : const Text(""),
                         ),
-                      ],
-                    )
-                        : const Text(""),
-                  ),
-                ),
+                      ),
+                    ),
+                  ],
+                )
               ),
             ],
-          )
-      ),
+          ),
+        )
     );
   }
 }
