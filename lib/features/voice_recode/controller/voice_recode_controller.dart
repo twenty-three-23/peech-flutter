@@ -43,7 +43,7 @@ class VoiceRecodeCtr extends GetxController {
     super.onInit();
   }
 
-  void getMaxAudioTime() async {
+  Future<void> getMaxAudioTime() async {
     try {
       _maxAudioTime = null;
       maxAudioTime.value = null;
@@ -134,16 +134,18 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeWithScript() async {
+    await getMaxAudioTime();
     if(_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
     _startRecording();
-    _stopRecodingWhenScrollIsEndListener();
+    // _stopRecodingWhenScrollIsEndListener(); //자농 녹음 중지 제거
     int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
     _startAutoScrollingAnimation(totalExpectedTime);
   }
 
-  void startPracticeNoScript() {
+  void startPracticeNoScript() async {
+    await getMaxAudioTime();
     if(_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
@@ -194,6 +196,11 @@ class VoiceRecodeCtr extends GetxController {
       scriptListViewSize.value = renderBox.size.height;
     });
 
+  }
+
+  void resetRecoding() {
+    practiceState.value = PracticeState.BEFORETOSTART;
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
   }
 
 
