@@ -139,7 +139,7 @@ class HomeScreen extends StatelessWidget {
             TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
-            const SizedBox(height: 30,),
+            const SizedBox(height: 16,),
           ],
         ),
       ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
+import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
 
 class ThemeInputScreen extends StatelessWidget {
@@ -15,36 +18,84 @@ class ThemeInputScreen extends StatelessWidget {
         title: const Text("발표 주제 입력"),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text("발표 주제를 입력해주세요"),
-          const SizedBox(height: 20,),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              maxLines: 1,
-              onChanged: (value) {
-                controller.updateTheme(value);
-              },
-              decoration: const InputDecoration(
-                  hintText: "발표 주제",
-                  border: OutlineInputBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                    'assets/images/progress_indicator_filled.svg',
+                    semanticsLabel: 'progress bar'
+                ),
+                const SizedBox(width: 4,),
+                SvgPicture.asset(
+                    'assets/images/progress_indicator_empty.svg',
+                    semanticsLabel: 'progress bar'
+                ),
+                const SizedBox(width: 4,),
+                SvgPicture.asset(
+                    'assets/images/progress_indicator_empty.svg',
+                    semanticsLabel: 'progress bar'
+                ),
+                const SizedBox(width: 4,),
+                SvgPicture.asset(
+                    'assets/images/progress_indicator_empty.svg',
+                    semanticsLabel: 'progress bar'
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16,),
+                  const Text(
+                    "무엇에 대해 발표하시나요?",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF3B3E43)
+                    )
+                  ),
+                  const SizedBox(height: 8,),
+                  const Text(
+                      "발표할 주제나 제목을 적어보세요",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF3B3E43)
+                      )
+                  ),
+                  const SizedBox(height: 24,),
+                  CommonTextField(
+                    hintText: '대본의 제목을 입력해주세요',
+                    maxLines: 1,
+                    onChanged: (value) {
+                      controller.updateTheme(value);
+                    },
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: PrimaryColorButton(
+                          text: '입력 완료',
+                          onPressed: () {
+                            controller.finishButton(context);
+                          },
+                          isLoading: controller.isLoading,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16,)
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 10,),
-          TextButton(
-              onPressed: () {
-                controller.finishButton(context);
-              },
-              child: GetX<ThemeInputCtr>(
-                  builder: (_) => controller.isLoading.value == true
-                      ? const CircularProgressIndicator()
-                      : const Text("입력 완료")
-              )
-          ),
-          const SizedBox(height: 100,),
         ],
       ),
     );
