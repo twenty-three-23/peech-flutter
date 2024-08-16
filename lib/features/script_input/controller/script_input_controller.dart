@@ -62,11 +62,18 @@ class ScriptInputCtr extends GetxController {
   }
 
   void gotoPracticeBtn(BuildContext context) async {
-    expectedTimeIsLoading.value = true;
-    int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
-    await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
-    Navigator.pushNamed(context, '/voiceRecodeWithScript');
-    expectedTimeIsLoading.value = false;
+    try {
+      expectedTimeIsLoading.value = true;
+      int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
+      await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
+      Navigator.pushNamed(context, '/voiceRecodeWithScript');
+    } catch(e) {
+      print("[gotoPracticeBtn] Exception: $e");
+      rethrow;
+    } finally {
+      expectedTimeIsLoading.value = false;
+    }
+
   }
 
   int toMilliSec(String expectedTime) {
@@ -75,7 +82,8 @@ class ScriptInputCtr extends GetxController {
     int hour = int.parse(timeList[0]);
     int min = int.parse(timeList[1]);
     int sec = int.parse(timeList[2]);
-    int milli = int.parse(time[1]);
+    int milli =  0;
+    if(time.length >= 2) milli = int.parse(time[1]);
     return (hour * 60 * 60 + min * 60 + sec) * 1000 + milli;
   }
 
