@@ -4,10 +4,10 @@ part 'keyword_paragraph_unit_model.g.dart';
 
 @JsonSerializable()
 class KeywordParagraphUnitModel {
-  List<String>? keywords;
+  List<String>? keyWords;
   int? paragraphOrder;
 
-  KeywordParagraphUnitModel({this.keywords, this.paragraphOrder});
+  KeywordParagraphUnitModel({this.keyWords, this.paragraphOrder});
 
   factory KeywordParagraphUnitModel.fromJson(Map<String, dynamic> json) => _$KeywordParagraphUnitModelFromJson(json);
   Map<String, dynamic> toJson() => _$KeywordParagraphUnitModelToJson(this);
