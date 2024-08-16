@@ -5,11 +5,15 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/voice_recode/data_source/remote_paragraph_keywords.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/keyword_response_model.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
@@ -27,6 +31,8 @@ class VoiceRecodeCtr extends GetxController {
   Rx<double> scriptListViewSize = Rx<double>(0.0);
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
   Timer? _timer;
+  Rx<bool> showKeyword = false.obs;
+  Rx<KeywordParagraphsModel?> keywords = KeywordParagraphsModel().obs;
 
   MaxAudioTimeModel? _maxAudioTime;
   Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
@@ -34,6 +40,7 @@ class VoiceRecodeCtr extends GetxController {
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
+    getKeywords();
     _path = await RecodingFileUtil().getFilePath();
     getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
@@ -203,5 +210,34 @@ class VoiceRecodeCtr extends GetxController {
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
   }
 
+  void toggleKeyword() {
+    showKeyword.value = !showKeyword.value;
+  }
+
+  Future<void> getKeywords() async {
+    try {
+      int themeId = getThemeId();
+      int scriptId = getScriptId();
+      RemoteParagraphKeywords remoteParagraphKeywords = RemoteParagraphKeywords(AuthDioFactory().dio);
+      KeywordResponseModel keywordResponseModel = await remoteParagraphKeywords.getKeywords(themeId, scriptId);
+      keywords.value = KeywordParagraphsModel(paragraphs: keywordResponseModel.responseBody?.paragraphs);
+      keywords.refresh();
+    } on DioException catch(e) {
+      print("[getKeywords] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+    } catch(e) {
+      print("[getKeywords] Exception: ${e}");
+    }
+
+  }
+
+  int getThemeId() {
+    LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
+    return int.parse(localPracticeThemeStorage.getThemeId() ?? '0');
+  }
+
+  int getScriptId() {
+    LocalScriptStorage localScriptStorage = LocalScriptStorage();
+    return localScriptStorage.getInputScriptId() ?? 0;
+  }
 
 }

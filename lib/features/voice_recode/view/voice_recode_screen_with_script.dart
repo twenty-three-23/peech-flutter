@@ -111,11 +111,53 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      _controller.script?[index] ?? '',
+                                      "${index + 1} 문단",
                                       style: const TextStyle(
-                                        fontSize: 21,
-                                        height: 2.5,
+                                        fontSize: 13,
+                                        color: Colors.grey,
                                       )
+                                  ),
+                                  Stack(
+                                    children: [
+                                      Visibility(
+                                        visible: !_controller.showKeyword.value,
+                                        maintainState: true,
+                                        maintainSize: true,
+                                        maintainAnimation: true,
+                                        child: Text(
+                                            _controller.script?[index] ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 21,
+                                              height: 2.5,
+                                            )
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: _controller.showKeyword.value,
+                                        maintainState: true,
+                                        maintainSize: true,
+                                        maintainAnimation: true,
+                                        child: GetX<VoiceRecodeCtr>(
+                                          builder: (_) => Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              if(_controller.keywords.value?.paragraphs?[index].keyWords == null)
+                                                const Text("키워드 불러오는 중..")
+                                              else
+                                                for(String keyword in _controller.keywords.value?.paragraphs?[index].keyWords ?? [])
+                                                  Text(
+                                                      keyword,
+                                                      style: const TextStyle(
+                                                        fontSize: 21,
+                                                        height: 2.5,
+                                                      )
+                                                  ),
+                                            ],
+                                          )
+
+                                        )
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(height: 40,),
                                 ],
@@ -155,6 +197,26 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                   ],
                 )
               ),
+              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                    child: IntrinsicHeight(
+                      child: Column(
+                        children: [
+                          const Divider(height: 1, color: Colors.grey,),
+                          const Text('핵심 키워드만 보기'),
+                          Switch(
+                              value: _controller.showKeyword.value,
+                              onChanged: (value) { _controller.toggleKeyword(); }
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
             ],
           ),
         )
