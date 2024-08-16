@@ -148,6 +148,7 @@ class VoiceRecodeCtr extends GetxController {
     _startRecording();
     // _stopRecodingWhenScrollIsEndListener(); //자농 녹음 중지 제거
     int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
+    totalExpectedTime += (script?.length ?? 0) * 1000; //문단당 1초로 숨 쉬는 시간 계산
     _startAutoScrollingAnimation(totalExpectedTime);
   }
 

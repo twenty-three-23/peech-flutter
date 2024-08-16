@@ -134,9 +134,6 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                       ),
                                       Visibility(
                                         visible: _controller.showKeyword.value,
-                                        maintainState: true,
-                                        maintainSize: true,
-                                        maintainAnimation: true,
                                         child: GetX<VoiceRecodeCtr>(
                                           builder: (_) => Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceAround,
