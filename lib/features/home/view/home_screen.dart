@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
+import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
@@ -9,23 +11,36 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
 
-    final controller = Get.find<HomeCtr>();
+      final controller = Get.find<HomeCtr>();
 
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: Column(
+          children: [
+            const SizedBox(height: 15.5,),
+            SvgPicture.asset(
+                'assets/images/app_bar_logo.svg',
+                semanticsLabel: 'peech app bar logo'
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 112.5,),
             const Text(
-              "Peech - 발표 속도 조절, 기록 관리",
+              "발표 대본을 작성하면\n가장 적절한 시간을 계산해줘요!\n함께 연습을 시작해 볼까요?",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 23,
+                fontSize: 20,
               ),
             ),
-            const SizedBox(height: 50,),
+            const SizedBox(height: 30,),
             GetX<HomeCtr>(
               builder: (_) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -82,28 +97,49 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 30,),
-            TextButton(
-                onPressed: () {
-                    LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-                    Navigator.pushNamed(context, '/themeInput');
-                  },
-                child: const Text("대본 입력하고 시작하기")
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryColorButton(
+                      onPressed: () {
+                          LocalPracticeModeStorage().setMode(PracticeMode.withScript);
+                          Navigator.pushNamed(context, '/themeInput');
+                        },
+                      text: "대본 입력하고 시작하기"
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-                onPressed: () {
-                    LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-                    Navigator.pushNamed(context, '/themeInput');
-                  },
-                child: const Text("대본 입력하지 않고 시작하기")
+            const SizedBox(height: 10,),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryColorButton(
+                      onPressed: () {
+                          LocalPracticeModeStorage().setMode(PracticeMode.noScript);
+                          Navigator.pushNamed(context, '/themeInput');
+                        },
+                      text: "대본 입력하지 않고 시작하기"
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-                onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
-                child: const Text("기록 보기")
+            const SizedBox(height: 10,),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryColorButton(
+                      onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
+                      text:"기록 보기"
+                  ),
+                ),
+              ],
             ),
             TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
+            const SizedBox(height: 30,),
           ],
         ),
       ),
