@@ -58,6 +58,7 @@ dependencies:
   event_bus: ^2.0.0
   dio: ^5.5.0+1
   flutter_svg: ^2.0.10+1
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:
