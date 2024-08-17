@@ -76,6 +76,7 @@ class ThemeInputScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24,),
                     CommonTextField(
+                      initialText: controller.getTheme(),
                       hintText: '대본의 제목을 입력해주세요',
                       maxLines: 1,
                       onChanged: (value) {

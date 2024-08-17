@@ -16,6 +16,10 @@ class ThemeInputCtr extends GetxController {
     _theme = newTheme;
   }
 
+  String getTheme() {
+    return _theme ?? "";
+  }
+
   Future<void> saveTheme() async {
     if(_theme == null || _theme == "") {
       throw Exception("error: theme is null or blank");
