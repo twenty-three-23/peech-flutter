@@ -7,6 +7,8 @@ class CommonTextField extends StatefulWidget {
   final String hintText;
   final bool showCounter;
   final TextEditingController? controller;
+  final String? initialText;
+  final bool readOnly;
 
   const CommonTextField({
     super.key,
@@ -15,7 +17,9 @@ class CommonTextField extends StatefulWidget {
     this.onChanged = _defaultOnChanged,
     this.hintText = '',
     this.showCounter = false,
-    this.controller
+    this.controller,
+    this.initialText,
+    this.readOnly = false
   });
 
   static void _defaultOnChanged(String value) {
@@ -29,13 +33,17 @@ class CommonTextField extends StatefulWidget {
 class _CommonTextFieldState extends State<CommonTextField> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      readOnly: widget.readOnly,
+      initialValue: widget.initialText,
       controller: widget.controller,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
       onChanged: (value) => widget.onChanged(value),
       style: const TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 24 / 16
       ),
       buildCounter: (context,
           {required currentLength, required isFocused, maxLength}) {

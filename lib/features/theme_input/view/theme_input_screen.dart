@@ -56,17 +56,19 @@ class ThemeInputScreen extends StatelessWidget {
                     "무엇에 대해 발표하시나요?",
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF3B3E43)
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF3B3E43),
+                      height: 34 / 22
                     )
                   ),
                   const SizedBox(height: 8,),
                   const Text(
                       "발표할 주제나 제목을 적어보세요",
                       style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF3B3E43)
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF3B3E43),
+                        height: 22 / 14
                       )
                   ),
                   const SizedBox(height: 24,),
@@ -91,7 +93,7 @@ class ThemeInputScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16,)
+                  const SizedBox(height: 8,)
                 ],
               ),
             ),

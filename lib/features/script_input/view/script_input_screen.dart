@@ -66,23 +66,26 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 16,),
                           const Text(
                               "발표할 내용을 적어보세요",
                               style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF3B3E43)
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF3B3E43),
+                                height: 34 / 22
                               )
                           ),
                           const SizedBox(height: 8,),
                           const Text(
                               "발표할 내용을 적으면 예상 시간을 알 수 있어요",
                               style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF3B3E43)
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF3B3E43),
+                                height: 22 / 14
                               )
                           ),
                           const SizedBox(height: 24,),
@@ -128,9 +131,12 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                               );
                             },
                           ),
-                          TextButton(
-                            onPressed: () { controller.addParagraph(); },
-                            child: const Text("문단 추가")
+                          Align(
+                            alignment: Alignment.center,
+                            child: TextButton(
+                              onPressed: () { controller.addParagraph(); },
+                              child: const Text("문단 추가")
+                            ),
                           ),
                         ],
                       ),
@@ -154,7 +160,7 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                   ],
                 ),
               ),
-            const SizedBox(height: 16,)
+            const SizedBox(height: 8,)
           ],
         ),
       ),
