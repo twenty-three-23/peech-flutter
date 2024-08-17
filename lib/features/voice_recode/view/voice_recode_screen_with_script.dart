@@ -106,7 +106,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                         Stack(
                                           children: [
                                             Visibility(
-                                              visible: !_controller.showKeyword.value,
+                                              visible: _controller.promptSelectedOption.value == _controller.promptOptions[0],
                                               maintainState: true,
                                               maintainSize: true,
                                               maintainAnimation: true,
@@ -119,7 +119,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                               ),
                                             ),
                                             Visibility(
-                                              visible: _controller.showKeyword.value,
+                                              visible: _controller.promptSelectedOption.value == _controller.promptOptions[1],
                                               child: GetX<VoiceRecodeCtr>(
                                                 builder: (_) => Column(
                                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -199,10 +199,26 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                             child: IntrinsicHeight(
                               child: Row(
                                 children: [
-                                  const Text('핵심 키워드만 보기'),
-                                  Switch(
-                                      value: _controller.showKeyword.value,
-                                      onChanged: (value) { _controller.toggleKeyword(); }
+                                  const Text('보이기:'),
+                                  const SizedBox(width: 5,),
+                                  // Switch(
+                                  //     value: _controller.showKeyword.value,
+                                  //     onChanged: (value) { _controller.toggleKeyword(); }
+                                  // ),
+
+                                  DropdownButton<String>(
+                                    value: _controller.promptSelectedOption.value,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        _controller.promptSelectedOption.value = newValue;
+                                      });
+                                    },
+                                    items: _controller.promptOptions.map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                                   ),
                                 ],
                               ),

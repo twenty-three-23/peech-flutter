@@ -31,13 +31,13 @@ class VoiceRecodeCtr extends GetxController {
   Rx<double> scriptListViewSize = Rx<double>(0.0);
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
   Timer? _timer;
-  Rx<bool> showKeyword = false.obs;
   Rx<KeywordParagraphsModel?> keywords = KeywordParagraphsModel().obs;
 
   MaxAudioTimeModel? _maxAudioTime;
   Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
 
-
+  Rx<String?> promptSelectedOption = RxString('대본');
+  final List<String> promptOptions = ['대본', '핵심 키워드', '전부 숨기기'];
 
   @override
   void onInit() async {
@@ -207,10 +207,6 @@ class VoiceRecodeCtr extends GetxController {
     practiceState.value = PracticeState.BEFORETOSTART;
     recodingStopWatch.value.reset();
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
-  }
-
-  void toggleKeyword() {
-    showKeyword.value = !showKeyword.value;
   }
 
   Future<void> getKeywords() async {
