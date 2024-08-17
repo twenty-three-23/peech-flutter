@@ -133,12 +133,13 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 8,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Row(
                     children: [
                       Expanded(
-                        child: PrimaryColorButton(
+                        child: ColoredButton(
                           text: '연습하러 가기',
                           onPressed: () { controller.gotoPracticeBtn(context); }
                         ),
@@ -146,7 +147,7 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8,)
+                const SizedBox(height: 8,),
               ],
             );
           }

@@ -3,24 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 
-class PrimaryColorButton extends StatefulWidget {
+class ColoredButton extends StatefulWidget {
   final String text;
   final Function onPressed;
   final RxBool isLoading;
-  PrimaryColorButton({super.key, required this.text, required this.onPressed, RxBool? isLoading}) : isLoading = isLoading ?? false.obs;
+  final RxString? subText;
+  Color backgroundColor;
+  Color textColor;
+  Color subTextColor;
+
+  ColoredButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.subText,
+    RxBool? isLoading,
+    this.backgroundColor = defaultBackgroundColor,
+    this.textColor = defaultTextColor,
+    this.subTextColor = defaultSubTextColor,
+  }) : isLoading = isLoading ?? false.obs;
+
+  static const defaultTextColor = Color(0xffffffff);
+  static const defaultSubTextColor = Color(0xffffffff);
+  static const defaultBackgroundColor = Color(0xFFFF5468);
 
   @override
-  State<PrimaryColorButton> createState() => _PrimaryColorButtonState();
+  State<ColoredButton> createState() => _ColoredButtonState();
 }
 
-class _PrimaryColorButtonState extends State<PrimaryColorButton> {
+class _ColoredButtonState extends State<ColoredButton> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return ElevatedButton(
         onPressed: () => widget.onPressed(),
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all<Color>(const Color(0xFFFF5468)),
+          backgroundColor: WidgetStateProperty.all<Color>(widget.backgroundColor),
           fixedSize: WidgetStateProperty.all<Size>(const Size(double.infinity, 50)),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -49,12 +67,27 @@ class _PrimaryColorButtonState extends State<PrimaryColorButton> {
               maintainAnimation: true,
               maintainSize: true,
               maintainState: true,
-              child: Text(
-                widget.text,
-                style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.text,
+                    style: TextStyle(
+                      color: widget.textColor,
+                      fontSize: 18,
+                    ),
+                  ),
+                  if(widget.subText != null)
+                    Obx(() => Text(
+                        widget.subText?.value ?? '',
+                        style: TextStyle(
+                          color: widget.subTextColor,
+                          fontSize: 10,
+                        ),
+                      ),
+                    )
+                ],
               ),
             ),
           ],

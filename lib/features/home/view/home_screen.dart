@@ -101,7 +101,7 @@ class HomeScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: PrimaryColorButton(
+                  child: ColoredButton(
                       onPressed: () {
                           LocalPracticeModeStorage().setMode(PracticeMode.withScript);
                           Navigator.pushNamed(context, '/themeInput');
@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: PrimaryColorButton(
+                  child: ColoredButton(
                       onPressed: () {
                           LocalPracticeModeStorage().setMode(PracticeMode.noScript);
                           Navigator.pushNamed(context, '/themeInput');
@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: PrimaryColorButton(
+                  child: ColoredButton(
                       onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
                       text:"기록 보기"
                   ),

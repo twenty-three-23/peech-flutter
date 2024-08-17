@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
@@ -41,52 +42,11 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
         appBar: AppBar(
           leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
           title: const Text("음성 녹음"),
-          actions: [
-            GetX<VoiceRecodeCtr>(
-              builder: (_) {
-                if(_controller.practiceState.value == PracticeState.BEFORETOSTART) {
-                  return ElevatedButton(
-                      onPressed: () { _controller.startPracticeWithScript(); },
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text("녹음 시작"),
-                          _controller.maxAudioTime.value == null
-                              ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
-                              : Text(
-                                  "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                  ),
-                                )
-                        ],
-                      )
-                  );
-                } else if(_controller.practiceState.value == PracticeState.RECODING) {
-                  return Row(
-                    children: [
-                      Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
-                      const SizedBox(width: 10,),
-                      ElevatedButton(onPressed: () { _controller.stopPracticeWithScript(); }, child: const Text("녹음 종료")),
-                    ],
-                  );
-                } else {
-                  return Row(
-                    children: [
-                      Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
-                      const SizedBox(width: 10,),
-                    ],
-                  );
-                }
-              }
-            ),
-            const SizedBox(width: 8,),
-          ],
         ),
         body: GetX<VoiceRecodeCtr>(
           builder: (_) => Stack(
             children: [
-              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART)
+              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART || _controller.practiceState.value == PracticeState.PAUSE)
                 Column(
                   children: [
                     Container(height: _controller.scriptListViewSize.value * 4/10),
@@ -94,126 +54,286 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                   ],
                 ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: CustomScrollView(
-                  key: _controller.scriptListViewKey,
-                  controller: _controller.scriptScrollController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Container(height: _controller.scriptListViewSize.value * 5/10),
+              Column(
+                children: [
+                  const SizedBox(height: 10,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.timer_outlined,
+                          size: 20,
+                          color: Color(0xFFD13853),
+                        ),
+                        const SizedBox(width: 4,),
+                        Text(
+                            _controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFFD13853),
+                                height: 16 / 12
+                            )
+                        ),
+                      ],
                     ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      "${index + 1} 문단",
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey,
-                                      )
-                                  ),
-                                  Stack(
-                                    children: [
-                                      Visibility(
-                                        visible: !_controller.showKeyword.value,
-                                        maintainState: true,
-                                        maintainSize: true,
-                                        maintainAnimation: true,
-                                        child: Text(
-                                            _controller.script?[index] ?? '',
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 36),
+                      child: CustomScrollView(
+                        key: _controller.scriptListViewKey,
+                        controller: _controller.scriptScrollController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Container(height: _controller.scriptListViewSize.value * 5/10),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "${index + 1} 문단",
                                             style: const TextStyle(
-                                              fontSize: 21,
-                                              height: 2.5,
+                                              fontSize: 13,
+                                              color: Colors.grey,
                                             )
                                         ),
+                                        Stack(
+                                          children: [
+                                            Visibility(
+                                              visible: !_controller.showKeyword.value,
+                                              maintainState: true,
+                                              maintainSize: true,
+                                              maintainAnimation: true,
+                                              child: Text(
+                                                  _controller.script?[index] ?? '',
+                                                  style: const TextStyle(
+                                                    fontSize: 21,
+                                                    height: 2.5,
+                                                  )
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: _controller.showKeyword.value,
+                                              child: GetX<VoiceRecodeCtr>(
+                                                builder: (_) => Column(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  children: [
+                                                    if(_controller.keywords.value?.paragraphs?[index].keyWords == null)
+                                                      const Text("키워드 불러오는 중..")
+                                                    else
+                                                      for(String keyword in _controller.keywords.value?.paragraphs?[index].keyWords ?? [])
+                                                        Text(
+                                                            keyword,
+                                                            style: const TextStyle(
+                                                              fontSize: 21,
+                                                              height: 2.5,
+                                                            )
+                                                        ),
+                                                  ],
+                                                )
+                    
+                                              )
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 40,),
+                                      ],
+                                    );
+                              },
+                              childCount: (_controller.script?.length ?? 0),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: GetX<VoiceRecodeCtr>(
+                              builder: (_) => Container(
+                                height: _controller.scriptListViewSize.value,
+                                alignment: Alignment.center,
+                                child: _controller.practiceState.value == PracticeState.ENDRECODING
+                                    ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () { _controller.endPractice(context); },
+                                        child: const Text("분석 받기")
+                                    ),
+                                    IntrinsicWidth(
+                                      child: ElevatedButton(
+                                          // onPressed: () { _controller.startPracticeWithScript(); },
+                                          onPressed: () {
+                                            _controller.resetRecoding();
+                                          },
+                                          child: const Text("다시 녹음하기")
                                       ),
-                                      Visibility(
-                                        visible: _controller.showKeyword.value,
-                                        child: GetX<VoiceRecodeCtr>(
-                                          builder: (_) => Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: [
-                                              if(_controller.keywords.value?.paragraphs?[index].keyWords == null)
-                                                const Text("키워드 불러오는 중..")
-                                              else
-                                                for(String keyword in _controller.keywords.value?.paragraphs?[index].keyWords ?? [])
-                                                  Text(
-                                                      keyword,
-                                                      style: const TextStyle(
-                                                        fontSize: 21,
-                                                        height: 2.5,
-                                                      )
-                                                  ),
-                                            ],
-                                          )
-
-                                        )
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 40,),
-                                ],
-                              );
-                        },
-                        childCount: (_controller.script?.length ?? 0),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: GetX<VoiceRecodeCtr>(
-                        builder: (_) => Container(
-                          height: _controller.scriptListViewSize.value,
-                          alignment: Alignment.center,
-                          child: _controller.practiceState.value == PracticeState.ENDRECODING
-                              ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () { _controller.endPractice(context); },
-                                  child: const Text("분석 받기")
+                                    ),
+                                  ],
+                                )
+                                    : const Text(""),
                               ),
-                              IntrinsicWidth(
-                                child: ElevatedButton(
-                                    // onPressed: () { _controller.startPracticeWithScript(); },
-                                    onPressed: () {
-                                      _controller.resetRecoding();
-                                    },
-                                    child: const Text("다시 녹음하기")
-                                ),
-                              ),
-                            ],
-                          )
-                              : const Text(""),
-                        ),
-                      ),
+                            ),
+                          ),
+                        ],
+                      )
                     ),
-                  ],
-                )
+                  ),
+                ],
               ),
-              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: IntrinsicHeight(
                       child: Column(
                         children: [
-                          const Divider(height: 1, color: Colors.grey,),
-                          const Text('핵심 키워드만 보기'),
-                          Switch(
-                              value: _controller.showKeyword.value,
-                              onChanged: (value) { _controller.toggleKeyword(); }
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white,
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  const Text('핵심 키워드만 보기'),
+                                  Switch(
+                                      value: _controller.showKeyword.value,
+                                      onChanged: (value) { _controller.toggleKeyword(); }
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
+                          const SizedBox(height: 8,),
+                          if(_controller.practiceState.value == PracticeState.BEFORETOSTART)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ColoredButton(
+                                    isLoading: RxBool(_controller.maxAudioTime.value == null),
+                                    text: '시작하기',
+                                    onPressed: () { _controller.startPracticeWithScript(); },
+                                    subText: RxString("(최대 ${_controller.maxAudioTime.value?.text ?? '?'})"),
+                                  ),
+                                ),
+                              ],
+                            )
+                          else if(_controller.practiceState.value == PracticeState.RECODING)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ColoredButton(
+                                    text: '중지하기',
+                                    onPressed: () { _controller.pausePracticeWithScript(); }
+                                  ),
+                                ),
+                              ],
+                            )
+                          else if(_controller.practiceState.value == PracticeState.PAUSE)
+                            Row(
+                              children: [
+                                GestureDetector( // 다시하기
+                                  onTap: () { //_controller.resetRecoding();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              "다시 녹음하기",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xFF3B3E43),
+                                                height: 26 / 18
+                                              )
+                                          ),
+                                          content: const Text(
+                                            "다시 녹음시 기존 녹음은\n저장되지 않습니다 다시 하시겠어요?",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xFF3B3E43),
+                                              height: 24 / 16
+                                            )
+                                          ),
+                                          actions: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: ColoredButton(
+                                                    text: '취소',
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    backgroundColor: const Color(0xFFF4F6FA),
+                                                    textColor: const Color(0xFF3B3E43),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8,),
+                                                Expanded(
+                                                  child: ColoredButton(
+                                                    text: '확인',
+                                                    onPressed: () {
+                                                      _controller.resetRecoding();
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    backgroundColor: const Color(0xFF3B3E43),
+                                                    textColor: const Color(0xFFFFFFFF),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: const Color(0xFFFFF1F3),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: const Color(0xFFFF5468)
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.refresh,
+                                      color: Color(0xFF3B3E43),
+                                    ),
+                                  )
+                                ),
+                                const SizedBox(width: 8,),
+                                Expanded(
+                                  child: ColoredButton(
+                                      text: '이어하기',
+                                      onPressed: () { _controller.resumePractice(); }
+                                  ),
+                                ),
+                                const SizedBox(width: 8,),
+                                Expanded(
+                                  child: ColoredButton(
+                                      text: '분석받기',
+                                      onPressed: () { _controller.endPractice(context); }
+                                  ),
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 8,),
                         ],
                       ),
                     ),
                   ),
-                )
+                ),
+              )
             ],
           ),
         )

@@ -83,7 +83,7 @@ class ThemeInputScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: PrimaryColorButton(
+                        child: ColoredButton(
                           text: '입력 완료',
                           onPressed: () {
                             controller.finishButton(context);

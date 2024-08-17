@@ -37,6 +37,8 @@ class VoiceRecodeCtr extends GetxController {
   MaxAudioTimeModel? _maxAudioTime;
   Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
 
+
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
@@ -93,10 +95,7 @@ class VoiceRecodeCtr extends GetxController {
     recodingStopWatch.value.reset();
     recodingStopWatch.value.start();
 
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      recodingStopWatch.refresh();
-      checkRecodingTimeLimit(recodingStopWatch.value);
-    });
+    _startTimer();
 
     await _recorder!.startRecorder(
       toFile: _path,
@@ -147,9 +146,8 @@ class VoiceRecodeCtr extends GetxController {
     }
     _startRecording();
     // _stopRecodingWhenScrollIsEndListener(); //자농 녹음 중지 제거
-    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
-    totalExpectedTime += (script?.length ?? 0) * 1000; //문단당 1초로 숨 쉬는 시간 계산
-    _startAutoScrollingAnimation(totalExpectedTime);
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
+    _startAutoScrollingAnimation(_getTotalExpectedTime());
   }
 
   void startPracticeNoScript() async {
@@ -183,7 +181,6 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _startAutoScrollingAnimation(int milliSec) async {
-    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     await scriptScrollController.animateTo(
       scriptScrollController.position.maxScrollExtent,
       duration: Duration(milliseconds: milliSec),
@@ -208,6 +205,7 @@ class VoiceRecodeCtr extends GetxController {
 
   void resetRecoding() {
     practiceState.value = PracticeState.BEFORETOSTART;
+    recodingStopWatch.value.reset();
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
   }
 
@@ -239,6 +237,49 @@ class VoiceRecodeCtr extends GetxController {
   int getScriptId() {
     LocalScriptStorage localScriptStorage = LocalScriptStorage();
     return localScriptStorage.getInputScriptId() ?? 0;
+  }
+
+  Future<void> _pauseRecoding() async {
+    await _recorder?.pauseRecorder();
+  }
+
+  Future<void> _resumeRecoding() async {
+    await _recorder?.resumeRecorder();
+  }
+
+  void _stopScrollingAnimation() {
+    // 현재 애니메이션을 멈추고, 현재 위치에서 바로 멈추도록 설정
+    scriptScrollController.jumpTo(scriptScrollController.offset);
+  }
+
+  void pausePracticeWithScript() async {
+    await _pauseRecoding();
+    _stopScrollingAnimation();
+    recodingStopWatch.value.stop(); // 타이머 멈추기
+    _timer?.cancel(); // 타이머 객체 취소
+    practiceState.value = PracticeState.PAUSE;
+  }
+
+  void resumePractice() async {
+    await _resumeRecoding();
+    recodingStopWatch.value.start(); // 타이머 멈추기
+    _startTimer();
+    int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
+    _startAutoScrollingAnimation(remainingTime);
+    practiceState.value = PracticeState.RECODING;
+  }
+
+  int _getTotalExpectedTime() {
+    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
+    totalExpectedTime += (script?.length ?? 0) * 1000; //문단당 1초로 숨 쉬는 시간 계산
+    return totalExpectedTime;
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      recodingStopWatch.refresh();
+      checkRecodingTimeLimit(recodingStopWatch.value);
+    });
   }
 
 }

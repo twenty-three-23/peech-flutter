@@ -1,5 +1,6 @@
 enum PracticeState {
   BEFORETOSTART,
   RECODING,
+  PAUSE,
   ENDRECODING,
 }

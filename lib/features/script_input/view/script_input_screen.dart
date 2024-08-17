@@ -144,22 +144,29 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                 ),
               ),
             ),
-            if(controller.scriptInputIsLoading.value == false)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: PrimaryColorButton(
-                        text: '대본 입력 완료',
-                        onPressed: () {
-                          controller.inputConfirmBtn(context);
-                        },
+            const SizedBox(height: 8,),
+            GetX<ScriptInputCtr>(
+                builder: (_) {
+                  if(controller.scriptInputIsLoading.value == false) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ColoredButton(
+                              text: '대본 입력 완료',
+                              onPressed: () {
+                                controller.inputConfirmBtn(context);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    );
+                  }
+                  return const Text('');
+                }
+            ),
             const SizedBox(height: 8,)
           ],
         ),
