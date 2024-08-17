@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
@@ -22,6 +24,9 @@ void main() async {
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
     };
+
+    Get.put(UserInfoController());
+
     runApp(MyApp(navigatorKey: navigatorKey));
   },
     (Object error, StackTrace stack) {

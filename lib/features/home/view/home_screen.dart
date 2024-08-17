@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
@@ -13,7 +13,8 @@ class HomeScreen extends StatelessWidget {
   @override
     Widget build(BuildContext context) {
 
-      final controller = Get.find<HomeCtr>();
+    final controller = Get.find<HomeCtr>();
+    final userInfoController = Get.find<UserInfoController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -48,23 +49,25 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 40,),
                   Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text("총"),
-                          const SizedBox(width: 3,),
-                          controller.remainingTime.value == null
-                              ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
-                              : Text(
-                                  controller.remainingTime.value?.text ?? "?",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                ),
-                          const SizedBox(width: 3,),
-                          const Text("사용 가능"),
-                        ],
+                      GetX<UserInfoController>(
+                        builder: (_) => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text("총"),
+                            const SizedBox(width: 3,),
+                            userInfoController.remainingTime.value == null
+                                ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
+                                : Text(
+                                    userInfoController.remainingTime.value?.text ?? "?",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  ),
+                            const SizedBox(width: 3,),
+                            const Text("사용 가능"),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,10 +75,10 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           const Text("1회 최대"),
                           const SizedBox(width: 3,),
-                          controller.maxAudioTime.value == null
+                            userInfoController.maxAudioTime.value == null
                               ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
                               : Text(
-                                  controller.maxAudioTime.value?.text ?? "?",
+                                  userInfoController.maxAudioTime.value?.text ?? "?",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )
@@ -90,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                     width: 40,
                     height: 40,
                     child: IconButton(
-                        onPressed: () { controller.getUserAudioTimeInfo(); },
+                        onPressed: () { userInfoController.getUserAudioTimeInfo(); },
                         icon: const Icon(Icons.refresh, size: 17,)
                     ),
                   )
