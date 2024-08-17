@@ -5,7 +5,6 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeCtr extends GetxController {
 
