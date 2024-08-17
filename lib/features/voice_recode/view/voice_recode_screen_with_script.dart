@@ -46,7 +46,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
         body: GetX<VoiceRecodeCtr>(
           builder: (_) => Stack(
             children: [
-              if(_controller.practiceState.value == PracticeState.RECODING || _controller.practiceState.value == PracticeState.BEFORETOSTART || _controller.practiceState.value == PracticeState.PAUSE)
+              if(_controller.practiceState.value == PracticeState.recoding || _controller.practiceState.value == PracticeState.beforeToStart || _controller.practiceState.value == PracticeState.pause)
                 Column(
                   children: [
                     Container(height: _controller.scriptListViewSize.value * 4/10),
@@ -154,26 +154,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                               builder: (_) => Container(
                                 height: _controller.scriptListViewSize.value,
                                 alignment: Alignment.center,
-                                child: _controller.practiceState.value == PracticeState.ENDRECODING
-                                    ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                        onPressed: () { _controller.endPractice(context); },
-                                        child: const Text("분석 받기")
-                                    ),
-                                    IntrinsicWidth(
-                                      child: ElevatedButton(
-                                          // onPressed: () { _controller.startPracticeWithScript(); },
-                                          onPressed: () {
-                                            _controller.resetRecoding();
-                                          },
-                                          child: const Text("다시 녹음하기")
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                    : const Text(""),
+                                child: const Text(""),
                               ),
                             ),
                           ),
@@ -225,7 +206,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                             ),
                           ),
                           const SizedBox(height: 8,),
-                          if(_controller.practiceState.value == PracticeState.BEFORETOSTART)
+                          if(_controller.practiceState.value == PracticeState.beforeToStart)
                             Row(
                               children: [
                                 Expanded(
@@ -238,7 +219,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 ),
                               ],
                             )
-                          else if(_controller.practiceState.value == PracticeState.RECODING)
+                          else if(_controller.practiceState.value == PracticeState.recoding)
                             Row(
                               children: [
                                 Expanded(
@@ -249,7 +230,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 ),
                               ],
                             )
-                          else if(_controller.practiceState.value == PracticeState.PAUSE)
+                          else if(_controller.practiceState.value == PracticeState.pause)
                             Row(
                               children: [
                                 GestureDetector( // 다시하기
@@ -296,8 +277,8 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                                   child: ColoredButton(
                                                     text: '확인',
                                                     onPressed: () {
-                                                      _controller.resetRecoding();
                                                       Navigator.of(context).pop();
+                                                      _controller.resetRecodingWithScript();
                                                     },
                                                     backgroundColor: const Color(0xFF3B3E43),
                                                     textColor: const Color(0xFFFFFFFF),
@@ -331,7 +312,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 Expanded(
                                   child: ColoredButton(
                                       text: '이어하기',
-                                      onPressed: () { _controller.resumePractice(); }
+                                      onPressed: () { _controller.resumePracticeWithScript(); }
                                   ),
                                 ),
                                 const SizedBox(width: 8,),

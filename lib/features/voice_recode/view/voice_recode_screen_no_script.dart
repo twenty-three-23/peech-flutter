@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
@@ -45,70 +46,174 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
       ),
       body: GetX<VoiceRecodeCtr>(
         builder: (_) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: <Widget>[
-              Icon(
-                  color: _controller.isRecording.value ? Colors.black : Colors.grey,
-                  size: 150,
-                  Icons.keyboard_voice_rounded),
-              const SizedBox(height: 30,),
-              if(_controller.practiceState.value == PracticeState.BEFORETOSTART)
-                IntrinsicWidth(
-                  child: ElevatedButton(onPressed: () { _controller.startPracticeNoScript(); },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                        color: _controller.practiceState.value == PracticeState.beforeToStart || _controller.practiceState.value == PracticeState.pause
+                            ? Colors.grey : Colors.black,
+                        size: 150,
+                        Icons.keyboard_voice_rounded),
+                    const SizedBox(height: 16,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("녹음 시작"),
-                        _controller.maxAudioTime.value == null
-                            ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
-                            : Text(
-                          "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
-                          style: const TextStyle(
-                            fontSize: 10,
-                          ),
-                        )
+                        const Icon(
+                          Icons.timer_outlined,
+                          size: 25,
+                          color: Color(0xFFD13853),
+                        ),
+                        const SizedBox(width: 4,),
+                        Text(
+                            _controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
+                            style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFFD13853),
+                                height: 16 / 15
+                            )
+                        ),
                       ],
-                    )
-                  ),
-                )
-              else if(_controller.practiceState.value == PracticeState.RECODING)
-                Column(
-                  children: [
-                    Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
-                    ElevatedButton(onPressed: () { _controller.stopPracticeNoScript(); }, child: const Text("녹음 종료")),
+                    ),
+                    const SizedBox(height: 140,)
                   ],
-                )
-              else if(_controller.practiceState.value == PracticeState.ENDRECODING)
-                Column(
-                  children: [
-                    Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10)),
-                    ElevatedButton(
-                        onPressed: () { _controller.startPracticeNoScript(); },
-                        child: IntrinsicWidth(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 8,),
+                        if(_controller.practiceState.value == PracticeState.beforeToStart)
+                          Row(
                             children: [
-                              const Text("다시 녹음하기"),
-                              _controller.maxAudioTime.value == null
-                                  ? const SizedBox(width: 10, height: 10, child: CircularProgressIndicator(strokeWidth: 1,))
-                                  : Text(
-                                "(최대 ${_controller.maxAudioTime.value?.text ?? '?'})",
-                                style: const TextStyle(
-                                  fontSize: 10,
+                              Expanded(
+                                child: ColoredButton(
+                                  isLoading: RxBool(_controller.maxAudioTime.value == null),
+                                  text: '시작하기',
+                                  onPressed: () { _controller.startPracticeNoScript(); },
+                                  subText: RxString("(최대 ${_controller.maxAudioTime.value?.text ?? '?'})"),
                                 ),
-                              )
+                              ),
                             ],
-                          ),
-                        )
+                          )
+                        else if(_controller.practiceState.value == PracticeState.recoding)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ColoredButton(
+                                    text: '중지하기',
+                                    onPressed: () { _controller.pausePracticeNoScript(); }
+                                ),
+                              ),
+                            ],
+                          )
+                        else if(_controller.practiceState.value == PracticeState.pause)
+                            Row(
+                              children: [
+                                GestureDetector( // 다시하기
+                                    onTap: () { //_controller.resetRecoding();
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  "다시 녹음하기",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Color(0xFF3B3E43),
+                                                      height: 26 / 18
+                                                  )
+                                              ),
+                                              content: const Text(
+                                                  "다시 녹음시 기존 녹음은\n저장되지 않습니다 다시 하시겠어요?",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Color(0xFF3B3E43),
+                                                      height: 24 / 16
+                                                  )
+                                              ),
+                                              actions: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ColoredButton(
+                                                        text: '취소',
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        backgroundColor: const Color(0xFFF4F6FA),
+                                                        textColor: const Color(0xFF3B3E43),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8,),
+                                                    Expanded(
+                                                      child: ColoredButton(
+                                                        text: '확인',
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                          _controller.resetRecodingNoScript();
+                                                        },
+                                                        backgroundColor: const Color(0xFF3B3E43),
+                                                        textColor: const Color(0xFFFFFFFF),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: const Color(0xFFFFF1F3),
+                                        border: Border.all(
+                                            width: 1,
+                                            color: const Color(0xFFFF5468)
+                                        ),
+                                      ),
+                                      child: const Icon(
+                                        Icons.refresh,
+                                        color: Color(0xFF3B3E43),
+                                      ),
+                                    )
+                                ),
+                                const SizedBox(width: 8,),
+                                Expanded(
+                                  child: ColoredButton(
+                                      text: '이어하기',
+                                      onPressed: () { _controller.resumePracticeNoScript(); }
+                                  ),
+                                ),
+                                const SizedBox(width: 8,),
+                                Expanded(
+                                  child: ColoredButton(
+                                      text: '분석받기',
+                                      onPressed: () { _controller.endPractice(context); }
+                                  ),
+                                ),
+                              ],
+                            ),
+                        const SizedBox(height: 8,),
+                      ],
                     ),
-                    ElevatedButton(
-                        onPressed: () { _controller.endPractice(context); },
-                        child: const Text("분석 받기")
-                    ),
-                  ],
-                )
-              else const Text("error: 진행할 수 없습니다")
+                  ),
+                ),
+              )
             ],
           ),
         ),

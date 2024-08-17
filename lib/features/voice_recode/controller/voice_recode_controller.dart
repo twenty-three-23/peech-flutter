@@ -26,7 +26,7 @@ class VoiceRecodeCtr extends GetxController {
   late final String _path;
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
-  Rx<PracticeState> practiceState = PracticeState.BEFORETOSTART.obs;
+  Rx<PracticeState> practiceState = PracticeState.beforeToStart.obs;
   final GlobalKey scriptListViewKey = GlobalKey();  // GlobalKey 추가
   Rx<double> scriptListViewSize = Rx<double>(0.0);
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
@@ -91,7 +91,7 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _startRecording() async {
-    practiceState.value = PracticeState.RECODING;
+    practiceState.value = PracticeState.recoding;
     recodingStopWatch.value.reset();
     recodingStopWatch.value.start();
 
@@ -111,7 +111,6 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _stopRecording() async {
-    practiceState.value = PracticeState.ENDRECODING;
     _timer?.cancel();
     recodingStopWatch.value.stop();
     await _recorder!.stopRecorder();
@@ -203,10 +202,17 @@ class VoiceRecodeCtr extends GetxController {
 
   }
 
-  void resetRecoding() {
-    practiceState.value = PracticeState.BEFORETOSTART;
+  void resetRecodingWithScript() {
+    practiceState.value = PracticeState.beforeToStart;
     recodingStopWatch.value.reset();
+    _recorder?.stopRecorder();
     scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
+  }
+
+  void resetRecodingNoScript() {
+    practiceState.value = PracticeState.beforeToStart;
+    _recorder?.stopRecorder();
+    recodingStopWatch.value.reset();
   }
 
   Future<void> getKeywords() async {
@@ -253,16 +259,30 @@ class VoiceRecodeCtr extends GetxController {
     _stopScrollingAnimation();
     recodingStopWatch.value.stop(); // 타이머 멈추기
     _timer?.cancel(); // 타이머 객체 취소
-    practiceState.value = PracticeState.PAUSE;
+    practiceState.value = PracticeState.pause;
   }
 
-  void resumePractice() async {
+  void pausePracticeNoScript() async {
+    await _pauseRecoding();
+    recodingStopWatch.value.stop(); // 타이머 멈추기
+    _timer?.cancel(); // 타이머 객체 취소
+    practiceState.value = PracticeState.pause;
+  }
+
+  void resumePracticeWithScript() async {
     await _resumeRecoding();
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
     int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
     _startAutoScrollingAnimation(remainingTime);
-    practiceState.value = PracticeState.RECODING;
+    practiceState.value = PracticeState.recoding;
+  }
+
+  void resumePracticeNoScript() async {
+    await _resumeRecoding();
+    recodingStopWatch.value.start(); // 타이머 멈추기
+    _startTimer();
+    practiceState.value = PracticeState.recoding;
   }
 
   int _getTotalExpectedTime() {
