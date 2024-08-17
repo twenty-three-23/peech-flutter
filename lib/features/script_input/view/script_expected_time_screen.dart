@@ -141,7 +141,9 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
                       Expanded(
                         child: ColoredButton(
                           text: '연습하러 가기',
-                          onPressed: () { controller.gotoPracticeBtn(context); }
+                          onPressed: () { controller.gotoPracticeBtn(context); },
+                          backgroundColor: const Color(0xFF3B3E43),
+                          textColor: const Color(0xFFFFFFFF),
                         ),
                       ),
                     ],

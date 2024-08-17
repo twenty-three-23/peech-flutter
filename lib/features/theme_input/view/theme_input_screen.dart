@@ -93,6 +93,8 @@ class ThemeInputScreen extends StatelessWidget {
                               LocalPracticeModeStorage().setMode(PracticeMode.withScript);
                               controller.finishButton(context);
                             },
+                            backgroundColor: const Color(0xFF3B3E43),
+                            textColor: const Color(0xFFFFFFFF),
                           ),
                         ),
                       ],

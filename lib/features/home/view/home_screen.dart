@@ -102,10 +102,12 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ColoredButton(
-                      onPressed: () {
-                          Navigator.pushNamed(context, '/themeInput');
-                        },
-                      text: "연습 시작하기"
+                    onPressed: () {
+                        Navigator.pushNamed(context, '/themeInput');
+                      },
+                    text: "연습 시작하기",
+                    backgroundColor: const Color(0xFF3B3E43),
+                    textColor: const Color(0xFFFFFFFF),
                   ),
                 ),
               ],
@@ -115,8 +117,10 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ColoredButton(
-                      onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
-                      text:"기록 보기"
+                    onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
+                    text:"기록 보기",
+                    backgroundColor: const Color(0xFF3B3E43),
+                    textColor: const Color(0xFFFFFFFF),
                   ),
                 ),
               ],

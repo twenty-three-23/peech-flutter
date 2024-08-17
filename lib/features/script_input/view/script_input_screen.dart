@@ -158,6 +158,8 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
                               onPressed: () {
                                 controller.inputConfirmBtn(context);
                               },
+                              backgroundColor: const Color(0xFF3B3E43),
+                              textColor: const Color(0xFFFFFFFF),
                             ),
                           ),
                         ],
