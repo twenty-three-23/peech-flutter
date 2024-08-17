@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
-import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
-import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -127,6 +125,21 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 10,),
+            TextButton(
+                onPressed: () {
+                  controller.contactToEmail(context);
+                },
+                child: const Text(
+                    "이메일로 문의하기",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF3B3E43),
+                      height: 22 / 14,
+                    )
+                )
             ),
             // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
