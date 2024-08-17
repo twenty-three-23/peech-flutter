@@ -14,6 +14,7 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
       return themeListView(controller);
     case HistoryPathState.majorList:
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: majorListView(controller)),
           Row(
@@ -53,16 +54,41 @@ Widget historyListView(BuildContext context, HistoryCtr controller) {
       );
     case HistoryPathState.minorList:
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextButton(onPressed: () { controller.majorDetailButton(context); }, child: const Text("기존 대본 보기")),
           Expanded(child: minorListView(controller)),
+          Row(
+            children: [
+              Expanded(
+                child: ColoredButton(
+                  text: '선택한 대본 상세보기',
+                  onPressed: () {
+                    controller.majorDetailButton(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8,),
         ],
       );
     case HistoryPathState.minorDetail:
       return Column(
         children: [
-          TextButton(onPressed: () { controller.startWithMinorScriptBtn(context); }, child: const Text("이 대본으로 시작하기")),
           Expanded(child: minorDetailView(controller)),
+          const SizedBox(height: 8,),
+          Row(
+            children: [
+              Expanded(
+                child: ColoredButton(
+                  text: '이 대본으로 시작하기',
+                  onPressed: () {
+                    controller.startWithThemeWithScriptBtn(context);
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       );
   }
