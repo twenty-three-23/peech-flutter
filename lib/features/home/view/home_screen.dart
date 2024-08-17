@@ -105,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                           Navigator.pushNamed(context, '/themeInput');
                         },
-                      text: "시작하기"
+                      text: "연습 시작하기"
                   ),
                 ),
               ],
