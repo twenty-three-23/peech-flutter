@@ -10,10 +10,14 @@ import '../../common/data_source/local/local_practice_mode_storage.dart';
 class ThemeInputCtr extends GetxController {
   String? _theme;
 
-  Rx<bool> isLoading = false.obs;
+  RxBool isLoading = false.obs;
 
   void updateTheme(String? newTheme) {
     _theme = newTheme;
+  }
+
+  String getTheme() {
+    return _theme ?? "";
   }
 
   Future<void> saveTheme() async {

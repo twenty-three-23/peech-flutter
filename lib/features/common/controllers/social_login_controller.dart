@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_additional_info_data_source.dart';
@@ -32,6 +33,8 @@ class SocialLoginCtr extends GetxController {
   Rx<UserAdditionalInfoViewState> userAdditionalInfoViewState = Rx<UserAdditionalInfoViewState>(UserAdditionalInfoViewState.input);
   Rx<bool> userAdditionalInfoViewLoginFailed = Rx<bool>(false);
 
+  final userInfoController = Get.find<UserInfoController>();
+
 
   void loginWithKakao(BuildContext context) async {
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
@@ -48,7 +51,7 @@ class SocialLoginCtr extends GetxController {
         if(authTokenResponseModel.statusCode == 411) {
           AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
         }
-        else {
+        else { // 로그인 성공
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text("카카오톡 로그인 성공!"),
@@ -56,6 +59,7 @@ class SocialLoginCtr extends GetxController {
           if(context.mounted) {
             Navigator.pop(context);
           }
+          userInfoController.getUserAudioTimeInfo();
         }
       } on DioException catch (error) {
 
@@ -117,9 +121,11 @@ class SocialLoginCtr extends GetxController {
       RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
       AuthTokenModel authTokenModel = await remoteUserAdditionalInfoDataSource.postUserAdditionalInfo(userAdditionalInfoModel.toJson());
       await saveUserToken(authTokenModel);
+      //추가정보 입력 성공
       if(context.mounted) {
         Navigator.pop(context);
       }
+      userInfoController.getUserAudioTimeInfo();
     } on DioException catch(e) {
       print("[additionInfoConfirmBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;

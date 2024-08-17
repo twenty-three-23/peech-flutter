@@ -30,6 +30,8 @@ class PracticeResultCtr extends GetxController {
 
   int? resultScriptId;
 
+  bool isEditSaved = false; //수정사항 저장했는지 여부
+
   bool isEdited = false;
 
   void getPracticeResult() async {
@@ -117,6 +119,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void insertNewParagraph(int index) {
+    isEdited = true;
     practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, nowStatus: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "")]));
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     if(index + 1 == practiceResult.value?.script?.length) {
@@ -125,6 +128,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void removeParagraph(int index) {
+    isEdited = true;
     practiceResult.value?.script?.removeAt(index);
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
   }
@@ -143,7 +147,7 @@ class PracticeResultCtr extends GetxController {
 
   void homeBtn(BuildContext context) async {
     isLoading.value = true;
-    if(isEdited) {
+    if(isEditSaved) {
       await putEditedScript();
     }
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
@@ -170,6 +174,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void editingDialogSaveBtn(TextEditingController textEditingController, BuildContext context, int paragraphIndex, int sentenceIndex) {
+    isEdited = true;
     practiceResult.value?.script?[paragraphIndex].sentences?[sentenceIndex].sentenceContent = textEditingController.text;
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     Navigator.of(context).pop();
@@ -178,7 +183,8 @@ class PracticeResultCtr extends GetxController {
   void editingFinishBtn() async {
     try {
       isLoading.value = true;
-      isEdited = true;
+      isEdited = false;
+      isEditSaved = true;
       _practiceResult = practiceResult.value;
       await getEditingResult();
       practiceResult.value = _practiceResult;
