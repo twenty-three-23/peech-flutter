@@ -294,55 +294,60 @@ class PracticeResultScreen extends StatelessWidget {
                         textColor: const Color(0xFFFFFFFF),
                         text: '나가기',
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text(
-                                    "나가기",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      height: 26 / 18,
-                                    )
-                                  ),
-                                  content: const Text(
-                                    "반영되지 않은 수정 사항이 있다면\n저장하기를 눌러주세요\n'기록보기'에서 확인할 수 있습니다.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      height: 24 / 16,
+                          if(controller.isEdited) {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        "나가기",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          height: 26 / 18,
+                                        )
                                     ),
-                                  ),
-                                  actions: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: ColoredButton(
-                                            text: '닫기',
-                                            onPressed: () { Navigator.of(context).pop(); },
-                                            backgroundColor: const Color(0xFFF4F6FA),
-                                            textColor: const Color(0xFF3B3E43),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8,),
-                                        Expanded(
-                                          child: ColoredButton(
-                                            text: '나가기',
-                                            onPressed: () { controller.homeBtn(context); },
-                                            backgroundColor: const Color(0xFF3B3E43),
-                                            textColor: const Color(0xFFFFFFFF),
-                                          ),
-                                        ),
-                                      ],
+                                    content: const Text(
+                                      "반영되지 않은 수정 사항이 있다면\n저장하기를 눌러주세요\n'기록보기'에서 확인할 수 있습니다.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        height: 24 / 16,
+                                      ),
                                     ),
-                                  ],
-                      
-                                );
-                              }
-                          );
+                                    actions: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: ColoredButton(
+                                              text: '닫기',
+                                              onPressed: () { Navigator.of(context).pop(); },
+                                              backgroundColor: const Color(0xFFF4F6FA),
+                                              textColor: const Color(0xFF3B3E43),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8,),
+                                          Expanded(
+                                            child: ColoredButton(
+                                              text: '나가기',
+                                              onPressed: () { controller.homeBtn(context); },
+                                              backgroundColor: const Color(0xFF3B3E43),
+                                              textColor: const Color(0xFFFFFFFF),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+
+                                  );
+                                }
+                            );
+                          }
+                          else {
+                            controller.homeBtn(context);
+                          }
                         },
                       ),
                     ),
