@@ -103,24 +103,9 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   child: ColoredButton(
                       onPressed: () {
-                          LocalPracticeModeStorage().setMode(PracticeMode.withScript);
                           Navigator.pushNamed(context, '/themeInput');
                         },
-                      text: "대본 입력하고 시작하기"
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10,),
-            Row(
-              children: [
-                Expanded(
-                  child: ColoredButton(
-                      onPressed: () {
-                          LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-                          Navigator.pushNamed(context, '/themeInput');
-                        },
-                      text: "대본 입력하지 않고 시작하기"
+                      text: "시작하기"
                   ),
                 ),
               ],
