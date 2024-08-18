@@ -29,6 +29,8 @@ class AuthTokenRefreshInterceptor extends Interceptor {
           throw Exception("refreshToken is null!");
         }
 
+        print('refresh token 가져오기 성공: $refreshToken');
+
         //토큰 재발급받기
         RefreshTokenModel refreshTokenModel = RefreshTokenModel(refreshToken: refreshToken);
         RemoteAuthTokenRefreshDataSource remoteAuthTokenRefreshDataSource = RemoteAuthTokenRefreshDataSource(AuthDioFactory().dio);
@@ -36,10 +38,13 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         LocalAuthTokenStorage().setAccessToken(authTokenModel.accessToken ?? '');
         LocalAuthTokenStorage().setRefreshToken(authTokenModel.refreshToken ?? '');
 
+        print('토큰 재발급 성공: ${authTokenModel.accessToken}');
+
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
         final reDio = AuthDioFactory().dio;
         final response = await reDio.fetch(options);
+        print('다시 원래 요청으로 결과 받아오기 성공: ${response.data}');
         return handler.resolve(response);
 
       } on DioException catch(e) {

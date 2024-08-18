@@ -16,7 +16,17 @@ class AuthTokenInjectInterceptor extends Interceptor {
         token = 'x';
       }
       options.headers.addAll({"authorization": "Bearer $token"});
-      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [$token]");
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject access token [$token]");
+    }
+
+    if(options.headers['refreshToken'] == 'true') {
+      options.headers.remove('refreshToken');
+      String? token = localAuthTokenStorage.getRefreshToken();
+      if(token == '' || token == null) {
+        token = 'x';
+      }
+      options.headers.addAll({"authorization": "Bearer $token"});
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject refresh token [$token]");
     }
 
     return super.onRequest(options, handler);
