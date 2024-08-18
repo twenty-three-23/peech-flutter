@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
@@ -16,6 +17,10 @@ void main() async {
 
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    Get.put(UserInfoController()); //유저 정보 전역 컨트롤러
+    Get.put(AppInfoController()); // 앱 정보 전역 컨트롤러
+
     await AppInitializer().initialize();
     AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
       print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
@@ -23,9 +28,7 @@ void main() async {
     });
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
-    };
-
-    Get.put(UserInfoController());
+    }; //앱 정보 전역 컨트롤러
 
     runApp(MyApp(navigatorKey: navigatorKey));
   },
