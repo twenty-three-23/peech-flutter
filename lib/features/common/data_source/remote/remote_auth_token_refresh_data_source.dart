@@ -9,7 +9,7 @@ part 'remote_auth_token_refresh_data_source.g.dart';
 abstract class RemoteAuthTokenRefreshDataSource {
   factory RemoteAuthTokenRefreshDataSource(Dio dio, {String baseUrl}) = _RemoteAuthTokenRefreshDataSource;
 
-  @retrofit.PATCH("/api/v1.1/auth/reissue")
+  @retrofit.POST("/api/v1.1/auth/reissue")
   @retrofit.Headers({'refreshToken': 'true'})
   Future<AuthTokenModel> refreshToken(@retrofit.Body() Map<String, dynamic> socialLoginInfo);
 }
