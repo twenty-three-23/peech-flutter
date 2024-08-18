@@ -9,6 +9,6 @@ part 'remote_app_info_data_source.g.dart';
 abstract class RemoteAppInfoDataSource {
   factory RemoteAppInfoDataSource(Dio dio, {String baseUrl}) = _RemoteAppInfoDataSource;
 
-  @GET("/app/info")
+  @GET("/api/v1.1/app")
   Future<AppInfoModel> getAppInfo();
 }
