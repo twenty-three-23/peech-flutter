@@ -22,6 +22,12 @@ class AuthTokenRefreshInterceptor extends Interceptor {
     final isStatus410 = err.response?.statusCode == 410;
 
     if(isStatus410) {
+
+      if(err.requestOptions.headers['noRefresh'] == 'true') {
+        print('[AuthTokenRefreshInterceptor] noRefresh');
+        return handler.reject(err);
+      }
+
       try {
         //refresh token 가져오기
         String refreshToken = localAuthTokenStorage.getRefreshToken() ?? "";
@@ -43,6 +49,7 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
         final reDio = AuthDioFactory().dio;
+        reDio.options.headers.addAll({'noRefresh': 'true'});
         final response = await reDio.fetch(options);
         print('다시 원래 요청으로 결과 받아오기 성공: ${response.data}');
         return handler.resolve(response);

@@ -41,7 +41,7 @@ class SocialLoginCtr extends GetxController {
     if (await isKakaoTalkInstalled()) {
       try {
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-        print("토큰: ${token.accessToken}");
+        print("KAKAO AccessToken: ${token.accessToken}");
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
         AuthTokenResponseModel authTokenResponseModel = await postSocialToken(kakaoLoginInfo);
         loginChoiceViewState.value = SocialLoginChoiceViewState.success;
