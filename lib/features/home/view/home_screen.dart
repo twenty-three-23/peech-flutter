@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-    Widget build(BuildContext context) {
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    final controller = Get.find<HomeCtr>();
-    final userInfoController = Get.find<UserInfoController>();
+class _HomeScreenState extends State<HomeScreen> {
+
+  final appInfoController = Get.find<AppInfoController>();
+  final controller = Get.find<HomeCtr>();
+  final userInfoController = Get.find<UserInfoController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appInfoController.checkAppInfo(context);
+    });
+  }
+
+  @override
+    Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
@@ -141,9 +159,9 @@ class HomeScreen extends StatelessWidget {
                     )
                 )
             ),
-            // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
-            // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
-            // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
+            TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
+            TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
+            TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
             const SizedBox(height: 16,),
           ],
         ),

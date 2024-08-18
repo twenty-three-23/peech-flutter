@@ -60,6 +60,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   url_launcher: ^6.3.0
   flutter_email_sender: ^6.0.3
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:
