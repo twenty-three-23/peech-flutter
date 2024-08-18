@@ -75,7 +75,7 @@ class AppInfoController extends GetxController {
   }
 
   Future<bool> checkAppAvailable(BuildContext context) async {
-    if(appAvailable == true) {
+    if(appAvailable == false) {
       if(context.mounted) {
         showCommonDialog(
             context: context,
