@@ -16,7 +16,7 @@ class AuthTokenRefreshInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
 
-    print("[ERR] [${err.requestOptions.method}] [${err.requestOptions.path}]");
+    print("[ERR] [${err.requestOptions.method}] [${err.requestOptions.path}] [${err.response?.statusCode}]");
 
     //AT 만료
     final isStatus410 = err.response?.statusCode == 410;
@@ -41,15 +41,18 @@ class AuthTokenRefreshInterceptor extends Interceptor {
         RefreshTokenModel refreshTokenModel = RefreshTokenModel(refreshToken: refreshToken);
         RemoteAuthTokenRefreshDataSource remoteAuthTokenRefreshDataSource = RemoteAuthTokenRefreshDataSource(AuthDioFactory().dio);
         AuthTokenModel authTokenModel = await remoteAuthTokenRefreshDataSource.refreshToken(refreshTokenModel.toJson());
-        LocalAuthTokenStorage().setAccessToken(authTokenModel.accessToken ?? '');
-        LocalAuthTokenStorage().setRefreshToken(authTokenModel.refreshToken ?? '');
+        await LocalAuthTokenStorage().setAccessToken(authTokenModel.accessToken ?? '');
+        await LocalAuthTokenStorage().setRefreshToken(authTokenModel.refreshToken ?? '');
 
         print('토큰 재발급 성공: ${authTokenModel.accessToken}');
 
         //다시 원래 요청으로 결과 받아오기
         final options = err.requestOptions;
         final reDio = AuthDioFactory().dio;
-        reDio.options.headers.addAll({'noRefresh': 'true'});
+        options.headers.addAll({'noRefresh': 'true'});
+        options.headers.remove('authorization');
+        options.headers.addAll({"accessToken": "true"});
+        print('헤더 ${options.headers}');
         final response = await reDio.fetch(options);
         print('다시 원래 요청으로 결과 받아오기 성공: ${response.data}');
         return handler.resolve(response);
