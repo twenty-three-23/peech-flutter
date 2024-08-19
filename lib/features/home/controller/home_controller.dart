@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_nickname_data_source.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/models/user_nickname_model.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 
 class HomeCtr extends GetxController {
@@ -53,16 +56,28 @@ class HomeCtr extends GetxController {
   }
 
   void contactToEmail(BuildContext context) async {
-    final Email email = Email(
-      body: '',
-      subject: '[피치 서비스 문의]',
-      recipients: ['sbin.ch04@gmail.com'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
-    );
+
+    //유저 닉네임 받아오기
+    UserNicknameModel userNicknameModel;
+
     try {
+      userNicknameModel = await RemoteUserNicknameDataSource(AuthDioFactory().dio).getUserNickname();
+    } catch (error) {
+      print('유저 닉네임 받아오기 실패 $error');
+      return;
+    }
+
+    try {
+      final Email email = Email(
+        body: '\n\n\n\n\n--------------------------------------------------------------\n위에 피치 서비스에 문의 또는 건의하실 내용을 입력해주세요.',
+        subject: '[피치 서비스 문의] 닉네임: ${userNicknameModel.nickName}',
+        recipients: ['sbin.ch04@gmail.com'],
+        cc: [],
+        bcc: [],
+        attachmentPaths: [],
+        isHTML: false,
+      );
+      //이메일 서비스로 연결
       await FlutterEmailSender.send(email);
     } catch (error) {
       print('이메일 전송 실패 $error');

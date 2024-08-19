@@ -123,10 +123,3 @@ class AppInfoController extends GetxController {
   }
 
 }
-// Get.defaultDialog(
-//   title: "앱 업데이트",
-//   middleText: "새로운 버전이 출시되었습니다. 업데이트 후 사용해주세요.",
-//   textConfirm: "업데이트",
-//   onConfirm: () {
-//
-// }
