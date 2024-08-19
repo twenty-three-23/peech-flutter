@@ -2,14 +2,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auto_token_register_intercepter.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
@@ -34,6 +30,8 @@ class PracticeResultCtr extends GetxController {
 
   int? resultScriptId;
 
+  bool isEditSaved = false; //수정사항 저장했는지 여부
+
   bool isEdited = false;
 
   void getPracticeResult() async {
@@ -52,13 +50,7 @@ class PracticeResultCtr extends GetxController {
   Future<void> checkRecodeFileDuration() async {
     try {
       int seconds = await getRecodeSeconds();
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AutoTokenRegisterIntercepter(localDeviceUuidStorage: LocalDeviceUuidStorage()),
-        DebugIntercepter(),
-      ]);
-      RemoteFileDurationCheckDataSource remoteFileDurationCheckDataSource = RemoteFileDurationCheckDataSource(dio);
+      RemoteFileDurationCheckDataSource remoteFileDurationCheckDataSource = RemoteFileDurationCheckDataSource(AuthDioFactory().dio);
       UsageTimeCheckModel usageTimeCheck = await remoteFileDurationCheckDataSource.checkFileDuration(seconds);
       print("응답: ${usageTimeCheck.message}");
     } on DioException catch(e) {
@@ -78,10 +70,7 @@ class PracticeResultCtr extends GetxController {
   Future<ParagraphListModel> postPracticeResult(PracticeMode practiceMode) async {
    try {
      print('postPracticeResult() called');
-     Dio dio = Dio();
-     dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
-     dio.interceptors.add(DebugIntercepter());
-     RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(dio);
+     RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
      int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
      if(practiceMode == PracticeMode.withScript) {
@@ -130,6 +119,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void insertNewParagraph(int index) {
+    isEdited = true;
     practiceResult.value?.script?.insert(index, ParagraphModel(paragraphId: null, paragraphOrder: null, time: null, nowStatus: null, sentences: [SentenceModel(sentenceId: null, sentenceOrder: 1, sentenceContent: "")]));
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     if(index + 1 == practiceResult.value?.script?.length) {
@@ -138,6 +128,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void removeParagraph(int index) {
+    isEdited = true;
     practiceResult.value?.script?.removeAt(index);
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
   }
@@ -156,7 +147,7 @@ class PracticeResultCtr extends GetxController {
 
   void homeBtn(BuildContext context) async {
     isLoading.value = true;
-    if(isEdited) {
+    if(isEditSaved) {
       await putEditedScript();
     }
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
@@ -165,14 +156,8 @@ class PracticeResultCtr extends GetxController {
 
   Future<StoreEditedScriptResult> putEditedScript() async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AutoTokenRegisterIntercepter(localDeviceUuidStorage: LocalDeviceUuidStorage()),
-        DebugIntercepter(),
-      ]);
       int themeId = getThemeId();
-      RemoteStoreEditedScriptDataSource remoteStoreEditedScriptDataSource = RemoteStoreEditedScriptDataSource(dio);
+      RemoteStoreEditedScriptDataSource remoteStoreEditedScriptDataSource = RemoteStoreEditedScriptDataSource(AuthDioFactory().dio);
       if(resultScriptId == null) throw Exception("[putEditedScript] resultScriptId is null!");
       return await remoteStoreEditedScriptDataSource.storeEditedScript(themeId, resultScriptId!);
     } on DioException catch(e) {
@@ -189,6 +174,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   void editingDialogSaveBtn(TextEditingController textEditingController, BuildContext context, int paragraphIndex, int sentenceIndex) {
+    isEdited = true;
     practiceResult.value?.script?[paragraphIndex].sentences?[sentenceIndex].sentenceContent = textEditingController.text;
     practiceResult.value = ParagraphListModel(script: practiceResult.value?.script, scriptId: practiceResult.value?.scriptId, totalRealTime: practiceResult.value?.totalRealTime, totalTime: practiceResult.value?.totalTime);
     Navigator.of(context).pop();
@@ -197,7 +183,8 @@ class PracticeResultCtr extends GetxController {
   void editingFinishBtn() async {
     try {
       isLoading.value = true;
-      isEdited = true;
+      isEdited = false;
+      isEditSaved = true;
       _practiceResult = practiceResult.value;
       await getEditingResult();
       practiceResult.value = _practiceResult;
@@ -212,12 +199,7 @@ class PracticeResultCtr extends GetxController {
   Future<void> getEditingResult() async {
     try {
       ReqParagraphListModel reqParagraphListModel = convertReqParagraphModel(_practiceResult);
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      RemotePracticeEditingResultDataSource remotePracticeEditingResultDataSource = RemotePracticeEditingResultDataSource(dio);
+      RemotePracticeEditingResultDataSource remotePracticeEditingResultDataSource = RemotePracticeEditingResultDataSource(AuthDioFactory().dio);
       int themeId = getThemeId();
       if(resultScriptId == null) throw Exception("[getEditingResult] resultScriptId is null!");
       _practiceResult = await remotePracticeEditingResultDataSource.getPracticeWithScriptResultList(themeId, resultScriptId!, reqParagraphListModel);

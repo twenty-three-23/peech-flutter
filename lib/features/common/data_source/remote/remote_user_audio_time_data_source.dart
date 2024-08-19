@@ -1,4 +1,4 @@
-import 'package:retrofit/retrofit.dart';
+import 'package:retrofit/retrofit.dart' as retrofit;
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
@@ -6,13 +6,15 @@ import 'package:swm_peech_flutter/features/common/models/remaining_time_model.da
 
 part 'remote_user_audio_time_data_source.g.dart';
 
-@RestApi(baseUrl: Constants.baseUrl)
+@retrofit.RestApi(baseUrl: Constants.baseUrl)
 abstract class RemoteUserAudioTimeDataSource {
   factory RemoteUserAudioTimeDataSource(Dio dio, {String baseUrl}) = _RemoteUserAudioTimeDataSource;
 
-  @GET('api/v1/remaining-time')
+  @retrofit.GET('api/v1/remaining-time')
+  @retrofit.Headers({'accessToken': 'true'},)
   Future<RemainingTimeModel> getUserRemainingTime();
 
-  @GET('api/v1/max-audio-time')
+  @retrofit.GET('api/v1/max-audio-time')
+  @retrofit.Headers({'accessToken' : 'true'})
   Future<MaxAudioTimeModel> getUserMaxAudioTime();
 }

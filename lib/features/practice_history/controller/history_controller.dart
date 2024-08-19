@@ -1,15 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_refresh_intercepter.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
@@ -70,9 +66,7 @@ class HistoryCtr extends GetxController {
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      final remoteMajorDetailDataSource = RemoteMajorDetailDataSource(dio);
+      final remoteMajorDetailDataSource = RemoteMajorDetailDataSource(AuthDioFactory().dio);
       _majorDetail = await remoteMajorDetailDataSource.getMajorDetail(themeId, scriptId);
     } on DioException catch(e) {
       print("[getMajorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
@@ -86,13 +80,7 @@ class HistoryCtr extends GetxController {
   void getThemeList() async {
     try {
       isLoading.value = true;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      final historyThemeDataSource = RemoteThemeListDataSource(dio);
+      final historyThemeDataSource = RemoteThemeListDataSource(AuthDioFactory().dio);
       _themeList = await historyThemeDataSource.getThemeList();
       themeList.value = _themeList;
       isLoading.value = false;
@@ -117,13 +105,7 @@ class HistoryCtr extends GetxController {
   void getMajorList() async {
     try {
       isLoading.value = true;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      final historyMajorDataSource = RemoteMajorListDataSource(dio);
+      final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
       _majorList = await historyMajorDataSource.getMajorList(historyPath.value.theme!);
       majorList.value = _majorList;
       print("메이저 개수: ${majorList.value?.majorScripts?.length}");
@@ -148,13 +130,7 @@ class HistoryCtr extends GetxController {
   void getMinorList() async {
     try {
       isLoading.value = true;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        AuthTokenRefreshInterceptor(localDeviceUuidStorage: LocalDeviceUuidStorage(), localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      final historyMinorDataSource = RemoteMinorListDataSource(dio);
+      final historyMinorDataSource = RemoteMinorListDataSource(AuthDioFactory().dio);
       _minorList = await historyMinorDataSource.getMirorList(historyPath.value.theme ?? 0, historyPath.value.major ?? 0);
       minorList.value = _minorList;
       print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
@@ -181,11 +157,7 @@ class HistoryCtr extends GetxController {
       isLoading.value = true;
       minorDetail.value = null;
       _minorList = null;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        DebugIntercepter()
-      ]);
-      final remoteMinorDetailDataSource = RemoteMinorDetailDataSource(dio);
+      final remoteMinorDetailDataSource = RemoteMinorDetailDataSource(AuthDioFactory().dio);
       final themeId = historyPath.value.theme ?? 0;
       final majorVersion = historyPath.value.major ?? 0;
       final minorVersion = historyPath.value.minor ?? 0;
@@ -336,9 +308,7 @@ class HistoryCtr extends GetxController {
     ScriptIdModel? scriptIdModel;
     // 대본 생성하기
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(AuthDioFactory().dio);
       scriptIdModel = await remoteScriptInputDataSource.postScript(themeId, scriptInputParagraphsModel.toJson());
     } on DioException catch(e) {
       print("[startWithMinorScriptBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");

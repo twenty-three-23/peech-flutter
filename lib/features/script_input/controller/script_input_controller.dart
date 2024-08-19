@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
@@ -64,11 +62,18 @@ class ScriptInputCtr extends GetxController {
   }
 
   void gotoPracticeBtn(BuildContext context) async {
-    expectedTimeIsLoading.value = true;
-    int scriptExectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
-    await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExectedTimeMilliSec);
-    Navigator.pushNamed(context, '/voiceRecodeWithScript');
-    expectedTimeIsLoading.value = false;
+    try {
+      expectedTimeIsLoading.value = true;
+      int scriptExpectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
+      await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExpectedTimeMilliSec);
+      Navigator.pushNamed(context, '/voiceRecodeWithScript');
+    } catch(e) {
+      print("[gotoPracticeBtn] Exception: $e");
+      rethrow;
+    } finally {
+      expectedTimeIsLoading.value = false;
+    }
+
   }
 
   int toMilliSec(String expectedTime) {
@@ -77,16 +82,14 @@ class ScriptInputCtr extends GetxController {
     int hour = int.parse(timeList[0]);
     int min = int.parse(timeList[1]);
     int sec = int.parse(timeList[2]);
-    int milli = int.parse(time[1]);
+    int milli =  0;
+    if(time.length >= 2) milli = int.parse(time[1]);
     return (hour * 60 * 60 + min * 60 + sec) * 1000 + milli;
   }
 
   Future<ScriptIdModel> postScript(int themeId, ScriptInputParagraphsModel script) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      dio.interceptors.add(AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()));
-      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(dio);
+      RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(AuthDioFactory().dio);
       ScriptIdModel? scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
       if(scriptId == null) throw(Exception("[postScript] scriptId is null!"));
       return scriptId;
@@ -101,9 +104,7 @@ class ScriptInputCtr extends GetxController {
 
   Future<ExpectedTimeModel> getExpectedTime(int themeId, int scriptId) async {
     try {
-      Dio dio = Dio();
-      dio.interceptors.add(DebugIntercepter());
-      final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(dio);
+      final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(AuthDioFactory().dio);
       ExpectedTimeModel expectedTimeModel = await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
       return expectedTimeModel;
     } on DioException catch(e) {

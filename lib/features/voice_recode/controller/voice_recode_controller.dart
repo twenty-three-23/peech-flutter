@@ -5,13 +5,15 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/auth_token_inject_interceptor.dart';
-import 'package:swm_peech_flutter/features/common/dio_intercepter/debug_interceptor.dart';
+import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/voice_recode/data_source/remote_paragraph_keywords.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraphs_model.dart';
+import 'package:swm_peech_flutter/features/voice_recode/model/keyword_response_model.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
@@ -24,18 +26,23 @@ class VoiceRecodeCtr extends GetxController {
   late final String _path;
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
-  Rx<PracticeState> practiceState = PracticeState.BEFORETOSTART.obs;
+  Rx<PracticeState> practiceState = PracticeState.beforeToStart.obs;
   final GlobalKey scriptListViewKey = GlobalKey();  // GlobalKey 추가
   Rx<double> scriptListViewSize = Rx<double>(0.0);
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
   Timer? _timer;
+  Rx<KeywordParagraphsModel?> keywords = KeywordParagraphsModel().obs;
 
   MaxAudioTimeModel? _maxAudioTime;
   Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
 
+  Rx<String?> promptSelectedOption = RxString('대본');
+  final List<String> promptOptions = ['대본', '핵심 키워드', '전부 숨기기'];
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
+    getKeywords();
     _path = await RecodingFileUtil().getFilePath();
     getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
@@ -45,16 +52,11 @@ class VoiceRecodeCtr extends GetxController {
     super.onInit();
   }
 
-  void getMaxAudioTime() async {
+  Future<void> getMaxAudioTime() async {
     try {
       _maxAudioTime = null;
       maxAudioTime.value = null;
-      Dio dio = Dio();
-      dio.interceptors.addAll([
-        AuthTokenInjectInterceptor(localUserTokenStorage: LocalUserTokenStorage()),
-        DebugIntercepter(),
-      ]);
-      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(dio);
+      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
       _maxAudioTime = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
       maxAudioTime.value = _maxAudioTime;
     } on DioException catch(e) {
@@ -89,14 +91,11 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _startRecording() async {
-    practiceState.value = PracticeState.RECODING;
+    practiceState.value = PracticeState.recoding;
     recodingStopWatch.value.reset();
     recodingStopWatch.value.start();
 
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
-      recodingStopWatch.refresh();
-      checkRecodingTimeLimit(recodingStopWatch.value);
-    });
+    _startTimer();
 
     await _recorder!.startRecorder(
       toFile: _path,
@@ -112,7 +111,6 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _stopRecording() async {
-    practiceState.value = PracticeState.ENDRECODING;
     _timer?.cancel();
     recodingStopWatch.value.stop();
     await _recorder!.stopRecorder();
@@ -141,16 +139,18 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeWithScript() async {
+    await getMaxAudioTime();
     if(_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
     _startRecording();
-    _stopRecodingWhenScrollIsEndListener();
-    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
-    _startAutoScrollingAnimation(totalExpectedTime);
+    // _stopRecodingWhenScrollIsEndListener(); //자농 녹음 중지 제거
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
+    _startAutoScrollingAnimation(_getTotalExpectedTime());
   }
 
-  void startPracticeNoScript() {
+  void startPracticeNoScript() async {
+    await getMaxAudioTime();
     if(_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
@@ -180,7 +180,6 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _startAutoScrollingAnimation(int milliSec) async {
-    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     await scriptScrollController.animateTo(
       scriptScrollController.position.maxScrollExtent,
       duration: Duration(milliseconds: milliSec),
@@ -203,5 +202,100 @@ class VoiceRecodeCtr extends GetxController {
 
   }
 
+  void resetRecodingWithScript() {
+    practiceState.value = PracticeState.beforeToStart;
+    recodingStopWatch.value.reset();
+    _recorder?.stopRecorder();
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
+  }
+
+  void resetRecodingNoScript() {
+    practiceState.value = PracticeState.beforeToStart;
+    _recorder?.stopRecorder();
+    recodingStopWatch.value.reset();
+  }
+
+  Future<void> getKeywords() async {
+    try {
+      int themeId = getThemeId();
+      int scriptId = getScriptId();
+      RemoteParagraphKeywords remoteParagraphKeywords = RemoteParagraphKeywords(AuthDioFactory().dio);
+      KeywordResponseModel keywordResponseModel = await remoteParagraphKeywords.getKeywords(themeId, scriptId);
+      keywords.value = KeywordParagraphsModel(paragraphs: keywordResponseModel.responseBody?.paragraphs);
+      keywords.refresh();
+    } on DioException catch(e) {
+      print("[getKeywords] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+    } catch(e) {
+      print("[getKeywords] Exception: ${e}");
+    }
+
+  }
+
+  int getThemeId() {
+    LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
+    return int.parse(localPracticeThemeStorage.getThemeId() ?? '0');
+  }
+
+  int getScriptId() {
+    LocalScriptStorage localScriptStorage = LocalScriptStorage();
+    return localScriptStorage.getInputScriptId() ?? 0;
+  }
+
+  Future<void> _pauseRecoding() async {
+    await _recorder?.pauseRecorder();
+  }
+
+  Future<void> _resumeRecoding() async {
+    await _recorder?.resumeRecorder();
+  }
+
+  void _stopScrollingAnimation() {
+    // 현재 애니메이션을 멈추고, 현재 위치에서 바로 멈추도록 설정
+    scriptScrollController.jumpTo(scriptScrollController.offset);
+  }
+
+  void pausePracticeWithScript() async {
+    await _pauseRecoding();
+    _stopScrollingAnimation();
+    recodingStopWatch.value.stop(); // 타이머 멈추기
+    _timer?.cancel(); // 타이머 객체 취소
+    practiceState.value = PracticeState.pause;
+  }
+
+  void pausePracticeNoScript() async {
+    await _pauseRecoding();
+    recodingStopWatch.value.stop(); // 타이머 멈추기
+    _timer?.cancel(); // 타이머 객체 취소
+    practiceState.value = PracticeState.pause;
+  }
+
+  void resumePracticeWithScript() async {
+    await _resumeRecoding();
+    recodingStopWatch.value.start(); // 타이머 멈추기
+    _startTimer();
+    int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
+    _startAutoScrollingAnimation(remainingTime);
+    practiceState.value = PracticeState.recoding;
+  }
+
+  void resumePracticeNoScript() async {
+    await _resumeRecoding();
+    recodingStopWatch.value.start(); // 타이머 멈추기
+    _startTimer();
+    practiceState.value = PracticeState.recoding;
+  }
+
+  int _getTotalExpectedTime() {
+    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
+    totalExpectedTime += (script?.length ?? 0) * 1000; //문단당 1초로 숨 쉬는 시간 계산
+    return totalExpectedTime;
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+      recodingStopWatch.refresh();
+      checkRecodingTimeLimit(recodingStopWatch.value);
+    });
+  }
 
 }

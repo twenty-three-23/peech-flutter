@@ -1,29 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
+import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    final controller = Get.find<HomeCtr>();
+class _HomeScreenState extends State<HomeScreen> {
+
+  final appInfoController = Get.find<AppInfoController>();
+  final controller = Get.find<HomeCtr>();
+  final userInfoController = Get.find<UserInfoController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appInfoController.checkAppInfo(context);
+    });
+  }
+
+  @override
+    Widget build(BuildContext context) {
 
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: Column(
+          children: [
+            const SizedBox(height: 15.5,),
+            SvgPicture.asset(
+                'assets/images/app_bar_logo.svg',
+                semanticsLabel: 'peech app bar logo'
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 112.5,),
             const Text(
-              "Peech - 발표 속도 조절, 기록 관리",
+              "발표 대본을 작성하면\n가장 적절한 시간을 계산해줘요!\n함께 연습을 시작해 볼까요?",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 23,
+                fontSize: 20,
               ),
             ),
-            const SizedBox(height: 50,),
+            const SizedBox(height: 30,),
             GetX<HomeCtr>(
               builder: (_) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -31,23 +65,25 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 40,),
                   Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text("총"),
-                          const SizedBox(width: 3,),
-                          controller.remainingTime.value == null
-                              ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
-                              : Text(
-                                  controller.remainingTime.value?.text ?? "?",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                ),
-                          const SizedBox(width: 3,),
-                          const Text("사용 가능"),
-                        ],
+                      GetX<UserInfoController>(
+                        builder: (_) => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text("총"),
+                            const SizedBox(width: 3,),
+                            userInfoController.remainingTime.value == null
+                                ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
+                                : Text(
+                                    userInfoController.remainingTime.value?.text ?? "?",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  ),
+                            const SizedBox(width: 3,),
+                            const Text("사용 가능"),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -55,10 +91,10 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           const Text("1회 최대"),
                           const SizedBox(width: 3,),
-                          controller.maxAudioTime.value == null
+                            userInfoController.maxAudioTime.value == null
                               ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
                               : Text(
-                                  controller.maxAudioTime.value?.text ?? "?",
+                                  userInfoController.maxAudioTime.value?.text ?? "?",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )
@@ -73,32 +109,60 @@ class HomeScreen extends StatelessWidget {
                     width: 40,
                     height: 40,
                     child: IconButton(
-                        onPressed: () { controller.getUserAudioTimeInfo(); },
+                        onPressed: () { userInfoController.getUserAudioTimeInfo(); },
                         icon: const Icon(Icons.refresh, size: 17,)
                     ),
                   )
                 ],
               ),
             ),
-            const SizedBox(height: 30,),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: ColoredButton(
+                    onPressed: () {
+                        Navigator.pushNamed(context, '/themeInput');
+                      },
+                    text: "연습 시작하기",
+                    backgroundColor: const Color(0xFF3B3E43),
+                    textColor: const Color(0xFFFFFFFF),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10,),
+            Row(
+              children: [
+                Expanded(
+                  child: ColoredButton(
+                    onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
+                    text:"기록 보기",
+                    backgroundColor: const Color(0xFF3B3E43),
+                    textColor: const Color(0xFFFFFFFF),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10,),
             TextButton(
                 onPressed: () {
-                    LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-                    Navigator.pushNamed(context, '/themeInput');
-                  },
-                child: const Text("대본 입력하고 시작하기")
+                  controller.contactToEmail(context);
+                },
+                child: const Text(
+                    "이메일로 문의하기",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF3B3E43),
+                      height: 22 / 14,
+                    )
+                )
             ),
-            TextButton(
-                onPressed: () {
-                    LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-                    Navigator.pushNamed(context, '/themeInput');
-                  },
-                child: const Text("대본 입력하지 않고 시작하기")
-            ),
-            TextButton(
-                onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
-                child: const Text("기록 보기")
-            ),
+            // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
+            // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
+            // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
+            const SizedBox(height: 16,),
           ],
         ),
       ),

@@ -1,20 +1,34 @@
 import 'package:dio/dio.dart';
-import 'package:swm_peech_flutter/features/common/data_source/local/local_user_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 
 class AuthTokenInjectInterceptor extends Interceptor {
-  final LocalUserTokenStorage localUserTokenStorage;
+  final LocalAuthTokenStorage localAuthTokenStorage;
 
-  AuthTokenInjectInterceptor({required this.localUserTokenStorage});
+  AuthTokenInjectInterceptor({required this.localAuthTokenStorage});
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
 
+    if(options.headers['accessToken'] == 'true') {
+      options.headers.remove('accessToken');
+      String? token = localAuthTokenStorage.getAccessToken();
+      if(token == '' || token == null) {
+        token = 'x';
+      }
+      options.headers.addAll({"authorization": "Bearer $token"});
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject access token [$token]");
+    }
 
-    final String? token = localUserTokenStorage.getUserToken();
+    if(options.headers['refreshToken'] == 'true') {
+      options.headers.remove('refreshToken');
+      String? token = localAuthTokenStorage.getRefreshToken();
+      if(token == '' || token == null) {
+        token = 'x';
+      }
+      options.headers.addAll({"authorization": "Bearer $token"});
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject refresh token [$token]");
+    }
 
-    options.headers.addAll({"authorization": "Bearer ${token ?? 'x'}"});
-
-    print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject token [${token ?? 'x'}]");
     return super.onRequest(options, handler);
   }
 

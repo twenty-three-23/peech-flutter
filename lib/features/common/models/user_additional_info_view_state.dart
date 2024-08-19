@@ -1,0 +1,4 @@
+enum UserAdditionalInfoViewState {
+  input,
+  loading,
+}
