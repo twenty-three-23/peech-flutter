@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
@@ -132,6 +133,19 @@ class ScriptInputCtr extends GetxController {
   void inputConfirmBtn(BuildContext context) async {
     scriptInputIsLoading.value = true;
     int themeId = getThemeId();
+    removeEmptyParagraphs(); // 빈 문단들 제거
+    if(_script.paragraphs?.isEmpty ?? false) {
+      scriptInputIsLoading.value = false;
+      showCommonDialog(
+        context: context,
+        title: '에러',
+        message: '대본을 입력해주세요',
+        showFirstButton: false,
+        secondButtonText: '확인',
+        secondAction: () { Navigator.of(context).pop(); },
+      );
+      return;
+    }
     ScriptIdModel scriptIdModel = await postScript(themeId, _script);
     int scriptId = scriptIdModel.scriptId ?? 0;
     await saveScriptContent();
@@ -140,6 +154,17 @@ class ScriptInputCtr extends GetxController {
     if(context.mounted) {
       Navigator.pushNamed(context, '/scriptInput/result');
       scriptInputIsLoading.value = false;
+    }
+  }
+
+  void removeEmptyParagraphs() {
+    for(int i = 0; i < _script.paragraphs!.length; i++) {
+      if(_script.paragraphs![i] == '') {
+        _script.paragraphs!.removeAt(i);
+        script.value[i].dispose();
+        script.value.removeAt(i);
+        i--;
+      }
     }
   }
 
