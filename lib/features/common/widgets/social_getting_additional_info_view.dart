@@ -87,7 +87,7 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                                 final selectedDate = await showDatePicker(
                                   context: context,
                                   initialDate: controller.birthday.value,
-                                  firstDate: DateTime(2000),
+                                  firstDate: DateTime(1900),
                                   lastDate: DateTime.now(),
                                 );
                                 if (selectedDate != null) {
