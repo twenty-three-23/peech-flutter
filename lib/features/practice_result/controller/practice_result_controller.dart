@@ -73,9 +73,9 @@ class PracticeResultCtr extends GetxController {
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
      int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
-     int? scriptId = LocalScriptStorage().getInputScriptId();
-     if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
      if(practiceMode == PracticeMode.withScript) {
+       int? scriptId = LocalScriptStorage().getInputScriptId();
+       if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
        File voiceFile = await getRecodingFile();
        ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile, seconds);
        return paragraphListModel;
