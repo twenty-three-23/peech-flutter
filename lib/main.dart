@@ -9,8 +9,8 @@ import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bott
 import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() async {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -30,6 +30,7 @@ void main() async {
       print("[FlutterError] 에러 발생: ${details.exception}");
     }; //앱 정보 전역 컨트롤러
 
+    setUrlStrategy(PathUrlStrategy());
     runApp(MyApp(navigatorKey: navigatorKey));
   },
     (Object error, StackTrace stack) {
