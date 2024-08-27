@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
@@ -16,12 +17,9 @@ class PracticeResultScreen extends StatelessWidget {
 
     final controller = Get.find<PracticeResultCtr>();
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("연습 결과"),
-      ),
-      body: Padding(
+    return CommonScaffold(
+      appBarTitle: '연습 결과',
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: GetX<PracticeResultCtr>(
             builder: (_) => Column(

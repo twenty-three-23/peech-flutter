@@ -47,33 +47,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width > 600
-                ? 600
-                : MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-            ),
-            child: GetMaterialApp(
-              navigatorKey: navigatorKey,
-              getPages: Routers.routers,
-              initialRoute: Routers.INITIAL,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: const [
-                Locale('ko','KR'),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return GetMaterialApp(
+      navigatorKey: navigatorKey,
+      getPages: Routers.routers,
+      initialRoute: Routers.INITIAL,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko','KR'),
+      ],
     );
   }
 }

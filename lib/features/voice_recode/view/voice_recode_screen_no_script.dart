@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
@@ -39,12 +40,9 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
   Widget build(BuildContext context) {
 
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("음성 녹음"),
-      ),
-      body: GetX<VoiceRecodeCtr>(
+    return CommonScaffold(
+      appBarTitle: '음성 녹음',
+      child: GetX<VoiceRecodeCtr>(
         builder: (_) => Center(
           child: Stack(
             children: <Widget>[

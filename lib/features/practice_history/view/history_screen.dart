@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/practice_history/widgets/history_list_view.dart';
 import 'package:swm_peech_flutter/features/practice_history/widgets/history_path_view.dart';
 import '../controller/history_controller.dart';
@@ -21,12 +22,12 @@ class HistoryScreen extends StatelessWidget {
 
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(onPressed: () { controller.backButton(context); }, icon: const Icon(Icons.arrow_back_ios)),
-          title: const Text("발표 기록"),
-        ),
-        body: GetX<HistoryCtr>(
+      child: CommonScaffold(
+        appBarTitle: '발표 기록',
+        backAction: () {
+          controller.backButton(context);
+        },
+        child: GetX<HistoryCtr>(
           builder: (_) {
             return controller.isLoading == true
               ? const Center(child: CircularProgressIndicator())

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_model.dart';
@@ -14,12 +15,9 @@ class HistoryMajorDetailScreen extends StatelessWidget {
     HistoryMajorModel? major = controller.majorList.value?.majorScripts?.firstWhereOrNull((element) => element.majorVersion == controller.historyPath.value.major);
     print("major: ${controller.historyPath.value.major}");
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.pop(context); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("발표 기록"),
-      ),
-      body:
+    return CommonScaffold(
+      appBarTitle: '발표 기록',
+      child:
       GetX<HistoryCtr>(
           builder: (_) => SizedBox(
             child: controller.majorDetail.value == null

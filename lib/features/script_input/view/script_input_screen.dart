@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import '../controller/script_input_controller.dart';
@@ -21,12 +22,9 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
 
     final controller = Get.find<ScriptInputCtr>();
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back_ios)),
-        title: const Text("대본으로 시작"),
-      ),
-      body: GestureDetector(
+    return CommonScaffold(
+      appBarTitle: '대본으로 시작',
+      child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus(); // 화면을 터치하면 키보드를 내리고 포커스를 해제합니다.
         },
@@ -36,24 +34,36 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  SvgPicture.asset(
+                  Expanded(
+                    child: SvgPicture.asset(
                       'assets/images/progress_indicator_filled.svg',
-                      semanticsLabel: 'progress bar'
+                      semanticsLabel: 'progress bar',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                   const SizedBox(width: 4,),
-                  SvgPicture.asset(
+                  Expanded(
+                    child: SvgPicture.asset(
                       'assets/images/progress_indicator_filled.svg',
-                      semanticsLabel: 'progress bar'
+                      semanticsLabel: 'progress bar',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                   const SizedBox(width: 4,),
-                  SvgPicture.asset(
+                  Expanded(
+                    child: SvgPicture.asset(
                       'assets/images/progress_indicator_empty.svg',
-                      semanticsLabel: 'progress bar'
+                      semanticsLabel: 'progress bar',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                   const SizedBox(width: 4,),
-                  SvgPicture.asset(
+                  Expanded(
+                    child: SvgPicture.asset(
                       'assets/images/progress_indicator_empty.svg',
-                      semanticsLabel: 'progress bar'
+                      semanticsLabel: 'progress bar',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ],
               ),
