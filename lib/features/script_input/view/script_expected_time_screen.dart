@@ -27,7 +27,7 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
   Widget build(BuildContext context) {
 
     return CommonScaffold(
-      appBarTitle: '대본 예상 시간Z',
+      appBarTitle: '대본 예상 시간',
       child: GetX<ScriptInputCtr>(
         builder: (_) {
           if(controller.expectedTimeIsLoading.value == true) {

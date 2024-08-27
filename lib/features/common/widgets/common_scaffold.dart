@@ -22,6 +22,7 @@ class CommonScaffold extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(height: MediaQuery.of(context).padding.top,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: SizedBox(
