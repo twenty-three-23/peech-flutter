@@ -9,6 +9,8 @@ class AuthTokenInjectInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
 
+    options.headers["ngrok-skip-browser-warning"] = '100';
+
     if(options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken');
       String? token = localAuthTokenStorage.getAccessToken();

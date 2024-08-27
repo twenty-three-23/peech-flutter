@@ -25,63 +25,72 @@ class Routers {
       page: () => const HomeScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HomeCtr>(() => HomeCtr());
-      })
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
       name: '/scriptInput/input',
       page: () => const ScriptInputScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
-      })
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
-        name: '/scriptInput/result',
-        page: () => const ScriptExpectedTimeScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
-        })
+      name: '/scriptInput/result',
+      page: () => const ScriptExpectedTimeScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
-        name: '/voiceRecodeNoScript',
-        page: () => const VoiceRecodeScreenNoScript(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
-        })
+      name: '/voiceRecodeNoScript',
+      page: () => const VoiceRecodeScreenNoScript(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
-        name: '/voiceRecodeWithScript',
-        page: () => const VoiceRecodeScreenWithScript(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
-        })
+      name: '/voiceRecodeWithScript',
+      page: () => const VoiceRecodeScreenWithScript(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
+      }),
+      transition: Transition.noTransition
     ),
-  GetPage(
+    GetPage(
       name: '/themeInput',
       page: () => const ThemeInputScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ThemeInputCtr>(() => ThemeInputCtr());
-      })
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
       name: '/historyThemeList',
       page: () => const HistoryScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
-      })
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
       name: '/historyMajorDetail',
       page: () => const HistoryMajorDetailScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
-      })
+      }),
+      transition: Transition.noTransition
     ),
     GetPage(
-        name: '/practiceResult',
-        page: () => const PracticeResultScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
-        })
+      name: '/practiceResult',
+      page: () => const PracticeResultScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
+      }),
+      transition: Transition.noTransition
     ),
   ];
 
