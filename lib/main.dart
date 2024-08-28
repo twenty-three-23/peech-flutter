@@ -11,7 +11,6 @@ import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
 
-
 void main() async {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -23,21 +22,20 @@ void main() async {
 
     await AppInitializer().initialize();
     AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
-      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
-      showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
+      print(
+          "[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
+      showSocialLoginBottomSheet(
+          navigatorKey.currentContext!, event.socialLoginBottomSheetState);
     });
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
     }; //앱 정보 전역 컨트롤러
 
     runApp(MyApp(navigatorKey: navigatorKey));
-  },
-    (Object error, StackTrace stack) {
-      print("[runZonedGuarded] 에러 발생: $error");
-    }
-  );
+  }, (Object error, StackTrace stack) {
+    print("[runZonedGuarded] 에러 발생: $error");
+  });
 }
-
 
 class MyApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -56,7 +54,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('ko','KR'),
+        Locale('ko', 'KR'),
       ],
     );
   }
