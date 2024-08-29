@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/models/web_recording_file.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
@@ -20,6 +23,8 @@ import 'package:swm_peech_flutter/features/practice_result/model/req_sentence_mo
 import 'package:swm_peech_flutter/features/practice_result/model/sentence_model.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/store_edited_script_result.dart';
 import 'package:swm_peech_flutter/features/practice_result/model/usage_time_check_model.dart';
+import 'dart:html' as html;
+import 'dart:typed_data';
 
 class PracticeResultCtr extends GetxController {
 
@@ -36,7 +41,6 @@ class PracticeResultCtr extends GetxController {
 
   void getPracticeResult() async {
     isLoading.value = true;
-    await checkRecodeFileDuration();
     //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
     PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
     if(practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
@@ -67,26 +71,60 @@ class PracticeResultCtr extends GetxController {
     return File(filePath);
   }
 
+  Future<String> getRecodingFileOnWeb() async {
+
+    String audioFileURL = await RecodingFileUtil().getFilePath();
+
+    final response = await html.HttpRequest.request(audioFileURL, responseType: 'blob');
+    final html.Blob blob = response.response;
+
+    final reader = html.FileReader();
+    reader.readAsArrayBuffer(blob);
+    await reader.onLoad.first;
+    Uint8List voiceFileAsByte = reader.result as Uint8List;
+    String voiceFile = base64Encode(voiceFileAsByte);
+    return voiceFile;
+  }
+
   Future<ParagraphListModel> postPracticeResult(PracticeMode practiceMode) async {
    try {
      print('postPracticeResult() called');
      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
-     int seconds = await getRecodeSeconds();
      int themeId = getThemeId();
-     int? scriptId = LocalScriptStorage().getInputScriptId();
-     if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
-     if(practiceMode == PracticeMode.withScript) {
-       File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile, seconds);
-       return paragraphListModel;
-     }
-     else {
-       File voiceFile = await getRecodingFile();
-       ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile, seconds);
-       return paragraphListModel;
-     }
 
+     if(!kIsWeb) {
+       File voiceFile = await getRecodingFile();
+       if (practiceMode == PracticeMode.withScript) {
+         int? scriptId = LocalScriptStorage().getInputScriptId();
+         if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
+         ParagraphListModel paragraphListModel = await practiceResultDataSource
+             .getPracticeWithScriptResultList(
+             themeId, scriptId, voiceFile);
+         return paragraphListModel;
+       }
+       else {
+         ParagraphListModel paragraphListModel = await practiceResultDataSource
+             .getPracticeNoScriptResultList(themeId, voiceFile);
+         return paragraphListModel;
+       }
+     } else{
+       String voiceFile = await getRecodingFileOnWeb();
 
+       if (practiceMode == PracticeMode.withScript) {
+         int? scriptId = LocalScriptStorage().getInputScriptId();
+         if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
+         ParagraphListModel paragraphListModel = await practiceResultDataSource
+             .getPracticeWithScriptResultListWeb(
+             themeId, scriptId, WebRecordingFile(file: voiceFile));
+
+         return paragraphListModel;
+       }
+       else {
+         ParagraphListModel paragraphListModel = await practiceResultDataSource
+             .getPracticeNoScriptResultListWeb(themeId, WebRecordingFile(file: voiceFile));
+         return paragraphListModel;
+       }
+     }
    } on DioException catch(e) {
      print("[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
      rethrow;

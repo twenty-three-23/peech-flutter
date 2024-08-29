@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -97,10 +99,17 @@ class VoiceRecodeCtr extends GetxController {
 
     _startTimer();
 
-    await _recorder!.startRecorder(
-      toFile: _path,
-      codec: Codec.aacADTS,
-    );
+    if (!kIsWeb) {
+      await _recorder!.startRecorder(
+          toFile: _path,
+          codec: Codec.aacADTS
+      );
+    } else {
+      await _recorder!.startRecorder(
+          toFile: Constants.webRecodingFileName,
+          codec: Codec.pcmWebM
+      );
+    }
     isRecording.value = true;
   }
 
@@ -133,8 +142,8 @@ class VoiceRecodeCtr extends GetxController {
     isPlaying.value = false;
   }
 
-  void endPractice(BuildContext context) {
-    _stopRecording();
+  void endPractice(BuildContext context) async{
+    await _stopRecording();
     Navigator.pushNamed(context, '/practiceResult');
   }
 

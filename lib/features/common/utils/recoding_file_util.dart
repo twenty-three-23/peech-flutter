@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:html' as html;
 
 class RecodingFileUtil {
 
@@ -16,10 +18,16 @@ class RecodingFileUtil {
 
   Future<String> getFilePath() async {
     String fileName = Constants.recodingFileName;
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
-    String filePath = '$appDocPath/$fileName';
-    return filePath;
+    if (!kIsWeb) {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+      String filePath = '$appDocPath/$fileName';
+      return filePath;
+    } else{
+      String audioFileURL = html.window.sessionStorage[Constants.webRecodingFileName] ?? "";
+      return audioFileURL;
+    }
+
   }
 
   //TODO 이런식으로 구하는게 맞나?
