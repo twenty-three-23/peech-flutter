@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -44,18 +45,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      navigatorKey: navigatorKey,
-      getPages: Routers.routers,
-      initialRoute: Routers.INITIAL,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ko', 'KR'),
-      ],
-    );
+    if (kIsWeb) {
+      //web 인 경우
+      return MaterialApp(
+        home: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width > 600
+                ? 600
+                : MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+            ),
+            child: GetMaterialApp(
+              navigatorKey: navigatorKey,
+              getPages: Routers.routers,
+              initialRoute: Routers.INITIAL,
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('ko', 'KR'),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      //android, ios 인 경우
+      return GetMaterialApp(
+        navigatorKey: navigatorKey,
+        getPages: Routers.routers,
+        initialRoute: Routers.INITIAL,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ko', 'KR'),
+        ],
+      );
+    }
   }
 }
