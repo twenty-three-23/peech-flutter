@@ -38,11 +38,28 @@ class PracticeResultCtr extends GetxController {
 
   bool isEdited = false;
 
-  Future<String> getRecodingFileOnWeb() async {
+  void getPracticeResult() async {
+    isLoading.value = true;
+    //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
+    PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
+    if (practiceMode == null)
+      throw Exception("[getPracticeResult] practiceMode is null!");
+    _practiceResult = await postPracticeResult(practiceMode);
+    resultScriptId = _practiceResult?.scriptId;
+    print("테스트: ${_practiceResult?.totalRealTime}");
+    practiceResult.value = ParagraphListModel(
+        script: _practiceResult?.script,
+        scriptId: _practiceResult?.scriptId,
+        totalRealTime: _practiceResult?.totalRealTime,
+        totalTime: _practiceResult?.totalTime);
+    isLoading.value = false;
+  }
 
+  Future<String> getRecodingFileOnWeb() async {
     String audioFileURL = await RecodingFileUtil().getFilePath();
 
-    final response = await html.HttpRequest.request(audioFileURL, responseType: 'blob');
+    final response =
+        await html.HttpRequest.request(audioFileURL, responseType: 'blob');
     final html.Blob blob = response.response;
 
     final reader = html.FileReader();
@@ -53,49 +70,52 @@ class PracticeResultCtr extends GetxController {
     return voiceFile;
   }
 
-  Future<ParagraphListModel> postPracticeResult(PracticeMode practiceMode) async {
+  Future<ParagraphListModel> postPracticeResult(
+      PracticeMode practiceMode) async {
     try {
       print('postPracticeResult() called');
-      RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
+      RemotePracticeResultDataSource practiceResultDataSource =
+          RemotePracticeResultDataSource(AuthDioFactory().dio);
       int themeId = getThemeId();
 
-      if(!kIsWeb) {
+      if (!kIsWeb) {
         File voiceFile = await getRecodingFile();
         if (practiceMode == PracticeMode.withScript) {
           int? scriptId = LocalScriptStorage().getInputScriptId();
-          if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
+          if (scriptId == null)
+            throw Exception("[postPracticeResult] scriptId is null!");
           ParagraphListModel paragraphListModel = await practiceResultDataSource
-              .getPracticeWithScriptResultList(
-              themeId, scriptId, voiceFile);
+              .getPracticeWithScriptResultList(themeId, scriptId, voiceFile);
           return paragraphListModel;
-        }
-        else {
+        } else {
           ParagraphListModel paragraphListModel = await practiceResultDataSource
               .getPracticeNoScriptResultList(themeId, voiceFile);
           return paragraphListModel;
         }
-      } else{
+      } else {
         String voiceFile = await getRecodingFileOnWeb();
 
         if (practiceMode == PracticeMode.withScript) {
           int? scriptId = LocalScriptStorage().getInputScriptId();
-          if(scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
-          ParagraphListModel paragraphListModel = await practiceResultDataSource
-              .getPracticeWithScriptResultListWeb(
-              themeId, scriptId, WebRecordingFile(file: voiceFile));
+          if (scriptId == null)
+            throw Exception("[postPracticeResult] scriptId is null!");
+          ParagraphListModel paragraphListModel =
+              await practiceResultDataSource.getPracticeWithScriptResultListWeb(
+                  themeId, scriptId, WebRecordingFile(file: voiceFile));
 
           return paragraphListModel;
-        }
-        else {
-          ParagraphListModel paragraphListModel = await practiceResultDataSource
-              .getPracticeNoScriptResultListWeb(themeId, WebRecordingFile(file: voiceFile));
+        } else {
+          ParagraphListModel paragraphListModel =
+              await practiceResultDataSource.getPracticeNoScriptResultListWeb(
+                  themeId, WebRecordingFile(file: voiceFile));
           return paragraphListModel;
         }
       }
-    } on DioException catch(e) {
-      print("[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+    } on DioException catch (e) {
+      print(
+          "[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[postPracticeResult] Exception: ${e}");
       rethrow;
     }
@@ -122,39 +142,6 @@ class PracticeResultCtr extends GetxController {
   Future<File> getRecodingFile() async {
     String filePath = await RecodingFileUtil().getFilePath();
     return File(filePath);
-  }
-
-  Future<ParagraphListModel> postPracticeResult(
-      PracticeMode practiceMode) async {
-    try {
-      print('postPracticeResult() called');
-      RemotePracticeResultDataSource practiceResultDataSource =
-          RemotePracticeResultDataSource(AuthDioFactory().dio);
-      int seconds = await getRecodeSeconds();
-      int themeId = getThemeId();
-      int? scriptId = LocalScriptStorage().getInputScriptId();
-      if (scriptId == null)
-        throw Exception("[postPracticeResult] scriptId is null!");
-      if (practiceMode == PracticeMode.withScript) {
-        File voiceFile = await getRecodingFile();
-        ParagraphListModel paragraphListModel =
-            await practiceResultDataSource.getPracticeWithScriptResultList(
-                themeId, scriptId, voiceFile, seconds);
-        return paragraphListModel;
-      } else {
-        File voiceFile = await getRecodingFile();
-        ParagraphListModel paragraphListModel = await practiceResultDataSource
-            .getPracticeNoScriptResultList(themeId, voiceFile, seconds);
-        return paragraphListModel;
-      }
-    } on DioException catch (e) {
-      print(
-          "[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
-      rethrow;
-    } catch (e) {
-      print("[postPracticeResult] Exception: ${e}");
-      rethrow;
-    }
   }
 
   Future<int> getRecodeSeconds() async {

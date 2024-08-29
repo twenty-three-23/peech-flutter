@@ -19,6 +19,7 @@ class RecodingFileUtil {
     if (!kIsWeb) {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
+      String fileName = Constants.recodingFileName;
       String filePath = '$appDocPath/$fileName';
       return filePath;
     } else {

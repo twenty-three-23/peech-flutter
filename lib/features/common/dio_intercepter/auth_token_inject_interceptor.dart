@@ -8,7 +8,8 @@ class AuthTokenInjectInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers["ngrok-skip-browser-warning"] = '100';
+    options.headers["ngrok-skip-browser-warning"] =
+        '100'; // ngrok 사용할 때 브라우저 경고창 무시
 
     if (options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken');
