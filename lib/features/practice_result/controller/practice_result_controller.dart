@@ -10,6 +10,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_script
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/web_recording_file.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_practice_editing_result_data_source.dart';
@@ -36,12 +37,12 @@ class PracticeResultCtr extends GetxController {
 
   bool isEdited = false;
 
-  void getPracticeResult() async {
+  void getPracticeResult(BuildContext context) async {
     isLoading.value = true;
     //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
     PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
     if (practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
-    _practiceResult = await postPracticeResult(practiceMode);
+    _practiceResult = await postPracticeResult(context, practiceMode);
     resultScriptId = _practiceResult?.scriptId;
     print("테스트: ${_practiceResult?.totalRealTime}");
     practiceResult.value = ParagraphListModel(
@@ -52,7 +53,7 @@ class PracticeResultCtr extends GetxController {
     isLoading.value = false;
   }
 
-  Future<ParagraphListModel> postPracticeResult(PracticeMode practiceMode) async {
+  Future<ParagraphListModel> postPracticeResult(BuildContext context, PracticeMode practiceMode) async {
     try {
       print('postPracticeResult() called');
       RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
@@ -86,9 +87,25 @@ class PracticeResultCtr extends GetxController {
       }
     } on DioException catch (e) {
       print("[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '서버 에러',
+          message: '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.\n\n에러 메시지: ${e.response?.data['message']}',
+          showFirstButton: false,
+          isSecondButtonToClose: true,
+        );
+      }
       rethrow;
     } catch (e) {
       print("[postPracticeResult] Exception: ${e}");
+      showCommonDialog(
+        context: context,
+        title: '서버 에러',
+        message: '클라이언트 에러가 발생했습니다. 잠시 후 다시 시도해주세요',
+        showFirstButton: false,
+        isSecondButtonToClose: true,
+      );
       rethrow;
     }
   }
@@ -121,12 +138,6 @@ class PracticeResultCtr extends GetxController {
   Future<ParagraphListModel> postPracticeResultTest() async {
     MockPracticeResultDataSource practiceResultDataSource = MockPracticeResultDataSource();
     return await practiceResultDataSource.getPracticeResultListTest();
-  }
-
-  @override
-  void onInit() {
-    getPracticeResult();
-    super.onInit();
   }
 
   void insertNewParagraph(int index) {
