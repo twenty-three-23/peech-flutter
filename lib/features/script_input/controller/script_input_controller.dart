@@ -12,13 +12,10 @@ import 'package:swm_peech_flutter/features/script_input/model/expected_time_mode
 import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
 
-
-
 class ScriptInputCtr extends GetxController {
-
   //대본 입력 데이터
-  Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([ TextEditingController() ]);
-  final ScriptInputParagraphsModel _script = ScriptInputParagraphsModel(paragraphs: [ '' ]);
+  Rx<List<TextEditingController>> script = Rx<List<TextEditingController>>([TextEditingController()]);
+  final ScriptInputParagraphsModel _script = ScriptInputParagraphsModel(paragraphs: ['']);
 
   //발표 전 대본 기반 에상 시간
   ExpectedTimeModel? _scriptExpectedTime;
@@ -33,7 +30,9 @@ class ScriptInputCtr extends GetxController {
 
   @override
   void onClose() {
-    for (var element in script.value) { element.dispose(); }
+    for (var element in script.value) {
+      element.dispose();
+    }
     super.onClose();
   }
 
@@ -68,13 +67,12 @@ class ScriptInputCtr extends GetxController {
       int scriptExpectedTimeMilliSec = toMilliSec(scriptExpectedTime.value?.expectedTimeByScript ?? "00:00:00");
       await LocalScriptStorage().setInputScriptTotalExpectedTimeMilli(scriptExpectedTimeMilliSec);
       Navigator.pushNamed(context, '/voiceRecodeWithScript');
-    } catch(e) {
+    } catch (e) {
       print("[gotoPracticeBtn] Exception: $e");
       rethrow;
     } finally {
       expectedTimeIsLoading.value = false;
     }
-
   }
 
   int toMilliSec(String expectedTime) {
@@ -83,8 +81,8 @@ class ScriptInputCtr extends GetxController {
     int hour = int.parse(timeList[0]);
     int min = int.parse(timeList[1]);
     int sec = int.parse(timeList[2]);
-    int milli =  0;
-    if(time.length >= 2) milli = int.parse(time[1]);
+    int milli = 0;
+    if (time.length >= 2) milli = int.parse(time[1]);
     return (hour * 60 * 60 + min * 60 + sec) * 1000 + milli;
   }
 
@@ -92,7 +90,7 @@ class ScriptInputCtr extends GetxController {
     try {
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(AuthDioFactory().dio);
       ScriptIdModel? scriptId = await remoteScriptInputDataSource.postScript(themeId, script.toJson());
-      if(scriptId == null) throw(Exception("[postScript] scriptId is null!"));
+      if (scriptId == null) throw (Exception("[postScript] scriptId is null!"));
       return scriptId;
     } on DioException catch (e) {
       print("[postScript] request body: [${e.requestOptions.data}] message: [${e.response?.data['message']}] DioException: $e");
@@ -108,10 +106,10 @@ class ScriptInputCtr extends GetxController {
       final RemoteScriptExpectedTimeDataSource scriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(AuthDioFactory().dio);
       ExpectedTimeModel expectedTimeModel = await scriptExpectedTimeDataSource.getExpectedTime(themeId, scriptId);
       return expectedTimeModel;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getExpectedTime] message:[${e.response?.data['message']}] DioException: $e");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getExpectedTime] Exception: $e");
       rethrow;
     }
@@ -126,7 +124,7 @@ class ScriptInputCtr extends GetxController {
   int getThemeId() {
     LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
     String? themeId = localPracticeThemeStorage.getThemeId();
-    if(themeId == null || themeId == "") throw(Exception("[getThemeId] theme id is null or empty string!"));
+    if (themeId == null || themeId == "") throw (Exception("[getThemeId] theme id is null or empty string!"));
     return int.parse(themeId);
   }
 
@@ -134,7 +132,7 @@ class ScriptInputCtr extends GetxController {
     scriptInputIsLoading.value = true;
     int themeId = getThemeId();
     removeEmptyParagraphs(); // 빈 문단들 제거
-    if(_script.paragraphs?.isEmpty ?? false) {
+    if (_script.paragraphs?.isEmpty ?? false) {
       scriptInputIsLoading.value = false;
       showCommonDialog(
         context: context,
@@ -142,7 +140,7 @@ class ScriptInputCtr extends GetxController {
         message: '대본을 입력해주세요',
         showFirstButton: false,
         secondButtonText: '확인',
-        secondAction: () { Navigator.of(context).pop(); },
+        isSecondButtonToClose: true,
       );
       return;
     }
@@ -151,15 +149,15 @@ class ScriptInputCtr extends GetxController {
     await saveScriptContent();
     await saveScriptId(scriptId);
 
-    if(context.mounted) {
+    if (context.mounted) {
       Navigator.pushNamed(context, '/scriptInput/result');
       scriptInputIsLoading.value = false;
     }
   }
 
   void removeEmptyParagraphs() {
-    for(int i = 0; i < _script.paragraphs!.length; i++) {
-      if(_script.paragraphs![i] == '') {
+    for (int i = 0; i < _script.paragraphs!.length; i++) {
+      if (_script.paragraphs![i] == '') {
         _script.paragraphs!.removeAt(i);
         script.value[i].dispose();
         script.value.removeAt(i);
@@ -185,5 +183,4 @@ class ScriptInputCtr extends GetxController {
     LocalScriptStorage localScriptStorage = LocalScriptStorage();
     return localScriptStorage.getInputScriptContent();
   }
-
 }

@@ -10,7 +10,6 @@ import 'package:swm_peech_flutter/features/common/models/user_nickname_model.dar
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 
 class HomeCtr extends GetxController {
-
   final userInfoController = Get.find<UserInfoController>();
 
   @override
@@ -48,7 +47,6 @@ class HomeCtr extends GetxController {
     } catch (error) {
       print('로그아웃 실패, SDK에서 토큰 삭제 $error');
     }
-
   }
 
   void logOut() async {
@@ -56,7 +54,6 @@ class HomeCtr extends GetxController {
   }
 
   void contactToEmail(BuildContext context) async {
-
     //유저 닉네임 받아오기
     UserNicknameModel userNicknameModel;
 
@@ -81,20 +78,18 @@ class HomeCtr extends GetxController {
       await FlutterEmailSender.send(email);
     } catch (error) {
       print('이메일 전송 실패 $error');
-      String title = "기본 메일 앱을 사용할 수 없기 때문에 앱에서 바로 문의를 전송하기 어려운 상황입니다.";
+      String title = "이메일로 문의하기";
       String message = "아래 이메일로 연락주시면 친절하게 답변해드릴게요 :)\n\nsbin.ch04@gmail.com";
-      if(context.mounted) {
+      if (context.mounted) {
         showCommonDialog(
           context: context,
           title: title,
           message: message,
           secondButtonText: '확인',
-          secondAction: () { Navigator.of(context).pop(); },
-          showFirstButton: false
+          isSecondButtonToClose: true,
+          showFirstButton: false,
         );
       }
     }
   }
-
-
 }
