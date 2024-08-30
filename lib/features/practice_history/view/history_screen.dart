@@ -11,15 +11,13 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final controller = Get.find<HistoryCtr>();
 
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        if(!didPop) {
+        if (!didPop) {
           controller.backButton(context);
-
         }
       },
       child: CommonScaffold(
@@ -27,27 +25,19 @@ class HistoryScreen extends StatelessWidget {
         backAction: () {
           controller.backButton(context);
         },
-        child: GetX<HistoryCtr>(
-          builder: (_) {
-            return controller.isLoading == true
+        child: GetX<HistoryCtr>(builder: (_) {
+          return controller.isLoading == true
               ? const Center(child: CircularProgressIndicator())
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: historyPathView(controller)
-                    ),
+                    Padding(padding: const EdgeInsets.all(15.0), child: historyPathView(controller)),
                     Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: historyListView(context, controller)
-                      ),
+                      child: Padding(padding: const EdgeInsets.all(8.0), child: historyListView(context, controller)),
                     ),
                   ],
                 );
-          }
-        ),
+        }),
       ),
     );
   }

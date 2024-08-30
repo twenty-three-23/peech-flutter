@@ -7,40 +7,36 @@ import 'package:swm_peech_flutter/features/common/models/remaining_time_model.da
 import '../dio/auth_dio_factory.dart';
 
 class UserInfoController extends GetxController {
+  final Rx<RemainingTimeModel?> _remainingTime = Rx<RemainingTimeModel?>(null);
+  RemainingTimeModel? get remainingTime => _remainingTime.value;
 
-  RemainingTimeModel? _remainingTime;
-  Rx<RemainingTimeModel?> remainingTime = Rx<RemainingTimeModel?>(null);
-
-  MaxAudioTimeModel? _maxAudioTime;
-  Rx<MaxAudioTimeModel?> maxAudioTime = Rx<MaxAudioTimeModel?>(null);
+  final Rx<MaxAudioTimeModel?> _maxAudioTime = Rx<MaxAudioTimeModel?>(null);
+  MaxAudioTimeModel? get maxAudioTime => _maxAudioTime.value;
 
   void getUserAudioTimeInfo() async {
     try {
-      remainingTime.value = null;
-      maxAudioTime.value = null;
       RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
       await Future.wait([
-        getRemainingTime(remoteUserAudioTimeDataSource),
-        getMaxAudioTime(remoteUserAudioTimeDataSource),
+        fetchRemainingTime(remoteUserAudioTimeDataSource),
+        fetchMaxAudioTime(remoteUserAudioTimeDataSource),
       ]);
-      remainingTime.value = _remainingTime;
-      maxAudioTime.value = _maxAudioTime;
-      print("[getUserAudioTimeInfo] [Success] ${remainingTime.value?.text} ${maxAudioTime.value?.text}");
-    } on DioException catch(e) {
+      print("[getUserAudioTimeInfo] [Success] ${_remainingTime.value?.text} ${_maxAudioTime.value?.text}");
+    } on DioException catch (e) {
       print("[getUserAudioTimeInfo] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getUserAudioTimeInfo] [Exception] $e");
       rethrow;
     }
   }
 
-  Future<void> getRemainingTime(RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource) async {
-    _remainingTime = await remoteUserAudioTimeDataSource.getUserRemainingTime();
+  Future<void> fetchRemainingTime(RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource) async {
+    _remainingTime.value = null;
+    _remainingTime.value = await remoteUserAudioTimeDataSource.getUserRemainingTime();
   }
 
-  Future<void> getMaxAudioTime(RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource) async {
-    _maxAudioTime =  await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
+  Future<void> fetchMaxAudioTime(RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource) async {
+    _maxAudioTime.value = null;
+    _maxAudioTime.value = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
   }
-
 }

@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final appInfoController = Get.find<AppInfoController>();
   final controller = Get.find<HomeCtr>();
   final userInfoController = Get.find<UserInfoController>();
@@ -30,15 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-    Widget build(BuildContext context) {
-
+  Widget build(BuildContext context) {
     return CommonScaffold(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 112.5,),
+            const SizedBox(
+              height: 112.5,
+            ),
             const Text(
               "발표 대본을 작성하면\n가장 적절한 시간을 계산해줘요!\n함께 연습을 시작해 볼까요?",
               textAlign: TextAlign.center,
@@ -46,12 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 20,
               ),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             GetX<HomeCtr>(
               builder: (_) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(width: 40,),
+                  const SizedBox(
+                    width: 40,
+                  ),
                   Column(
                     children: [
                       GetX<UserInfoController>(
@@ -60,16 +64,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Text("총"),
-                            const SizedBox(width: 3,),
-                            userInfoController.remainingTime.value == null
-                                ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
-                                : Text(
-                                    userInfoController.remainingTime.value?.text ?? "?",
+                            const SizedBox(
+                              width: 3,
+                            ),
+                            userInfoController.remainingTime == null
+                                ? const SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ))
+                                : Text(userInfoController.remainingTime?.text ?? "?",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                    )
-                                  ),
-                            const SizedBox(width: 3,),
+                                    )),
+                            const SizedBox(
+                              width: 3,
+                            ),
                             const Text("사용 가능"),
                           ],
                         ),
@@ -79,16 +90,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Text("1회 최대"),
-                          const SizedBox(width: 3,),
-                            userInfoController.maxAudioTime.value == null
-                              ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2,))
-                              : Text(
-                                  userInfoController.maxAudioTime.value?.text ?? "?",
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          userInfoController.maxAudioTime == null
+                              ? const SizedBox(
+                                  width: 15,
+                                  height: 15,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ))
+                              : Text(userInfoController.maxAudioTime?.text ?? "?",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                  )
-                                ),
-                          const SizedBox(width: 3,),
+                                  )),
+                          const SizedBox(
+                            width: 3,
+                          ),
                           const Text("연습 가능"),
                         ],
                       ),
@@ -98,9 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 40,
                     height: 40,
                     child: IconButton(
-                        onPressed: () { userInfoController.getUserAudioTimeInfo(); },
-                        icon: const Icon(Icons.refresh, size: 17,)
-                    ),
+                        onPressed: () {
+                          userInfoController.getUserAudioTimeInfo();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          size: 17,
+                        )),
                   )
                 ],
               ),
@@ -111,8 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: ColoredButton(
                     onPressed: () {
-                        Navigator.pushNamed(context, '/themeInput');
-                      },
+                      Navigator.pushNamed(context, '/themeInput');
+                    },
                     text: "연습 시작하기",
                     backgroundColor: const Color(0xFF3B3E43),
                     textColor: const Color(0xFFFFFFFF),
@@ -120,38 +142,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Expanded(
                   child: ColoredButton(
-                    onPressed: () { Navigator.pushNamed(context, '/historyThemeList'); },
-                    text:"기록 보기",
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/historyThemeList');
+                    },
+                    text: "기록 보기",
                     backgroundColor: const Color(0xFF3B3E43),
                     textColor: const Color(0xFFFFFFFF),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             TextButton(
                 onPressed: () {
                   controller.contactToEmail(context);
                 },
-                child: const Text(
-                    "이메일로 문의하기",
+                child: const Text("이메일로 문의하기",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF3B3E43),
                       height: 22 / 14,
-                    )
-                )
-            ),
+                    ))),
             // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
-            const SizedBox(height: 16,),
+            const SizedBox(
+              height: 16,
+            ),
           ],
         ),
       ),
