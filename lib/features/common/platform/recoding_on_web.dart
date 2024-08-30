@@ -3,10 +3,10 @@ import 'dart:typed_data';
 import 'dart:html' as html;
 
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
-import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 
 Future<String> getRecodingFile() async {
-  String audioFileURL = await RecodingFileUtil().getFilePath();
+  print("[getRecodingFile] web");
+  String audioFileURL = await getFilePath();
 
   final response = await html.HttpRequest.request(audioFileURL, responseType: 'blob');
   final html.Blob blob = response.response;
@@ -20,6 +20,7 @@ Future<String> getRecodingFile() async {
 }
 
 Future<String> getFilePath() async {
+  print('[getFilePath] web');
   String audioFileURL = html.window.sessionStorage[Constants.webRecodingFileName] ?? "";
   return audioFileURL;
 }

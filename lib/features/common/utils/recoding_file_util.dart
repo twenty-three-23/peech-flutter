@@ -1,10 +1,6 @@
-import 'dart:io';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:swm_peech_flutter/features/common/constant/constants.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:swm_peech_flutter/features/common/platform/recoding_on_mobile.dart'
-    if (kIsWeb) 'package:swm_peech_flutter/features/common/platform/recoding_on_web.dart' as platform;
+    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/recoding_on_web.dart' as platform;
 
 class RecodingFileUtil {
   //TODO 1. 이런식으로 해도 괜찮을까?

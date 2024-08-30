@@ -24,7 +24,6 @@ class VoiceRecodeCtr extends GetxController {
   Rx<bool> isRecording = false.obs;
   Rx<bool> isPlaying = false.obs;
 
-  late final String _path;
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
   Rx<PracticeState> practiceState = PracticeState.beforeToStart.obs;
@@ -44,7 +43,6 @@ class VoiceRecodeCtr extends GetxController {
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
     getKeywords();
-    _path = await RecodingFileUtil().getFilePath();
     getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
@@ -57,13 +55,11 @@ class VoiceRecodeCtr extends GetxController {
     try {
       _maxAudioTime = null;
       maxAudioTime.value = null;
-      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource =
-          RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
+      RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
       _maxAudioTime = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
       maxAudioTime.value = _maxAudioTime;
     } on DioException catch (e) {
-      print(
-          "[getRemainingTime] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[getRemainingTime] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
     } catch (e) {
       print("[getRemainingTime] Exception: ${e}");
@@ -100,17 +96,21 @@ class VoiceRecodeCtr extends GetxController {
     _startTimer();
 
     if (!kIsWeb) {
-      await _recorder!.startRecorder(toFile: _path, codec: Codec.aacADTS);
+      await _recorder!.startRecorder(
+        toFile: await RecodingFileUtil().getFilePath(),
+        codec: Codec.aacADTS,
+      );
     } else {
       await _recorder!.startRecorder(
-          toFile: Constants.webRecodingFileName, codec: Codec.pcmWebM);
+        toFile: Constants.webRecodingFileName,
+        codec: Codec.pcmWebM,
+      );
     }
     isRecording.value = true;
   }
 
   void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
-    if (recodingStopWatch.elapsedMilliseconds >=
-        (_maxAudioTime?.second ?? 0) * 1000) {
+    if (recodingStopWatch.elapsedMilliseconds >= (_maxAudioTime?.second ?? 0) * 1000) {
       _stopRecording();
     }
   }
@@ -124,7 +124,7 @@ class VoiceRecodeCtr extends GetxController {
 
   Future<void> _startPlaying() async {
     await _player!.startPlayer(
-      fromURI: _path,
+      fromURI: 'input the path',
       codec: Codec.aacADTS,
       whenFinished: () {
         isPlaying.value = false;
@@ -150,8 +150,7 @@ class VoiceRecodeCtr extends GetxController {
     }
     _startRecording();
     // _stopRecodingWhenScrollIsEndListener(); //자농 녹음 중지 제거
-    scriptScrollController
-        .jumpTo(scriptScrollController.position.minScrollExtent);
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
     _startAutoScrollingAnimation(_getTotalExpectedTime());
   }
 
@@ -176,8 +175,7 @@ class VoiceRecodeCtr extends GetxController {
 
   void _stopRecodingWhenScrollIsEndListener() {
     scriptScrollController.addListener(() {
-      if (scriptScrollController.position.pixels ==
-          scriptScrollController.position.maxScrollExtent) {
+      if (scriptScrollController.position.pixels == scriptScrollController.position.maxScrollExtent) {
         _setScrollingToEnd();
         _stopRecording();
         scriptScrollController.removeListener(() {});
@@ -194,18 +192,15 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void _setScrollingToEnd() {
-    scriptScrollController
-        .jumpTo(scriptScrollController.position.maxScrollExtent);
+    scriptScrollController.jumpTo(scriptScrollController.position.maxScrollExtent);
   }
 
   void _getListViewHeightOnWithScript() {
-    LocalPracticeModeStorage localPracticeModeStorage =
-        LocalPracticeModeStorage();
+    LocalPracticeModeStorage localPracticeModeStorage = LocalPracticeModeStorage();
     PracticeMode? practiceMode = localPracticeModeStorage.getMode();
     if (practiceMode != PracticeMode.withScript) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox renderBox =
-          scriptListViewKey.currentContext?.findRenderObject() as RenderBox;
+      final RenderBox renderBox = scriptListViewKey.currentContext?.findRenderObject() as RenderBox;
       scriptListViewSize.value = renderBox.size.height;
     });
   }
@@ -214,8 +209,7 @@ class VoiceRecodeCtr extends GetxController {
     practiceState.value = PracticeState.beforeToStart;
     recodingStopWatch.value.reset();
     _recorder?.stopRecorder();
-    scriptScrollController
-        .jumpTo(scriptScrollController.position.minScrollExtent);
+    scriptScrollController.jumpTo(scriptScrollController.position.minScrollExtent);
   }
 
   void resetRecodingNoScript() {
@@ -228,24 +222,19 @@ class VoiceRecodeCtr extends GetxController {
     try {
       int themeId = getThemeId();
       int scriptId = getScriptId();
-      RemoteParagraphKeywords remoteParagraphKeywords =
-          RemoteParagraphKeywords(AuthDioFactory().dio);
-      KeywordResponseModel keywordResponseModel =
-          await remoteParagraphKeywords.getKeywords(themeId, scriptId);
-      keywords.value = KeywordParagraphsModel(
-          paragraphs: keywordResponseModel.responseBody?.paragraphs);
+      RemoteParagraphKeywords remoteParagraphKeywords = RemoteParagraphKeywords(AuthDioFactory().dio);
+      KeywordResponseModel keywordResponseModel = await remoteParagraphKeywords.getKeywords(themeId, scriptId);
+      keywords.value = KeywordParagraphsModel(paragraphs: keywordResponseModel.responseBody?.paragraphs);
       keywords.refresh();
     } on DioException catch (e) {
-      print(
-          "[getKeywords] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[getKeywords] DioException: [${e.response?.statusCode}] ${e.response?.data}");
     } catch (e) {
       print("[getKeywords] Exception: ${e}");
     }
   }
 
   int getThemeId() {
-    LocalPracticeThemeStorage localPracticeThemeStorage =
-        LocalPracticeThemeStorage();
+    LocalPracticeThemeStorage localPracticeThemeStorage = LocalPracticeThemeStorage();
     return int.parse(localPracticeThemeStorage.getThemeId() ?? '0');
   }
 
@@ -286,8 +275,7 @@ class VoiceRecodeCtr extends GetxController {
     await _resumeRecoding();
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
-    int remainingTime =
-        _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
+    int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
     _startAutoScrollingAnimation(remainingTime);
     practiceState.value = PracticeState.recoding;
   }
@@ -300,8 +288,7 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   int _getTotalExpectedTime() {
-    int totalExpectedTime =
-        LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
+    int totalExpectedTime = LocalScriptStorage().getInputScriptTotalExpectedTimeMilli() ?? 0;
     totalExpectedTime += (script?.length ?? 0) * 1000; //문단당 1초로 숨 쉬는 시간 계산
     return totalExpectedTime;
   }
