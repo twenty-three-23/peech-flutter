@@ -8,6 +8,7 @@ import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/user_nickname_model.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeCtr extends GetxController {
   final userInfoController = Get.find<UserInfoController>();
@@ -59,17 +60,17 @@ class HomeCtr extends GetxController {
     }
 
     try {
-      final Email email = Email(
-        body: '\n\n\n\n\n--------------------------------------------------------------\n위에 피치 서비스에 문의 또는 건의하실 내용을 입력해주세요.',
-        subject: '[피치 서비스 문의] 닉네임: ${userNicknameModel.nickName}',
-        recipients: ['sbin.ch04@gmail.com'],
-        cc: [],
-        bcc: [],
-        attachmentPaths: [],
-        isHTML: false,
+      final Uri emailLaunchUri = Uri(
+        scheme: 'mailto',
+        path: 'sbin.ch04@gmail.com',
+        query: 'subject=[피치 서비스 문의] 닉네임: ${userNicknameModel.nickName}&body=피치 서비스에 문의 또는 건의하실 내용을 입력해주세요.\n',
       );
-      //이메일 서비스로 연결
-      await FlutterEmailSender.send(email);
+
+      if (await canLaunchUrl(emailLaunchUri)) {
+        await launchUrl(emailLaunchUri);
+      } else {
+        throw 'Could not launch ${emailLaunchUri.toString()}';
+      }
     } catch (error) {
       print('이메일 전송 실패 $error');
       String title = "이메일로 문의하기";

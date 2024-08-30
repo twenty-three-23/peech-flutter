@@ -162,16 +162,19 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10,
             ),
             TextButton(
-                onPressed: () {
-                  controller.contactToEmail(context);
-                },
-                child: const Text("이메일로 문의하기",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF3B3E43),
-                      height: 22 / 14,
-                    ))),
+              onPressed: () {
+                controller.contactToEmail(context);
+              },
+              child: const Text(
+                "이메일로 문의하기",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF3B3E43),
+                  height: 22 / 14,
+                ),
+              ),
+            ),
             // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),

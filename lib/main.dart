@@ -23,10 +23,8 @@ void main() async {
 
     await AppInitializer().initialize();
     AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
-      print(
-          "[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
-      showSocialLoginBottomSheet(
-          navigatorKey.currentContext!, event.socialLoginBottomSheetState);
+      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
+      showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
     });
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
@@ -50,9 +48,7 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         home: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width > 600
-                ? 600
-                : MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width > 600 ? 600 : MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
             ),
