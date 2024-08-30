@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
-import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
-import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      userInfoController.getUserAudioTimeInfo();
       appInfoController.checkAppInfo(context);
     });
   }

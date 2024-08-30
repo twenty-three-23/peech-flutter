@@ -12,12 +12,6 @@ import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dar
 class HomeCtr extends GetxController {
   final userInfoController = Get.find<UserInfoController>();
 
-  @override
-  onInit() {
-    userInfoController.getUserAudioTimeInfo();
-    super.onInit();
-  }
-
   void kakaoLogin() async {
     if (await isKakaoTalkInstalled()) {
       try {
