@@ -56,7 +56,7 @@ class HomeCtr extends GetxController {
       userNicknameModel = await RemoteUserNicknameDataSource(AuthDioFactory().dio).getUserNickname();
     } catch (error) {
       print('유저 닉네임 받아오기 실패 $error');
-      return;
+      userNicknameModel = UserNicknameModel(nickName: 'GUEST');
     }
 
     try {
