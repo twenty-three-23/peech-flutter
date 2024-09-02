@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
@@ -46,25 +47,55 @@ class MyApp extends StatelessWidget {
     if (kIsWeb) {
       //web 인 경우
       return MaterialApp(
-        home: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width > 600 ? 600 : MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-            ),
-            child: GetMaterialApp(
-              navigatorKey: navigatorKey,
-              getPages: Routers.routers,
-              initialRoute: Routers.INITIAL,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: const [
-                Locale('ko', 'KR'),
-              ],
-            ),
+        home: Container(
+          color: const Color(0xFFf1f1f1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                width: 220,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width > 600 ? 600 : MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 0.4,
+                  ),
+                ),
+                child: GetMaterialApp(
+                  navigatorKey: navigatorKey,
+                  getPages: Routers.routers,
+                  initialRoute: Routers.INITIAL,
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('ko', 'KR'),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/android_QR_code.svg',
+                    semanticsLabel: 'app QR code',
+                    width: 200,
+                    height: 250,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );
