@@ -12,6 +12,8 @@ import 'package:swm_peech_flutter/initializer/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
+import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
+    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform;
 
 void main() async {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -52,9 +54,10 @@ class MyApp extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                width: 220,
-              ),
+              if (platform.isMobile() == false)
+                const SizedBox(
+                  width: 220,
+                ),
               Container(
                 width: MediaQuery.of(context).size.width > 600 ? 600 : MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
@@ -77,24 +80,26 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/android_QR_code.svg',
-                    semanticsLabel: 'app QR code',
-                    width: 200,
-                    height: 250,
-                    fit: BoxFit.contain,
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                ],
-              ),
+              if (platform.isMobile() == false)
+                const SizedBox(
+                  width: 20,
+                ),
+              if (platform.isMobile() == false)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/images/android_QR_code.svg',
+                      semanticsLabel: 'app QR code',
+                      width: 200,
+                      height: 250,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
