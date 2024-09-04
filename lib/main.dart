@@ -13,7 +13,7 @@ import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
 import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform;
+    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
 
 // import 'dart:io';
 // import 'dart:math';
@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (platform.isIphone() == true)
+              if (platform_client.isIphone() == true)
                 const AlertDialog(
                   title: Text(
                     '플랫폼 에러',
@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (platform.isMobile() == false)
+              if (platform_client.isMobile() == false)
                 const SizedBox(
                   width: 220,
                 ),
@@ -122,15 +122,15 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
-              if (platform.isMobile() == false)
+              if (platform_client.isMobile() == false)
                 const SizedBox(
                   width: 20,
                 ),
-              if (platform.isMobile() == false)
+              if (platform_client.isMobile() == false)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (platform.isUnavailableClient() == true)
+                    if (platform_client.isUnavailableClient() == true)
                       Container(
                         width: 200,
                         decoration: BoxDecoration(

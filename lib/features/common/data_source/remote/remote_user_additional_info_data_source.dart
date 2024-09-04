@@ -11,5 +11,8 @@ abstract class RemoteUserAdditionalInfoDataSource {
 
   @retrofit.PATCH("/api/v1.1/user")
   @retrofit.Headers({'accessToken': 'true'})
-  Future<AuthTokenModel> postUserAdditionalInfo(@retrofit.Body() Map<String, dynamic> userAdditionalInfo);
+  Future<AuthTokenModel> postUserAdditionalInfo(
+    @retrofit.Query('funnel') String funnel,
+    @retrofit.Body() Map<String, dynamic> userAdditionalInfo,
+  );
 }

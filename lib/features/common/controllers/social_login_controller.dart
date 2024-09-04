@@ -18,9 +18,10 @@ import 'package:swm_peech_flutter/features/common/models/social_login_choice_vie
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
+import 'package:swm_peech_flutter/features/common/platform/funnel_on_mobile.dart'
+    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/funnel_on_web.dart' as platform_funnel;
 
 class SocialLoginCtr extends GetxController {
-
   bool isShowed = false;
   Rx<SocialLoginChoiceViewState> loginChoiceViewState = Rx<SocialLoginChoiceViewState>(SocialLoginChoiceViewState.waitingToLogin);
   Rx<bool> loginChoiceViewLoginFailed = Rx<bool>(false);
@@ -47,21 +48,20 @@ class SocialLoginCtr extends GetxController {
         loginChoiceViewLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
         await Future.delayed(const Duration(milliseconds: 500));
-        if(authTokenResponseModel.statusCode == 411) {
-          AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
-        }
-        else { // 로그인 성공
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("카카오톡 로그인 성공!"),
-              ));
-          if(context.mounted) {
+        if (authTokenResponseModel.statusCode == 411) {
+          AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(
+              socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
+        } else {
+          // 로그인 성공
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("카카오톡 로그인 성공!"),
+          ));
+          if (context.mounted) {
             Navigator.pop(context);
           }
           userInfoController.getUserAudioTimeInfo();
         }
       } on DioException catch (error) {
-
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
         print('카카오톡으로 로그인 실패(dio exception) $error');
@@ -88,15 +88,15 @@ class SocialLoginCtr extends GetxController {
       loginChoiceViewLoginFailed.value = false;
       print('카카오톡으로 로그인 성공');
       await Future.delayed(const Duration(milliseconds: 500));
-      if(authTokenResponseModel.statusCode == 411) {
-        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
-      }
-      else { // 로그인 성공
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("카카오톡 로그인 성공!"),
-            ));
-        if(context.mounted) {
+      if (authTokenResponseModel.statusCode == 411) {
+        AppEventBus.instance.fire(
+            SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
+      } else {
+        // 로그인 성공
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("카카오톡 로그인 성공!"),
+        ));
+        if (context.mounted) {
           Navigator.pop(context);
         }
         userInfoController.getUserAudioTimeInfo();
@@ -106,7 +106,11 @@ class SocialLoginCtr extends GetxController {
 
   Future<AuthTokenResponseModel> postSocialToken(SocialLoginInfo kakaoLoginInfo) async {
     RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
-    AuthTokenResponseModel authTokenResponseModel = await remoteSocialLoginDataSource.postSocialToken(kakaoLoginInfo.toJson());
+    String funnel = platform_funnel.getFunnel();
+    AuthTokenResponseModel authTokenResponseModel = await remoteSocialLoginDataSource.postSocialToken(
+      funnel,
+      kakaoLoginInfo.toJson(),
+    );
     await saveUserToken(authTokenResponseModel.responseBody ?? AuthTokenModel());
     return authTokenResponseModel;
   }
@@ -121,7 +125,7 @@ class SocialLoginCtr extends GetxController {
 
   void additionInfoConfirmBtn(BuildContext context) async {
     userAdditionalInfoViewState.value = UserAdditionalInfoViewState.loading;
-    if(firstName.value.isEmpty || lastName.value.isEmpty || nickname.value.isEmpty) {
+    if (firstName.value.isEmpty || lastName.value.isEmpty || nickname.value.isEmpty) {
       userAdditionalInfoViewState.value = UserAdditionalInfoViewState.input;
       userAdditionalInfoViewLoginFailed.value = true;
       return;
@@ -132,26 +136,25 @@ class SocialLoginCtr extends GetxController {
           lastName: lastName.value,
           birth: formatDate(birthday.value),
           gender: formatGender(gender.value),
-          nickName: nickname.value
-      );
+          nickName: nickname.value);
       RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
-      AuthTokenModel authTokenModel = await remoteUserAdditionalInfoDataSource.postUserAdditionalInfo(userAdditionalInfoModel.toJson());
+      String funnel = platform_funnel.getFunnel();
+      AuthTokenModel authTokenModel = await remoteUserAdditionalInfoDataSource.postUserAdditionalInfo(funnel, userAdditionalInfoModel.toJson());
       await saveUserToken(authTokenModel);
       //추가정보 입력 성공
-      if(context.mounted) {
+      if (context.mounted) {
         Navigator.pop(context);
       }
       userInfoController.getUserAudioTimeInfo();
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[additionInfoConfirmBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[additionInfoConfirmBtn] [Exception] $e");
       rethrow;
     } finally {
       userAdditionalInfoViewState.value = UserAdditionalInfoViewState.input;
     }
-
   }
 
   String formatDate(DateTime date) {
@@ -160,7 +163,7 @@ class SocialLoginCtr extends GetxController {
   }
 
   String formatGender(UserGender gender) {
-    switch(gender) {
+    switch (gender) {
       case UserGender.male:
         return 'MALE';
       case UserGender.female:
