@@ -10,5 +10,8 @@ abstract class RemoteSocialLoginDataSource {
   factory RemoteSocialLoginDataSource(Dio dio, {String baseUrl}) = _RemoteSocialLoginDataSource;
 
   @retrofit.POST("/api/v1.1/user")
-  Future<AuthTokenResponseModel> postSocialToken(@retrofit.Body() Map<String, dynamic> socialLoginInfo);
+  Future<AuthTokenResponseModel> postSocialToken(
+    @retrofit.Query('funnel') String funnel,
+    @retrofit.Body() Map<String, dynamic> socialLoginInfo,
+  );
 }
