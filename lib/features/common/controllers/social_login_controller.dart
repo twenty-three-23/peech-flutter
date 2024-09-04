@@ -35,7 +35,6 @@ class SocialLoginCtr extends GetxController {
 
   final userInfoController = Get.find<UserInfoController>();
 
-
   void loginWithKakao(BuildContext context) async {
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     if (await isKakaoTalkInstalled()) {
@@ -80,11 +79,28 @@ class SocialLoginCtr extends GetxController {
         rethrow;
       }
     } else {
-      loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
       print('카카오톡이 깔려있지 않습니다.');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("카카오톡이 깔려있지 않습니다"),
-      ));
+      OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+      print("KAKAO AccessToken: ${token.accessToken}");
+      SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
+      AuthTokenResponseModel authTokenResponseModel = await postSocialToken(kakaoLoginInfo);
+      loginChoiceViewState.value = SocialLoginChoiceViewState.success;
+      loginChoiceViewLoginFailed.value = false;
+      print('카카오톡으로 로그인 성공');
+      await Future.delayed(const Duration(milliseconds: 500));
+      if(authTokenResponseModel.statusCode == 411) {
+        AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
+      }
+      else { // 로그인 성공
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("카카오톡 로그인 성공!"),
+            ));
+        if(context.mounted) {
+          Navigator.pop(context);
+        }
+        userInfoController.getUserAudioTimeInfo();
+      }
     }
   }
 

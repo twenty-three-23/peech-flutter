@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
@@ -25,11 +26,9 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("대본 예상 시간"),
-      ),
-      body: GetX<ScriptInputCtr>(
+    return CommonScaffold(
+      appBarTitle: '대본 예상 시간',
+      child: GetX<ScriptInputCtr>(
         builder: (_) {
           if(controller.expectedTimeIsLoading.value == true) {
             return const Center(
@@ -43,24 +42,36 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      SvgPicture.asset(
+                      Expanded(
+                        child: SvgPicture.asset(
                           'assets/images/progress_indicator_filled.svg',
-                          semanticsLabel: 'progress bar'
+                          semanticsLabel: 'progress bar',
+                          fit: BoxFit.fill,
+                        ),
                       ),
                       const SizedBox(width: 4,),
-                      SvgPicture.asset(
+                      Expanded(
+                        child: SvgPicture.asset(
                           'assets/images/progress_indicator_filled.svg',
-                          semanticsLabel: 'progress bar'
+                          semanticsLabel: 'progress bar',
+                          fit: BoxFit.fill,
+                        ),
                       ),
                       const SizedBox(width: 4,),
-                      SvgPicture.asset(
+                      Expanded(
+                        child: SvgPicture.asset(
                           'assets/images/progress_indicator_filled.svg',
-                          semanticsLabel: 'progress bar'
+                          semanticsLabel: 'progress bar',
+                          fit: BoxFit.fill,
+                        ),
                       ),
                       const SizedBox(width: 4,),
-                      SvgPicture.asset(
+                      Expanded(
+                        child: SvgPicture.asset(
                           'assets/images/progress_indicator_empty.svg',
-                          semanticsLabel: 'progress bar'
+                          semanticsLabel: 'progress bar',
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ],
                   ),
