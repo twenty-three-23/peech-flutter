@@ -109,6 +109,28 @@ class MyApp extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    if (platform.isUnavailableClient() == true)
+                      Container(
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            '사파리, IOS에서는 호환되지 않습니다.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     SvgPicture.asset(
                       'assets/images/android_QR_code.svg',
                       semanticsLabel: 'app QR code',

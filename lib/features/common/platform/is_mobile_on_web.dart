@@ -5,3 +5,8 @@ bool isMobile() {
   print('userAgent: $userAgent');
   return userAgent.contains('iphone') || userAgent.contains('ipad') || userAgent.contains('android');
 }
+
+bool isUnavailableClient() {
+  final userAgent = html.window.navigator.userAgent.toLowerCase();
+  return userAgent.contains('iphone') || userAgent.contains('safari');
+}
