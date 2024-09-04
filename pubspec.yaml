@@ -63,6 +63,7 @@ dependencies:
   flutter_email_sender: ^6.0.3
   http: ^1.2.2
   http_parser: ^4.0.2
+  audio_session: ^0.1.21
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,7 @@ import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/voice_recode/data_source/remote_paragraph_keywords.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/keyword_response_model.dart';
@@ -67,13 +69,43 @@ class VoiceRecodeCtr extends GetxController {
     }
   }
 
-  Future<void> _openAudioSession() async {
+  Future<void> checkMicrophonePermission({required BuildContext? context}) async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
+      if (context != null) {
+        showCommonDialog(
+          context: context,
+          title: '마이크 권한이 필요합니다',
+          message: '마이크 권한을 허용해주세요',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
       throw RecordingPermissionException('Microphone permission not granted');
     }
+  }
+
+  Future<void> _openAudioSession() async {
+    await checkMicrophonePermission(context: null);
     await _recorder!.openRecorder();
     await _player!.openPlayer();
+
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth | AVAudioSessionCategoryOptions.defaultToSpeaker,
+      avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.voiceCommunication,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
   }
 
   @override
@@ -143,7 +175,8 @@ class VoiceRecodeCtr extends GetxController {
     Navigator.pushNamed(context, '/practiceResult');
   }
 
-  void startPracticeWithScript() async {
+  void startPracticeWithScript(BuildContext context) async {
+    await checkMicrophonePermission(context: context);
     await getMaxAudioTime();
     if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
@@ -154,7 +187,8 @@ class VoiceRecodeCtr extends GetxController {
     _startAutoScrollingAnimation(_getTotalExpectedTime());
   }
 
-  void startPracticeNoScript() async {
+  void startPracticeNoScript(BuildContext context) async {
+    await checkMicrophonePermission(context: context);
     await getMaxAudioTime();
     if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');

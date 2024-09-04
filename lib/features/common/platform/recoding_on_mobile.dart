@@ -4,13 +4,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 
 Future<File> getRecodingFile() async {
-  print("[getRecodingFile] app");
   String filePath = await getFilePath();
   return File(filePath);
 }
 
 Future<String> getFilePath() async {
-  print('[getFilePath] app');
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String appDocPath = appDocDir.path;
   String fileName = Constants.recodingFileName;

@@ -5,7 +5,6 @@ import 'dart:html' as html;
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 
 Future<String> getRecodingFile() async {
-  print("[getRecodingFile] web");
   String audioFileURL = await getFilePath();
 
   final response = await html.HttpRequest.request(audioFileURL, responseType: 'blob');
@@ -20,7 +19,6 @@ Future<String> getRecodingFile() async {
 }
 
 Future<String> getFilePath() async {
-  print('[getFilePath] web');
   String audioFileURL = html.window.sessionStorage[Constants.webRecodingFileName] ?? "";
   return audioFileURL;
 }

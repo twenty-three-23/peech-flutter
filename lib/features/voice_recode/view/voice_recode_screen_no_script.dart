@@ -13,7 +13,6 @@ class VoiceRecodeScreenNoScript extends StatefulWidget {
 }
 
 class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> with WidgetsBindingObserver {
-
   final VoiceRecodeCtr _controller = Get.find<VoiceRecodeCtr>();
 
   @override
@@ -38,8 +37,6 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
 
   @override
   Widget build(BuildContext context) {
-
-
     return CommonScaffold(
       appBarTitle: '음성 녹음',
       child: GetX<VoiceRecodeCtr>(
@@ -52,10 +49,13 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                   children: [
                     Icon(
                         color: _controller.practiceState.value == PracticeState.beforeToStart || _controller.practiceState.value == PracticeState.pause
-                            ? Colors.grey : Colors.black,
+                            ? Colors.grey
+                            : Colors.black,
                         size: 150,
                         Icons.keyboard_voice_rounded),
-                    const SizedBox(height: 16,),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -64,19 +64,16 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                           size: 25,
                           color: Color(0xFFD13853),
                         ),
-                        const SizedBox(width: 4,),
-                        Text(
-                            _controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
-                            style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFD13853),
-                                height: 16 / 15
-                            )
+                        const SizedBox(
+                          width: 4,
                         ),
+                        Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFFD13853), height: 16 / 15)),
                       ],
                     ),
-                    const SizedBox(height: 140,)
+                    const SizedBox(
+                      height: 140,
+                    )
                   ],
                 ),
               ),
@@ -87,126 +84,124 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                   child: IntrinsicHeight(
                     child: Column(
                       children: [
-                        const SizedBox(height: 8,),
-                        if(_controller.practiceState.value == PracticeState.beforeToStart)
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        if (_controller.practiceState.value == PracticeState.beforeToStart)
                           Row(
                             children: [
                               Expanded(
                                 child: ColoredButton(
                                   isLoading: RxBool(_controller.maxAudioTime.value == null),
                                   text: '시작하기',
-                                  onPressed: () { _controller.startPracticeNoScript(); },
+                                  onPressed: () {
+                                    _controller.startPracticeNoScript(context);
+                                  },
                                   subText: RxString("(최대 ${_controller.maxAudioTime.value?.text ?? '?'})"),
                                 ),
                               ),
                             ],
                           )
-                        else if(_controller.practiceState.value == PracticeState.recoding)
+                        else if (_controller.practiceState.value == PracticeState.recoding)
                           Row(
                             children: [
                               Expanded(
                                 child: ColoredButton(
                                     text: '중지하기',
-                                    onPressed: () { _controller.pausePracticeNoScript(); }
-                                ),
+                                    onPressed: () {
+                                      _controller.pausePracticeNoScript();
+                                    }),
                               ),
                             ],
                           )
-                        else if(_controller.practiceState.value == PracticeState.pause)
-                            Row(
-                              children: [
-                                GestureDetector( // 다시하기
-                                    onTap: () { //_controller.resetRecoding();
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: const Text(
-                                                  "다시 녹음하기",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Color(0xFF3B3E43),
-                                                      height: 26 / 18
-                                                  )
-                                              ),
-                                              content: const Text(
-                                                  "다시 녹음시 기존 녹음은\n저장되지 않습니다 다시 하시겠어요?",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w400,
-                                                      color: Color(0xFF3B3E43),
-                                                      height: 24 / 16
-                                                  )
-                                              ),
-                                              actions: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: ColoredButton(
-                                                        text: '취소',
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        backgroundColor: const Color(0xFFF4F6FA),
-                                                        textColor: const Color(0xFF3B3E43),
-                                                      ),
+                        else if (_controller.practiceState.value == PracticeState.pause)
+                          Row(
+                            children: [
+                              GestureDetector(
+                                  // 다시하기
+                                  onTap: () {
+                                    //_controller.resetRecoding();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("다시 녹음하기",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF3B3E43), height: 26 / 18)),
+                                            content: const Text("다시 녹음시 기존 녹음은\n저장되지 않습니다 다시 하시겠어요?",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Color(0xFF3B3E43), height: 24 / 16)),
+                                            actions: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: ColoredButton(
+                                                      text: '취소',
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      backgroundColor: const Color(0xFFF4F6FA),
+                                                      textColor: const Color(0xFF3B3E43),
                                                     ),
-                                                    const SizedBox(width: 8,),
-                                                    Expanded(
-                                                      child: ColoredButton(
-                                                        text: '확인',
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                          _controller.resetRecodingNoScript();
-                                                        },
-                                                        backgroundColor: const Color(0xFF3B3E43),
-                                                        textColor: const Color(0xFFFFFFFF),
-                                                      ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Expanded(
+                                                    child: ColoredButton(
+                                                      text: '확인',
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                        _controller.resetRecodingNoScript();
+                                                      },
+                                                      backgroundColor: const Color(0xFF3B3E43),
+                                                      textColor: const Color(0xFFFFFFFF),
                                                     ),
-                                                  ],
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 48,
-                                      height: 48,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: const Color(0xFFFFF1F3),
-                                        border: Border.all(
-                                            width: 1,
-                                            color: const Color(0xFFFF5468)
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.refresh,
-                                        color: Color(0xFF3B3E43),
-                                      ),
-                                    )
-                                ),
-                                const SizedBox(width: 8,),
-                                Expanded(
-                                  child: ColoredButton(
-                                      text: '이어하기',
-                                      onPressed: () { _controller.resumePracticeNoScript(); }
-                                  ),
-                                ),
-                                const SizedBox(width: 8,),
-                                Expanded(
-                                  child: ColoredButton(
-                                      text: '분석받기',
-                                      onPressed: () { _controller.endPractice(context); }
-                                  ),
-                                ),
-                              ],
-                            ),
-                        const SizedBox(height: 8,),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: const Color(0xFFFFF1F3),
+                                      border: Border.all(width: 1, color: const Color(0xFFFF5468)),
+                                    ),
+                                    child: const Icon(
+                                      Icons.refresh,
+                                      color: Color(0xFF3B3E43),
+                                    ),
+                                  )),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                child: ColoredButton(
+                                    text: '이어하기',
+                                    onPressed: () {
+                                      _controller.resumePracticeNoScript();
+                                    }),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                child: ColoredButton(
+                                    text: '분석받기',
+                                    onPressed: () {
+                                      _controller.endPractice(context);
+                                    }),
+                              ),
+                            ],
+                          ),
+                        const SizedBox(
+                          height: 8,
+                        ),
                       ],
                     ),
                   ),
