@@ -10,3 +10,8 @@ bool isUnavailableClient() {
   final userAgent = html.window.navigator.userAgent.toLowerCase();
   return userAgent.contains('iphone') || userAgent.contains('safari');
 }
+
+bool isIphone() {
+  final userAgent = html.window.navigator.userAgent.toLowerCase();
+  return userAgent.contains('iphone');
+}

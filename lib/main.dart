@@ -75,6 +75,27 @@ class MyApp extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              if (platform.isIphone() == true)
+                const AlertDialog(
+                  title: Text(
+                    '플랫폼 에러',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      height: 26 / 18,
+                    ),
+                  ),
+                  content: Text(
+                    '사파리, IOS에서는 호환되지 않습니다.\nPC를 통해 접속해주세요.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      height: 24 / 16,
+                    ),
+                  ),
+                ),
               if (platform.isMobile() == false)
                 const SizedBox(
                   width: 220,
