@@ -19,7 +19,7 @@ import 'package:swm_peech_flutter/features/common/models/user_additional_info_mo
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 import 'package:swm_peech_flutter/features/common/platform/funnel_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/funnel_on_web.dart' as platform_funnel;
+if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/funnel_on_web.dart' as platform_funnel;
 
 class SocialLoginCtr extends GetxController {
   bool isShowed = false;
