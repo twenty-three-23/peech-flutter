@@ -1,6 +1,6 @@
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:swm_peech_flutter/features/common/platform/recoding_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/recoding_on_web.dart' as platform;
+    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/recoding_on_web.dart' as platform_record;
 
 class RecodingFileUtil {
   //TODO 1. 이런식으로 해도 괜찮을까?
@@ -13,11 +13,11 @@ class RecodingFileUtil {
   }
 
   Future<String> getFilePath() async {
-    return platform.getFilePath();
+    return platform_record.getFilePath();
   }
 
   Future<dynamic> getRecodingFile() async {
-    return platform.getRecodingFile();
+    return platform_record.getRecodingFile();
   }
 
   //TODO 이런식으로 구하는게 맞나?
