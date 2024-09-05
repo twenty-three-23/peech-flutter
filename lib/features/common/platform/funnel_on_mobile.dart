@@ -1,0 +1,3 @@
+String getFunnel() {
+  return 'mobile';
+}

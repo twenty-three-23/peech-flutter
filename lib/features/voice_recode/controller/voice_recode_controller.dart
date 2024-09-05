@@ -1,9 +1,12 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -11,23 +14,22 @@ import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/voice_recode/data_source/remote_paragraph_keywords.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/keyword_response_model.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 
 class VoiceRecodeCtr extends GetxController {
-
   FlutterSoundRecorder? _recorder;
   FlutterSoundPlayer? _player;
   Rx<bool> isRecording = false.obs;
   Rx<bool> isPlaying = false.obs;
 
-  late final String _path;
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
   Rx<PracticeState> practiceState = PracticeState.beforeToStart.obs;
-  final GlobalKey scriptListViewKey = GlobalKey();  // GlobalKey 추가
+  final GlobalKey scriptListViewKey = GlobalKey(); // GlobalKey 추가
   Rx<double> scriptListViewSize = Rx<double>(0.0);
   Rx<Stopwatch> recodingStopWatch = Stopwatch().obs;
   Timer? _timer;
@@ -39,11 +41,12 @@ class VoiceRecodeCtr extends GetxController {
   Rx<String?> promptSelectedOption = RxString('대본');
   final List<String> promptOptions = ['대본', '핵심 키워드', '전부 숨기기'];
 
+  Rx<bool> isRecordStopped = false.obs;
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
     getKeywords();
-    _path = await RecodingFileUtil().getFilePath();
     getMaxAudioTime();
     _recorder = FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
@@ -59,23 +62,52 @@ class VoiceRecodeCtr extends GetxController {
       RemoteUserAudioTimeDataSource remoteUserAudioTimeDataSource = RemoteUserAudioTimeDataSource(AuthDioFactory().dio);
       _maxAudioTime = await remoteUserAudioTimeDataSource.getUserMaxAudioTime();
       maxAudioTime.value = _maxAudioTime;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getRemainingTime] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getRemainingTime] Exception: ${e}");
       rethrow;
     }
   }
 
-
-  Future<void> _openAudioSession() async {
+  Future<void> checkMicrophonePermission({required BuildContext? context}) async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
+      if (context != null) {
+        showCommonDialog(
+          context: context,
+          title: '마이크 권한이 필요합니다',
+          message: '마이크 권한을 허용해주세요',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
       throw RecordingPermissionException('Microphone permission not granted');
     }
+  }
+
+  Future<void> _openAudioSession() async {
+    await checkMicrophonePermission(context: null);
     await _recorder!.openRecorder();
     await _player!.openPlayer();
+
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playAndRecord,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth | AVAudioSessionCategoryOptions.defaultToSpeaker,
+      avAudioSessionMode: AVAudioSessionMode.spokenAudio,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.voiceCommunication,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
   }
 
   @override
@@ -97,15 +129,22 @@ class VoiceRecodeCtr extends GetxController {
 
     _startTimer();
 
-    await _recorder!.startRecorder(
-      toFile: _path,
-      codec: Codec.aacADTS,
-    );
+    if (!kIsWeb) {
+      await _recorder!.startRecorder(
+        toFile: await RecodingFileUtil().getFilePath(),
+        codec: Codec.aacADTS,
+      );
+    } else {
+      await _recorder!.startRecorder(
+        toFile: Constants.webRecodingFileName,
+        codec: Codec.pcmWebM,
+      );
+    }
     isRecording.value = true;
   }
 
   void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
-    if(recodingStopWatch.elapsedMilliseconds >= (_maxAudioTime?.second ?? 0) * 1000) {
+    if (recodingStopWatch.elapsedMilliseconds >= (_maxAudioTime?.second ?? 0) * 1000) {
       _stopRecording();
     }
   }
@@ -119,7 +158,7 @@ class VoiceRecodeCtr extends GetxController {
 
   Future<void> _startPlaying() async {
     await _player!.startPlayer(
-      fromURI: _path,
+      fromURI: 'input the path',
       codec: Codec.aacADTS,
       whenFinished: () {
         isPlaying.value = false;
@@ -133,14 +172,15 @@ class VoiceRecodeCtr extends GetxController {
     isPlaying.value = false;
   }
 
-  void endPractice(BuildContext context) {
-    _stopRecording();
+  void endPractice(BuildContext context) async {
+    await _stopRecording();
     Navigator.pushNamed(context, '/practiceResult');
   }
 
-  void startPracticeWithScript() async {
+  void startPracticeWithScript(BuildContext context) async {
+    await checkMicrophonePermission(context: context);
     await getMaxAudioTime();
-    if(_maxAudioTime == null || _maxAudioTime?.second == null) {
+    if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
     _startRecording();
@@ -149,9 +189,10 @@ class VoiceRecodeCtr extends GetxController {
     _startAutoScrollingAnimation(_getTotalExpectedTime());
   }
 
-  void startPracticeNoScript() async {
+  void startPracticeNoScript(BuildContext context) async {
+    await checkMicrophonePermission(context: context);
     await getMaxAudioTime();
-    if(_maxAudioTime == null || _maxAudioTime?.second == null) {
+    if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
     }
     _startRecording();
@@ -168,13 +209,12 @@ class VoiceRecodeCtr extends GetxController {
     _stopRecording();
   }
 
-
   void _stopRecodingWhenScrollIsEndListener() {
     scriptScrollController.addListener(() {
-      if(scriptScrollController.position.pixels == scriptScrollController.position.maxScrollExtent) {
+      if (scriptScrollController.position.pixels == scriptScrollController.position.maxScrollExtent) {
         _setScrollingToEnd();
         _stopRecording();
-        scriptScrollController.removeListener(() { });
+        scriptScrollController.removeListener(() {});
       }
     });
   }
@@ -194,12 +234,11 @@ class VoiceRecodeCtr extends GetxController {
   void _getListViewHeightOnWithScript() {
     LocalPracticeModeStorage localPracticeModeStorage = LocalPracticeModeStorage();
     PracticeMode? practiceMode = localPracticeModeStorage.getMode();
-    if(practiceMode != PracticeMode.withScript) return;
+    if (practiceMode != PracticeMode.withScript) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox = scriptListViewKey.currentContext?.findRenderObject() as RenderBox;
       scriptListViewSize.value = renderBox.size.height;
     });
-
   }
 
   void resetRecodingWithScript() {
@@ -223,12 +262,11 @@ class VoiceRecodeCtr extends GetxController {
       KeywordResponseModel keywordResponseModel = await remoteParagraphKeywords.getKeywords(themeId, scriptId);
       keywords.value = KeywordParagraphsModel(paragraphs: keywordResponseModel.responseBody?.paragraphs);
       keywords.refresh();
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getKeywords] DioException: [${e.response?.statusCode}] ${e.response?.data}");
-    } catch(e) {
+    } catch (e) {
       print("[getKeywords] Exception: ${e}");
     }
-
   }
 
   int getThemeId() {
@@ -242,10 +280,18 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _pauseRecoding() async {
+    if (_recorder?.isStopped ?? true) {
+      throw Exception("[_pauseRecoding] can't pause recorder. recorder is stopped");
+      return;
+    }
     await _recorder?.pauseRecorder();
   }
 
   Future<void> _resumeRecoding() async {
+    if (_recorder?.isStopped ?? true) {
+      throw Exception("[_resumeRecoding] can't resume recorder. recorder is stopped");
+      return;
+    }
     await _recorder?.resumeRecorder();
   }
 
@@ -254,23 +300,66 @@ class VoiceRecodeCtr extends GetxController {
     scriptScrollController.jumpTo(scriptScrollController.offset);
   }
 
-  void pausePracticeWithScript() async {
-    await _pauseRecoding();
+  void pausePracticeWithScript(BuildContext context) async {
+    try {
+      await _pauseRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '중단할 수 없습니다',
+          message: '녹음이 종료되어 녹음을 중단할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     _stopScrollingAnimation();
     recodingStopWatch.value.stop(); // 타이머 멈추기
     _timer?.cancel(); // 타이머 객체 취소
     practiceState.value = PracticeState.pause;
   }
 
-  void pausePracticeNoScript() async {
-    await _pauseRecoding();
+  void pausePracticeNoScript(BuildContext context) async {
+    try {
+      await _pauseRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '중단할 수 없습니다',
+          message: '녹음이 종료되어 녹음을 중단할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     recodingStopWatch.value.stop(); // 타이머 멈추기
     _timer?.cancel(); // 타이머 객체 취소
     practiceState.value = PracticeState.pause;
   }
 
-  void resumePracticeWithScript() async {
-    await _resumeRecoding();
+  void resumePracticeWithScript(BuildContext context) async {
+    try {
+      await _resumeRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '이어할 수 없습니다',
+          message: '녹음이 종료되어 이어서 녹음할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
+
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
     int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
@@ -278,8 +367,22 @@ class VoiceRecodeCtr extends GetxController {
     practiceState.value = PracticeState.recoding;
   }
 
-  void resumePracticeNoScript() async {
-    await _resumeRecoding();
+  void resumePracticeNoScript(BuildContext context) async {
+    try {
+      await _resumeRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '이어할 수 없습니다',
+          message: '녹음이 종료되어 이어서 녹음할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
     practiceState.value = PracticeState.recoding;
@@ -297,5 +400,4 @@ class VoiceRecodeCtr extends GetxController {
       checkRecodingTimeLimit(recodingStopWatch.value);
     });
   }
-
 }

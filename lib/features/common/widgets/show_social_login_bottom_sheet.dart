@@ -26,11 +26,17 @@ void showSocialLoginBottomSheet(BuildContext context, SocialLoginBottomSheetStat
 
             child: GetX<SocialLoginCtr>(
               builder: (_) {
-                return Container(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: controller.socialLoginBottomSheetState.value == SocialLoginBottomSheetState.choiceView
-                      ? socialLoginChoiceView(context, controller)
-                      : socialGettingAdditionalInfoView(context, controller),
+                return ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)), // 모서리를 둥글게 설정
+                  child: Container(
+                    width: MediaQuery.of(context).size.width > 600
+                        ? 600
+                        : MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: controller.socialLoginBottomSheetState.value == SocialLoginBottomSheetState.choiceView
+                        ? socialLoginChoiceView(context, controller)
+                        : socialGettingAdditionalInfoView(context, controller),
+                  ),
                 );
               },
             ),

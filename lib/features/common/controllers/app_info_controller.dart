@@ -10,13 +10,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppInfoController extends GetxController {
-
   int? appMinVersion;
   bool? appAvailable;
 
   final String _androidAppId = "com.twenty_three.swm_peech_flutter"; // Android 패키지 이름
   final String _iosAppId = "none"; // TODO iOS 앱스토어 ID
-
 
   Uri _getStoreUrl(BuildContext context) {
     if (Theme.of(context).platform == TargetPlatform.iOS) {
@@ -30,29 +28,23 @@ class AppInfoController extends GetxController {
   void gotoStore(BuildContext context) async {
     final Uri url = _getStoreUrl(context);
     if (await canLaunchUrl(url)) {
-    await launchUrl(url, mode: LaunchMode.externalApplication);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
-    throw '[gotoStore] Could not launch $url';
+      throw '[gotoStore] Could not launch $url';
     }
   }
 
   Future<bool> checkAppAvailableTest(BuildContext context) async {
     showCommonDialog(
-      context: context,
-      title: '앱을 사용할 수 없습니다',
-      message: '앱이 점검 중에 있습니다\n나중에 다시 시도해 주세요',
-      barrierDismissible: false,
-      showFirstButton: false,
-      secondButtonText: '확인',
-      secondAction: () {
-        if (context.mounted) {
-          Navigator.of(context).pop(true);  // 다이얼로그 종료
-        }
-        Future.delayed(const Duration(milliseconds: 100), () {
-          SystemNavigator.pop();  // 앱 종료
+        context: context,
+        title: '앱을 사용할 수 없습니다',
+        message: '앱이 점검 중에 있습니다\n나중에 다시 시도해 주세요',
+        barrierDismissible: false,
+        showFirstButton: false,
+        secondButtonText: '확인',
+        secondAction: () {
+          SystemNavigator.pop(); // 앱 종료
         });
-      }
-    );
     return false;
   }
 
@@ -60,11 +52,11 @@ class AppInfoController extends GetxController {
     await getAppInfo();
     print('appMinVersion: $appMinVersion');
     print('appAvailable: $appAvailable');
-    if(context.mounted) {
-      if(await checkAppUpdate(context) == false) return;
+    if (context.mounted) {
+      if (await checkAppUpdate(context) == false) return;
     }
-    if(context.mounted) {
-      if(await checkAppAvailable(context) == false) return;
+    if (context.mounted) {
+      if (await checkAppAvailable(context) == false) return;
     }
   }
 
@@ -75,8 +67,8 @@ class AppInfoController extends GetxController {
   }
 
   Future<bool> checkAppAvailable(BuildContext context) async {
-    if(appAvailable == false) {
-      if(context.mounted) {
+    if (appAvailable == false) {
+      if (context.mounted) {
         showCommonDialog(
             context: context,
             title: '앱을 사용할 수 없습니다',
@@ -85,14 +77,8 @@ class AppInfoController extends GetxController {
             showFirstButton: false,
             secondButtonText: '확인',
             secondAction: () {
-              if (context.mounted) {
-                Navigator.of(context).pop(true);  // 다이얼로그 종료
-              }
-              Future.delayed(const Duration(milliseconds: 100), () {
-                SystemNavigator.pop();  // 앱 종료
-              });
-            }
-        );
+              SystemNavigator.pop(); // 앱 종료
+            });
         return false;
       }
     }
@@ -103,8 +89,8 @@ class AppInfoController extends GetxController {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     int currentVersion = int.parse(packageInfo.buildNumber);
     print('현재 버전: $currentVersion / 최소 버전: $appMinVersion');
-    if(currentVersion < (appMinVersion ?? 0)) {
-      if(context.mounted) {
+    if (currentVersion < (appMinVersion ?? 0)) {
+      if (context.mounted) {
         showCommonDialog(
             context: context,
             title: '앱 업데이트',
@@ -114,12 +100,10 @@ class AppInfoController extends GetxController {
             secondButtonText: '업데이트',
             secondAction: () async {
               gotoStore(context);
-            }
-        );
+            });
         return false;
       }
     }
     return true;
   }
-
 }

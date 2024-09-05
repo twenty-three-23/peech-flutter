@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
+import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
@@ -14,34 +15,44 @@ class ThemeInputScreen extends StatelessWidget {
 
     final ThemeInputCtr controller = Get.find<ThemeInputCtr>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("발표 주제 입력"),
-      ),
-      body: Column(
+    return CommonScaffold(
+      appBarTitle: '발표 주제 입력',
+      child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: [
-                SvgPicture.asset(
+                Expanded(
+                  child: SvgPicture.asset(
                     'assets/images/progress_indicator_filled.svg',
-                    semanticsLabel: 'progress bar'
+                    semanticsLabel: 'progress bar',
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 const SizedBox(width: 4,),
-                SvgPicture.asset(
+                Expanded(
+                  child: SvgPicture.asset(
                     'assets/images/progress_indicator_empty.svg',
-                    semanticsLabel: 'progress bar'
+                    semanticsLabel: 'progress bar',
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 const SizedBox(width: 4,),
-                SvgPicture.asset(
+                Expanded(
+                  child: SvgPicture.asset(
                     'assets/images/progress_indicator_empty.svg',
-                    semanticsLabel: 'progress bar'
+                    semanticsLabel: 'progress bar',
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 const SizedBox(width: 4,),
-                SvgPicture.asset(
+                Expanded(
+                  child: SvgPicture.asset(
                     'assets/images/progress_indicator_empty.svg',
-                    semanticsLabel: 'progress bar'
+                    semanticsLabel: 'progress bar',
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ],
             ),
