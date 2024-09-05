@@ -41,6 +41,8 @@ class VoiceRecodeCtr extends GetxController {
   Rx<String?> promptSelectedOption = RxString('대본');
   final List<String> promptOptions = ['대본', '핵심 키워드', '전부 숨기기'];
 
+  Rx<bool> isRecordStopped = false.obs;
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
@@ -278,10 +280,18 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   Future<void> _pauseRecoding() async {
+    if (_recorder?.isStopped ?? true) {
+      throw Exception("[_pauseRecoding] can't pause recorder. recorder is stopped");
+      return;
+    }
     await _recorder?.pauseRecorder();
   }
 
   Future<void> _resumeRecoding() async {
+    if (_recorder?.isStopped ?? true) {
+      throw Exception("[_resumeRecoding] can't resume recorder. recorder is stopped");
+      return;
+    }
     await _recorder?.resumeRecorder();
   }
 
@@ -290,23 +300,66 @@ class VoiceRecodeCtr extends GetxController {
     scriptScrollController.jumpTo(scriptScrollController.offset);
   }
 
-  void pausePracticeWithScript() async {
-    await _pauseRecoding();
+  void pausePracticeWithScript(BuildContext context) async {
+    try {
+      await _pauseRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '중단할 수 없습니다',
+          message: '녹음이 종료되어 녹음을 중단할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     _stopScrollingAnimation();
     recodingStopWatch.value.stop(); // 타이머 멈추기
     _timer?.cancel(); // 타이머 객체 취소
     practiceState.value = PracticeState.pause;
   }
 
-  void pausePracticeNoScript() async {
-    await _pauseRecoding();
+  void pausePracticeNoScript(BuildContext context) async {
+    try {
+      await _pauseRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '중단할 수 없습니다',
+          message: '녹음이 종료되어 녹음을 중단할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     recodingStopWatch.value.stop(); // 타이머 멈추기
     _timer?.cancel(); // 타이머 객체 취소
     practiceState.value = PracticeState.pause;
   }
 
-  void resumePracticeWithScript() async {
-    await _resumeRecoding();
+  void resumePracticeWithScript(BuildContext context) async {
+    try {
+      await _resumeRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '이어할 수 없습니다',
+          message: '녹음이 종료되어 이어서 녹음할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
+
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
     int remainingTime = _getTotalExpectedTime() - recodingStopWatch.value.elapsedMilliseconds;
@@ -314,8 +367,22 @@ class VoiceRecodeCtr extends GetxController {
     practiceState.value = PracticeState.recoding;
   }
 
-  void resumePracticeNoScript() async {
-    await _resumeRecoding();
+  void resumePracticeNoScript(BuildContext context) async {
+    try {
+      await _resumeRecoding();
+    } catch (e) {
+      if (context.mounted) {
+        showCommonDialog(
+          context: context,
+          title: '이어할 수 없습니다',
+          message: '녹음이 종료되어 이어서 녹음할 수 없습니다',
+          showFirstButton: false,
+          secondButtonText: '확인',
+          isSecondButtonToClose: true,
+        );
+      }
+      rethrow;
+    }
     recodingStopWatch.value.start(); // 타이머 멈추기
     _startTimer();
     practiceState.value = PracticeState.recoding;
