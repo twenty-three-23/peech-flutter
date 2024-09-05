@@ -31,7 +31,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // 앱 백그라운드로 전환
     if (state == AppLifecycleState.paused) {
-      _controller.pausePracticeWithScript();
+      _controller.pausePracticeWithScript(context);
     }
   }
 
@@ -220,7 +220,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                   child: ColoredButton(
                                       text: '중지하기',
                                       onPressed: () {
-                                        _controller.pausePracticeWithScript();
+                                        _controller.pausePracticeWithScript(context);
                                       }),
                                 ),
                               ],
@@ -295,7 +295,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                   child: ColoredButton(
                                       text: '이어하기',
                                       onPressed: () {
-                                        _controller.resumePracticeWithScript();
+                                        _controller.resumePracticeWithScript(context);
                                       }),
                                 ),
                                 const SizedBox(
