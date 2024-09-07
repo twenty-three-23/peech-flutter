@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:swm_peech_flutter/features/common/controllers/review_controller.dart';
 
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_review_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/web_recording_file.dart';
@@ -26,6 +29,8 @@ import 'package:swm_peech_flutter/features/practice_result/model/store_edited_sc
 import 'package:swm_peech_flutter/features/practice_result/model/usage_time_check_model.dart';
 
 class PracticeResultCtr extends GetxController {
+  final reviewController = Get.find<ReviewController>();
+
   ParagraphListModel? _practiceResult; //데이터 받아오고, 요청 보낼때만 수정
   Rx<ParagraphListModel?> practiceResult = Rx<ParagraphListModel?>(null);
   ScrollController scrollController = ScrollController();
@@ -187,8 +192,18 @@ class PracticeResultCtr extends GetxController {
     if (isEditSaved) {
       await putEditedScript();
     }
+    reviewRequired(context);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
     isLoading.value = false;
+  }
+
+  void reviewRequired(BuildContext context) {
+    LocalReviewStorage localReviewStorage = LocalReviewStorage();
+    bool isReviewSubmitted = localReviewStorage.getIsReviewSubmitted() ?? false;
+    print("[isReviewSubmitted]: $isReviewSubmitted");
+    if (!isReviewSubmitted) {
+      reviewController.reviewRequired(context: context, endFunction: () => localReviewStorage.setIsReviewSubmitted(true));
+    }
   }
 
   Future<StoreEditedScriptResult> putEditedScript() async {
