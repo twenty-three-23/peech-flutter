@@ -1,13 +1,17 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_review_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_feedbacks_data_souce.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
+import 'package:swm_peech_flutter/features/common/models/user_feedback_model.dart';
 import 'package:swm_peech_flutter/features/common/models/web_recording_file.dart';
 import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
@@ -36,6 +40,8 @@ class PracticeResultCtr extends GetxController {
   bool isEditSaved = false; //수정사항 저장했는지 여부
 
   bool isEdited = false;
+
+  Rx<String> reviewText = "".obs;
 
   void getPracticeResult(BuildContext context) async {
     isLoading.value = true;
@@ -188,7 +194,42 @@ class PracticeResultCtr extends GetxController {
       await putEditedScript();
     }
     Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    reviewRequired();
     isLoading.value = false;
+  }
+
+  void reviewRequired() {
+    LocalReviewStorage localReviewStorage = LocalReviewStorage();
+    bool isReviewSubmitted = localReviewStorage.getIsReviewSubmitted() ?? false;
+    print("[isReviewSubmitted]: $isReviewSubmitted");
+    RemoteUserFeedbacksDataSource remoteUserFeedbacksDataSource = RemoteUserFeedbacksDataSource(AuthDioFactory().dio);
+    if (!isReviewSubmitted) {
+      showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('저희 서비스는 어떠셨나요?'),
+            content: TextField(
+              decoration: const InputDecoration(hintText: '소중한 의견을 남겨주세요.'),
+              onChanged: (value) {
+                reviewText.value = value;
+              },
+            ),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: const Text('전송'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  localReviewStorage.setIsReviewSubmitted(true);
+                  UserFeedbackModel userFeedbackModel = UserFeedbackModel(message: reviewText.value);
+                  remoteUserFeedbacksDataSource.sendUserFeedback(userFeedbackModel.toJson());
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Future<StoreEditedScriptResult> putEditedScript() async {
