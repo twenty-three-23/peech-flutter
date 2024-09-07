@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/review_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final appInfoController = Get.find<AppInfoController>();
   final controller = Get.find<HomeCtr>();
   final userInfoController = Get.find<UserInfoController>();
+  final reviewController = Get.find<ReviewController>();
 
   @override
   void initState() {
@@ -163,10 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             TextButton(
               onPressed: () {
-                controller.contactToEmail(context);
+                reviewController.reviewRequired(context: context);
               },
               child: const Text(
-                "이메일로 문의하기",
+                "문의하기",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
