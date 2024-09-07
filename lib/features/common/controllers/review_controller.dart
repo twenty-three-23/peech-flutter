@@ -34,7 +34,9 @@ class ReviewController extends GetxController {
               onPressed: () {
                 Navigator.pop(context);
                 UserFeedbackModel userFeedbackModel = UserFeedbackModel(message: reviewText.value);
-                remoteUserFeedbacksDataSource.sendUserFeedback(userFeedbackModel.toJson());
+                remoteUserFeedbacksDataSource.sendUserFeedback(userFeedbackModel.toJson()).then((value) {
+                  Get.snackbar('피드백 전송', '소중한 피드백 감사합니다');
+                });
                 if (endFunction != null) endFunction();
               },
             ),
