@@ -72,3 +72,19 @@ coverage/
 *.env
 *g.dart
 
+# Firebase ~~
+
+#Google Firebase 설정 파일, 중요한 API 키 포함
+*google-services.json
+*GoogleService-Info.plist
+
+#Firebase 프로젝트 설정 정보 포함 가능
+*firebase_options.dart
+
+#Firebase Hosting 캐시 파일
+*hosting.YnVpbGQvd2Vi.cache
+
+#Firebase 프로젝트 구성 파일
+*.firebaserc
+
+# ~~ Firebase
