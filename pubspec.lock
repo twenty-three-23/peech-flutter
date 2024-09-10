@@ -274,7 +274,7 @@ packages:
     source: hosted
     version: "3.9.0"
   firebase_analytics_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_analytics_web
       sha256: "89a740249bce9d52a99db4e501be6087ca6749c73c47cff2b174802be10abd81"
