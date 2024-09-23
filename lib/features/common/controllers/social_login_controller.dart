@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_social_login_data_souce.dart';
@@ -40,15 +41,23 @@ class SocialLoginCtr extends GetxController {
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     if (await isKakaoTalkInstalled()) {
       try {
+        //카카오톡으로 로그인
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print("KAKAO AccessToken: ${token.accessToken}");
+
+        //서버로 전송
         SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
         AuthTokenResponseModel authTokenResponseModel = await postSocialToken(kakaoLoginInfo);
+
+        //화면 상태 변경
         loginChoiceViewState.value = SocialLoginChoiceViewState.success;
         loginChoiceViewLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
+
+        //추가 정보 입력 분기
         await Future.delayed(const Duration(milliseconds: 500));
         if (authTokenResponseModel.statusCode == 411) {
+          // 추가 정보 입력 화면으로 이동
           AppEventBus.instance.fire(SocialLoginBottomSheetOpenEvent(
               socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
         } else {
@@ -56,12 +65,14 @@ class SocialLoginCtr extends GetxController {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("카카오톡 로그인 성공!"),
           ));
+          // 바텀 시트 닫기
           if (context.mounted) {
             Navigator.pop(context);
           }
-          userInfoController.getUserAudioTimeInfo();
+          userInfoController.getUserAudioTimeInfo(); //홈 화면 오디오 시간 받아오기
         }
       } on DioException catch (error) {
+        // 서버 에러
         loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
         loginChoiceViewLoginFailed.value = true;
         print('카카오톡으로 로그인 실패(dio exception) $error');
@@ -70,8 +81,9 @@ class SocialLoginCtr extends GetxController {
         ));
         rethrow;
       } catch (error) {
-        loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
-        loginChoiceViewLoginFailed.value = true;
+        // 클라이언트 에러
+        loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin; // 로그인 선택 뷰로 상태 변경
+        loginChoiceViewLoginFailed.value = true; // 로그인 실패 표시 보이기
         print('카카오톡으로 로그인 실패(exception) $error');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("카카오톡 로그인 실패: 클라이언트 에러"),
@@ -80,15 +92,24 @@ class SocialLoginCtr extends GetxController {
       }
     } else {
       print('카카오톡이 깔려있지 않습니다.');
+
+      //카카오 계정으로 로그인
       OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
       print("KAKAO AccessToken: ${token.accessToken}");
+
+      //서버로 전송
       SocialLoginInfo kakaoLoginInfo = SocialLoginInfo(socialToken: token.accessToken, authorizationServer: 'KAKAO');
       AuthTokenResponseModel authTokenResponseModel = await postSocialToken(kakaoLoginInfo);
+
+      //화면 상태 변경
       loginChoiceViewState.value = SocialLoginChoiceViewState.success;
       loginChoiceViewLoginFailed.value = false;
       print('카카오톡으로 로그인 성공');
+
+      //추가 정보 입력 분기
       await Future.delayed(const Duration(milliseconds: 500));
       if (authTokenResponseModel.statusCode == 411) {
+        // 추가 입력 화면으로 이동
         AppEventBus.instance.fire(
             SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
       } else {
@@ -96,11 +117,80 @@ class SocialLoginCtr extends GetxController {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("카카오톡 로그인 성공!"),
         ));
+        // 바텀 시트 닫기
         if (context.mounted) {
           Navigator.pop(context);
         }
-        userInfoController.getUserAudioTimeInfo();
+        userInfoController.getUserAudioTimeInfo(); // 홈 화면 오디오 시간 받아오기
       }
+    }
+  }
+
+  void loginWithApple(BuildContext context) async {
+    loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
+    try {
+      //apple id login
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'swm-peech-flutter.twenty-three.com',
+          redirectUri: Uri.parse('https://twenty-three-4d6f6.firebaseapp.com/__/auth/handler'),
+        ),
+      );
+
+      print('[credential]: $credential');
+      print('credential.state = $credential');
+      print('credential.email = ${credential.email}');
+      print('credential.userIdentifier = ${credential.userIdentifier}');
+      print('credential.identityToken = ${credential.identityToken}');
+
+      //서버로 전송
+      SocialLoginInfo appleLoginInfo = SocialLoginInfo(socialToken: credential.identityToken, authorizationServer: 'APPLE');
+      AuthTokenResponseModel authTokenResponseModel = await postSocialToken(appleLoginInfo);
+      loginChoiceViewState.value = SocialLoginChoiceViewState.success;
+      loginChoiceViewLoginFailed.value = false;
+      print('apple id로 로그인 성공');
+
+      // 추가정보 입력 분기
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (authTokenResponseModel.statusCode == 411) {
+        // 추가정보 입력 화면으로 이동
+        AppEventBus.instance.fire(
+            SocialLoginBottomSheetOpenEvent(socialLoginBottomSheetState: SocialLoginBottomSheetState.gettingAdditionalDataView, fromWhere: 'postSocialToken'));
+      } else {
+        // 로그인 성공
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("애플 로그인 성공!"),
+        ));
+        // 바텀 시트 닫기
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+        userInfoController.getUserAudioTimeInfo(); // 홈 화면 오디오 시간 받아오기
+      }
+    } on DioException catch (error) {
+      loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
+      loginChoiceViewLoginFailed.value = true;
+      print('Apple Id로 로그인 실패(dio exception): $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("애플 로그인 실패: 서버 에러"),
+        ),
+      );
+      rethrow;
+    } catch (error) {
+      loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
+      loginChoiceViewLoginFailed.value = true;
+      print('Apple Id로 로그인 실패(exception) $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("애플 로그인 실패: 클라이언트 에러"),
+        ),
+      );
+      rethrow;
     }
   }
 
