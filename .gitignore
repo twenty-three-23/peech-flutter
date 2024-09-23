@@ -88,3 +88,11 @@ coverage/
 *.firebaserc
 
 # ~~ Firebase
+
+# android studio files
+/.idea
+**/android/.idea
+*.iml
+/build
+/captures
+/.gradle
