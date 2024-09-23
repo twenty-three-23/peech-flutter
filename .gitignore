@@ -91,6 +91,7 @@ coverage/
 
 # android studio files
 /.idea
+**/android/.idea
 *.iml
 /build
 /captures
