@@ -17,16 +17,21 @@ void main() async {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    // 앱 전역 에러 처리
+    WidgetsFlutterBinding.ensureInitialized(); // 앱 초기화(비동기 처리 전에 실행되어야 함)
 
-    await AppInitializer().initialize();
+    await AppInitializer().initialize(); // 앱 초기화(비동기 처리)
+
+    // 소셜 로그인 바텀 시트 이벤트 버스
     AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
       print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
       showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
     });
+
+    // Flutter 에러 처리
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
-    }; //앱 정보 전역 컨트롤러
+    };
 
     runApp(MyApp(navigatorKey: navigatorKey));
   }, (Object error, StackTrace stack) {
