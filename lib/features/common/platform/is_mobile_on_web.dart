@@ -7,8 +7,12 @@ bool isMobile() {
 }
 
 bool isUnavailableClient() {
+  return isIphone() || isSafari();
+}
+
+bool isSafari() {
   final userAgent = html.window.navigator.userAgent.toLowerCase();
-  return userAgent.contains('iphone') || userAgent.contains('safari');
+  return userAgent.contains('safari') && !userAgent.contains('chrome');
 }
 
 bool isIphone() {
