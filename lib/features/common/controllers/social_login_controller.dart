@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
@@ -39,7 +41,7 @@ class SocialLoginCtr extends GetxController {
 
   void loginWithKakao(BuildContext context) async {
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
-    if (await isKakaoTalkInstalled()) {
+    if (await isKakaoTalkInstalled() && !Platform.isIOS) {
       try {
         //카카오톡으로 로그인
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
@@ -91,7 +93,7 @@ class SocialLoginCtr extends GetxController {
         rethrow;
       }
     } else {
-      print('카카오톡이 깔려있지 않습니다.');
+      print('카카오톡이 깔려있지 않거나 IOS입니다. 웹뷰로 로그인을 시도합니다.');
 
       //카카오 계정으로 로그인
       OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
