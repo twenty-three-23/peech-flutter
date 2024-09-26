@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
     if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
 
 import '../widgets/show_common_dialog.dart';
+import 'app_info_controller.dart';
 
 class PlatformInfoController extends GetxController {
+  final appInfoController = Get.find<AppInfoController>();
+
   // 디바이스 체크해서 지원하지 않는 환경이면 알림 띄워주기
   void checkDeviceRecordAvailable(BuildContext context) {
     if (platform_client.isUnavailableClient()) {
@@ -17,6 +23,25 @@ class PlatformInfoController extends GetxController {
         secondButtonText: '확인',
         isSecondButtonToClose: true,
       );
+    }
+  }
+
+  // 모바일에서 웹에 접속한 경우 다운로드 팝업 띄우기
+  void checkAppDownloadPopupOnWeb(BuildContext context) {
+    if (kIsWeb) {
+      if (platform_client.isAndroid()) {
+        showCommonDialog(
+          context: context,
+          title: '앱 다운로드',
+          message: '모바일에서 더욱 편리하게 사용할 수 있습니다.',
+          firstButtonText: '닫기',
+          isFirstButtonToClose: true,
+          secondButtonText: '다운로드',
+          secondAction: () {
+            appInfoController.gotoStore(context);
+          },
+        );
+      }
     }
   }
 }

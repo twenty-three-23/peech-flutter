@@ -7,7 +7,7 @@ bool isMobile() {
 }
 
 bool isUnavailableClient() {
-  return isIphone() || isSafari();
+  return isIOS() || isSafari();
 }
 
 bool isSafari() {
@@ -15,7 +15,12 @@ bool isSafari() {
   return userAgent.contains('safari') && !userAgent.contains('chrome');
 }
 
-bool isIphone() {
+bool isIOS() {
   final userAgent = html.window.navigator.userAgent.toLowerCase();
   return userAgent.contains('iphone');
+}
+
+bool isAndroid() {
+  final userAgent = html.window.navigator.userAgent.toLowerCase();
+  return userAgent.contains('android');
 }

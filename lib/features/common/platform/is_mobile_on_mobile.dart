@@ -8,6 +8,10 @@ bool isUnavailableClient() {
   return false;
 }
 
-bool isIphone() {
+bool isIOS() {
   return Platform.isIOS;
+}
+
+bool isAndroid() {
+  return Platform.isAndroid;
 }

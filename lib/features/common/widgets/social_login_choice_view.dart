@@ -54,7 +54,7 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                     'assets/images/kakao_login_medium_wide.png',
                   ),
                 ),
-                if (platform_client.isIphone())
+                if (platform_client.isIOS())
                   Column(
                     children: [
                       SizedBox(height: 10),
