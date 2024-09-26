@@ -44,7 +44,8 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
             children: [
               if (_controller.practiceState.value == PracticeState.recoding ||
                   _controller.practiceState.value == PracticeState.beforeToStart ||
-                  _controller.practiceState.value == PracticeState.pause)
+                  _controller.practiceState.value == PracticeState.pause ||
+                  _controller.practiceState.value == PracticeState.end)
                 Column(
                   children: [
                     Container(height: _controller.scriptListViewSize.value * 4 / 10),
@@ -225,7 +226,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 ),
                               ],
                             )
-                          else if (_controller.practiceState.value == PracticeState.pause)
+                          else if (_controller.practiceState.value == PracticeState.pause || _controller.practiceState.value == PracticeState.end)
                             Row(
                               children: [
                                 GestureDetector(
