@@ -14,35 +14,42 @@ import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.d
     if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
 
 void main() async {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   runZonedGuarded(() async {
     // 앱 전역 에러 처리
     WidgetsFlutterBinding.ensureInitialized(); // 앱 초기화(비동기 처리 전에 실행되어야 함)
 
     await AppInitializer().initialize(); // 앱 초기화(비동기 처리)
 
-    // 소셜 로그인 바텀 시트 이벤트 버스
-    AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
-      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
-      showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
-    });
-
     // Flutter 에러 처리
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
     };
 
-    runApp(MyApp(navigatorKey: navigatorKey));
+    runApp(MyApp());
   }, (Object error, StackTrace stack) {
     print("[runZonedGuarded] 에러 발생: $error");
   });
 }
 
-class MyApp extends StatelessWidget {
-  final GlobalKey<NavigatorState> navigatorKey;
+class MyApp extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  const MyApp({required this.navigatorKey, super.key});
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // 소셜 로그인 바텀 시트 이벤트 버스
+    AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
+      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
+      showSocialLoginBottomSheet(widget.navigatorKey.currentContext!, event.socialLoginBottomSheetState);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 child: GetMaterialApp(
-                  navigatorKey: navigatorKey,
+                  navigatorKey: widget.navigatorKey,
                   getPages: Routers.routers,
                   initialRoute: Routers.INITIAL,
                   localizationsDelegates: const [
@@ -129,7 +136,7 @@ class MyApp extends StatelessWidget {
     } else {
       //android, ios 인 경우
       return GetMaterialApp(
-        navigatorKey: navigatorKey,
+        navigatorKey: widget.navigatorKey,
         getPages: Routers.routers,
         initialRoute: Routers.INITIAL,
         localizationsDelegates: const [
