@@ -23,8 +23,6 @@ import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dar
 class VoiceRecodeCtr extends GetxController {
   FlutterSoundRecorder? _recorder;
   FlutterSoundPlayer? _player;
-  Rx<bool> isRecording = false.obs;
-  Rx<bool> isPlaying = false.obs;
 
   late final List<String>? script;
   ScrollController scriptScrollController = ScrollController();
@@ -43,12 +41,14 @@ class VoiceRecodeCtr extends GetxController {
 
   Rx<bool> isRecordStopped = false.obs;
 
+  Rx<bool> isLoading = false.obs;
+
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
     getKeywords();
     getMaxAudioTime();
-    _recorder = FlutterSoundRecorder();
+    _recorder = await FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
     _openAudioSession();
     _getListViewHeightOnWithScript();
@@ -140,7 +140,6 @@ class VoiceRecodeCtr extends GetxController {
         codec: Codec.pcmWebM,
       );
     }
-    isRecording.value = true;
   }
 
   void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
@@ -153,23 +152,18 @@ class VoiceRecodeCtr extends GetxController {
     _timer?.cancel();
     recodingStopWatch.value.stop();
     await _recorder!.stopRecorder();
-    isRecording.value = false;
+    practiceState.value = PracticeState.end;
   }
 
   Future<void> _startPlaying() async {
     await _player!.startPlayer(
       fromURI: 'input the path',
       codec: Codec.aacADTS,
-      whenFinished: () {
-        isPlaying.value = false;
-      },
     );
-    isPlaying.value = true;
   }
 
   Future<void> _stopPlaying() async {
     await _player!.stopPlayer();
-    isPlaying.value = false;
   }
 
   void endPractice(BuildContext context) async {
@@ -178,7 +172,13 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeWithScript(BuildContext context) async {
-    await checkMicrophonePermission(context: context);
+    if (!await Permission.microphone.isGranted) {
+      await checkMicrophonePermission(context: context);
+      isLoading.value = true;
+      await _openAudioSession();
+      isLoading.value = false;
+      return;
+    }
     await getMaxAudioTime();
     if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
@@ -190,7 +190,13 @@ class VoiceRecodeCtr extends GetxController {
   }
 
   void startPracticeNoScript(BuildContext context) async {
-    await checkMicrophonePermission(context: context);
+    if (!await Permission.microphone.isGranted) {
+      await checkMicrophonePermission(context: context);
+      isLoading.value = true;
+      await _openAudioSession();
+      isLoading.value = false;
+      return;
+    }
     await getMaxAudioTime();
     if (_maxAudioTime == null || _maxAudioTime?.second == null) {
       throw Exception('maxAudioTime is null!');
@@ -304,6 +310,7 @@ class VoiceRecodeCtr extends GetxController {
     try {
       await _pauseRecoding();
     } catch (e) {
+      practiceState.value = PracticeState.pause;
       if (context.mounted) {
         showCommonDialog(
           context: context,
@@ -327,6 +334,7 @@ class VoiceRecodeCtr extends GetxController {
       await _pauseRecoding();
     } catch (e) {
       if (context.mounted) {
+        practiceState.value = PracticeState.pause;
         showCommonDialog(
           context: context,
           title: '중단할 수 없습니다',
