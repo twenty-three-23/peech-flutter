@@ -46,7 +46,7 @@ class VoiceRecodeCtr extends GetxController {
   @override
   void onInit() async {
     script = LocalScriptStorage().getInputScriptContent();
-    getKeywords();
+    getKeywordsOnWithScript();
     getMaxAudioTime();
     _recorder = await FlutterSoundRecorder();
     _player = FlutterSoundPlayer();
@@ -260,8 +260,14 @@ class VoiceRecodeCtr extends GetxController {
     recodingStopWatch.value.reset();
   }
 
-  Future<void> getKeywords() async {
+  Future<void> getKeywordsOnWithScript() async {
     try {
+      // 대본 없이 녹음인 경우 키워드를 불러오지 않음
+      LocalPracticeModeStorage localPracticeModeStorage = LocalPracticeModeStorage();
+      PracticeMode? practiceMode = localPracticeModeStorage.getMode();
+      if (practiceMode != PracticeMode.withScript) return;
+
+      // 핵심 키워드 불러오기
       int themeId = getThemeId();
       int scriptId = getScriptId();
       RemoteParagraphKeywords remoteParagraphKeywords = RemoteParagraphKeywords(AuthDioFactory().dio);
