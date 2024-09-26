@@ -8,6 +8,7 @@ import 'package:swm_peech_flutter/features/common/models/app_info_model.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 
 class AppInfoController extends GetxController {
   int? appMinVersion;
@@ -17,12 +18,16 @@ class AppInfoController extends GetxController {
   final String _iosAppId = "none"; // TODO iOS 앱스토어 ID
 
   Uri _getStoreUrl(BuildContext context) {
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
+    if (PlatformDeviceInfo.isIOS()) {
+      // IOS 기기
       return Uri.parse("https://apps.apple.com/app/$_iosAppId");
-    } else if (Theme.of(context).platform == TargetPlatform.android) {
+    } else if (PlatformDeviceInfo.isAndroid()) {
+      // android 기기
+      return Uri.parse("https://play.google.com/store/apps/details?id=$_androidAppId");
+    } else {
+      // android, ios 둘 다 아닌 경우 google play store로 연결
       return Uri.parse("https://play.google.com/store/apps/details?id=$_androidAppId");
     }
-    return Uri.parse("");
   }
 
   void gotoStore(BuildContext context) async {
@@ -48,7 +53,7 @@ class AppInfoController extends GetxController {
     return false;
   }
 
-  Future<void> checkAppInfo(BuildContext context) async {
+  Future<void> checkAppAvailable(BuildContext context) async {
     await getAppInfo();
     print('appMinVersion: $appMinVersion');
     print('appAvailable: $appAvailable');
@@ -56,7 +61,7 @@ class AppInfoController extends GetxController {
       if (await checkAppUpdate(context) == false) return; // 앱 강제 업데이트
     }
     if (context.mounted) {
-      if (await checkAppAvailable(context) == false) return; // 앱 사용 불가
+      if (await checkAppAvailableFlag(context) == false) return; // 앱 사용 불가
     }
   }
 
@@ -66,7 +71,7 @@ class AppInfoController extends GetxController {
     appAvailable = appInfoModel.appAvailable;
   }
 
-  Future<bool> checkAppAvailable(BuildContext context) async {
+  Future<bool> checkAppAvailableFlag(BuildContext context) async {
     if (appAvailable == false) {
       if (context.mounted) {
         showCommonDialog(

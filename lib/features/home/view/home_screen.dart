@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       userInfoController.getUserAudioTimeInfo();
       platformInfoController.checkDeviceRecordAvailable(context);
-      appInfoController.checkAppInfo(context);
+      platformInfoController.checkAppDownloadPopupOnWeb(context);
+      appInfoController.checkAppAvailable(context);
     });
   }
 

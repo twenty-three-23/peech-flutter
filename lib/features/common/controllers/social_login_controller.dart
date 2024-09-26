@@ -21,8 +21,7 @@ import 'package:swm_peech_flutter/features/common/models/social_login_choice_vie
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
-import 'package:swm_peech_flutter/features/common/platform/funnel_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/funnel_on_web.dart' as platform_funnel;
+import 'package:swm_peech_flutter/features/common/platform/platform_funnel/platform_funnel.dart';
 
 class SocialLoginCtr extends GetxController {
   bool isShowed = false;
@@ -198,7 +197,7 @@ class SocialLoginCtr extends GetxController {
 
   Future<AuthTokenResponseModel> postSocialToken(SocialLoginInfo kakaoLoginInfo) async {
     RemoteSocialLoginDataSource remoteSocialLoginDataSource = RemoteSocialLoginDataSource(AuthDioFactory().dio);
-    String funnel = platform_funnel.getFunnel();
+    String funnel = PlatformFunnel.getFunnel();
     print('funnel: $funnel');
     AuthTokenResponseModel authTokenResponseModel = await remoteSocialLoginDataSource.postSocialToken(
       funnel,
@@ -231,7 +230,7 @@ class SocialLoginCtr extends GetxController {
           gender: formatGender(gender.value),
           nickName: nickname.value);
       RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
-      String funnel = platform_funnel.getFunnel();
+      String funnel = PlatformFunnel.getFunnel();
       print('funnel: $funnel');
       AuthTokenModel authTokenModel = await remoteUserAdditionalInfoDataSource.postUserAdditionalInfo(funnel, userAdditionalInfoModel.toJson());
       await saveUserToken(authTokenModel);

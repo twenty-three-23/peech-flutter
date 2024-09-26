@@ -5,13 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/initialize/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
-import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
 
 void main() async {
   runZonedGuarded(() async {
@@ -61,7 +60,7 @@ class _MyAppState extends State<MyApp> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (platform_client.isMobile() == false)
+              if (PlatformDeviceInfo.isMobile() == false)
                 const SizedBox(
                   width: 220,
                 ),
@@ -87,15 +86,15 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
               ),
-              if (platform_client.isMobile() == false)
+              if (PlatformDeviceInfo.isMobile() == false)
                 const SizedBox(
                   width: 20,
                 ),
-              if (platform_client.isMobile() == false)
+              if (PlatformDeviceInfo.isMobile() == false)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (platform_client.isUnavailableClient() == true)
+                    if (PlatformDeviceInfo.isRecordUnavailableClient() == true)
                       Container(
                         width: 200,
                         decoration: BoxDecoration(

@@ -13,7 +13,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_script
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_audio_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/max_audio_time_model.dart';
-import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/common/utils/record_file_util.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/voice_recode/data_source/remote_paragraph_keywords.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraphs_model.dart';
@@ -131,7 +131,7 @@ class VoiceRecodeCtr extends GetxController {
 
     if (!kIsWeb) {
       await _recorder!.startRecorder(
-        toFile: await RecodingFileUtil().getFilePath(),
+        toFile: await RecordFileUtil().getFilePath(),
         codec: Codec.aacADTS,
       );
     } else {
