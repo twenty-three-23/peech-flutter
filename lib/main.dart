@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
-import 'package:swm_peech_flutter/initializer/app_initializer.dart';
+import 'package:swm_peech_flutter/initialize/app_initializer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
@@ -14,35 +14,42 @@ import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.d
     if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
 
 void main() async {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   runZonedGuarded(() async {
     // 앱 전역 에러 처리
     WidgetsFlutterBinding.ensureInitialized(); // 앱 초기화(비동기 처리 전에 실행되어야 함)
 
     await AppInitializer().initialize(); // 앱 초기화(비동기 처리)
 
-    // 소셜 로그인 바텀 시트 이벤트 버스
-    AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
-      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
-      showSocialLoginBottomSheet(navigatorKey.currentContext!, event.socialLoginBottomSheetState);
-    });
-
     // Flutter 에러 처리
     FlutterError.onError = (FlutterErrorDetails details) {
       print("[FlutterError] 에러 발생: ${details.exception}");
     };
 
-    runApp(MyApp(navigatorKey: navigatorKey));
+    runApp(MyApp());
   }, (Object error, StackTrace stack) {
     print("[runZonedGuarded] 에러 발생: $error");
   });
 }
 
-class MyApp extends StatelessWidget {
-  final GlobalKey<NavigatorState> navigatorKey;
+class MyApp extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  const MyApp({required this.navigatorKey, super.key});
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // 소셜 로그인 바텀 시트 이벤트 버스
+    AppEventBus.instance.on<SocialLoginBottomSheetOpenEvent>().listen((event) {
+      print("[SocialLoginEvent] state: ${event.socialLoginBottomSheetState}, from: ${event.fromWhere}");
+      showSocialLoginBottomSheet(widget.navigatorKey.currentContext!, event.socialLoginBottomSheetState);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,27 +61,6 @@ class MyApp extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (platform_client.isIphone() == true)
-                const AlertDialog(
-                  title: Text(
-                    '플랫폼 에러',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      height: 26 / 18,
-                    ),
-                  ),
-                  content: Text(
-                    '사파리, IOS에서는 호환되지 않습니다.\nPC를 통해 접속해주세요.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      height: 24 / 16,
-                    ),
-                  ),
-                ),
               if (platform_client.isMobile() == false)
                 const SizedBox(
                   width: 220,
@@ -88,7 +74,7 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 child: GetMaterialApp(
-                  navigatorKey: navigatorKey,
+                  navigatorKey: widget.navigatorKey,
                   getPages: Routers.routers,
                   initialRoute: Routers.INITIAL,
                   localizationsDelegates: const [
@@ -119,10 +105,10 @@ class MyApp extends StatelessWidget {
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
-                            '사파리, IOS에서는 호환되지 않습니다.',
+                            '사파리, IOS에서는 웹 브라우저에서 녹음 기능이 호환되지 않습니다. 다른 플랫폼에서 이용해주세요.',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Colors.red,
                               decoration: TextDecoration.none,
                             ),
                           ),
@@ -150,7 +136,7 @@ class MyApp extends StatelessWidget {
     } else {
       //android, ios 인 경우
       return GetMaterialApp(
-        navigatorKey: navigatorKey,
+        navigatorKey: widget.navigatorKey,
         getPages: Routers.routers,
         initialRoute: Routers.INITIAL,
         localizationsDelegates: const [

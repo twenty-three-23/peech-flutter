@@ -53,10 +53,10 @@ class AppInfoController extends GetxController {
     print('appMinVersion: $appMinVersion');
     print('appAvailable: $appAvailable');
     if (context.mounted) {
-      if (await checkAppUpdate(context) == false) return;
+      if (await checkAppUpdate(context) == false) return; // 앱 강제 업데이트
     }
     if (context.mounted) {
-      if (await checkAppAvailable(context) == false) return;
+      if (await checkAppAvailable(context) == false) return; // 앱 사용 불가
     }
   }
 
