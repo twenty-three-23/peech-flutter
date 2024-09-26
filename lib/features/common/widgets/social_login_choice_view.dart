@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
-import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 
 Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
   return SizedBox(
@@ -54,7 +53,7 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                     'assets/images/kakao_login_medium_wide.png',
                   ),
                 ),
-                if (platform_client.isIOS())
+                if (PlatformDeviceInfo.isIOS())
                   Column(
                     children: [
                       SizedBox(height: 10),

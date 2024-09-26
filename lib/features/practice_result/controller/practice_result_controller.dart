@@ -12,7 +12,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_review
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/web_recording_file.dart';
-import 'package:swm_peech_flutter/features/common/utils/recoding_file_util.dart';
+import 'package:swm_peech_flutter/features/common/utils/record_file_util.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/mock/mock_practice_rseult_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_result/data_source/remote/remote_file_duration_check_data_source.dart';
@@ -64,7 +64,7 @@ class PracticeResultCtr extends GetxController {
       RemotePracticeResultDataSource practiceResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
       int themeId = getThemeId();
 
-      dynamic voiceFile = await RecodingFileUtil().getRecodingFile();
+      dynamic voiceFile = await RecordFileUtil().getRecodingFile();
 
       if (!kIsWeb) {
         if (practiceMode == PracticeMode.withScript) {
@@ -131,7 +131,7 @@ class PracticeResultCtr extends GetxController {
   }
 
   Future<int> getRecodeSeconds() async {
-    Duration duration = await RecodingFileUtil().getDuration();
+    Duration duration = await RecordFileUtil().getDuration();
     return duration.inSeconds;
   }
 

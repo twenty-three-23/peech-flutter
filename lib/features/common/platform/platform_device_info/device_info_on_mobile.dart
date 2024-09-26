@@ -4,7 +4,11 @@ bool isMobile() {
   return true;
 }
 
-bool isUnavailableClient() {
+bool isRecordUnavailableClient() {
+  return false;
+}
+
+bool isSafari() {
   return false;
 }
 

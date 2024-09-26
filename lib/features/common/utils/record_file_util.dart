@@ -1,23 +1,22 @@
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:swm_peech_flutter/features/common/platform/recoding_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/recoding_on_web.dart' as platform_record;
+import 'package:swm_peech_flutter/features/common/platform/platform_record_file/platform_record_file.dart';
 
-class RecodingFileUtil {
+class RecordFileUtil {
   //TODO 1. 이런식으로 해도 괜찮을까?
   //TODO 2. 녹음 시작, 종료 등의 기능도 여기다가 구현해 두고 사용해야 하나?
 
   FlutterSoundPlayer player = FlutterSoundPlayer();
 
-  RecodingFileUtil() {
+  RecordFileUtil() {
     player.openPlayer();
   }
 
   Future<String> getFilePath() async {
-    return platform_record.getFilePath();
+    return PlatformRecordFile.getFilePath();
   }
 
   Future<dynamic> getRecodingFile() async {
-    return platform_record.getRecodingFile();
+    return PlatformRecordFile.getRecodingFile();
   }
 
   //TODO 이런식으로 구하는게 맞나?

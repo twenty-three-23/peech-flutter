@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 
 import '../widgets/show_common_dialog.dart';
 import 'app_info_controller.dart';
@@ -14,7 +13,7 @@ class PlatformInfoController extends GetxController {
 
   // 디바이스 체크해서 지원하지 않는 환경이면 알림 띄워주기
   void checkDeviceRecordAvailable(BuildContext context) {
-    if (platform_client.isUnavailableClient()) {
+    if (PlatformDeviceInfo.isRecordUnavailableClient()) {
       showCommonDialog(
         context: context,
         title: '녹음을 지원하지 않는 환경',
@@ -29,7 +28,7 @@ class PlatformInfoController extends GetxController {
   // 모바일에서 웹에 접속한 경우 다운로드 팝업 띄우기
   void checkAppDownloadPopupOnWeb(BuildContext context) {
     if (kIsWeb) {
-      if (platform_client.isAndroid()) {
+      if (PlatformDeviceInfo.isAndroid()) {
         showCommonDialog(
           context: context,
           title: '앱 다운로드',

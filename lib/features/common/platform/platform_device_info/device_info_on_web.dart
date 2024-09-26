@@ -6,7 +6,7 @@ bool isMobile() {
   return userAgent.contains('iphone') || userAgent.contains('ipad') || userAgent.contains('android');
 }
 
-bool isUnavailableClient() {
+bool isRecordUnavailableClient() {
   return isIOS() || isSafari();
 }
 

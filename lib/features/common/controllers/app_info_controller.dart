@@ -8,8 +8,7 @@ import 'package:swm_peech_flutter/features/common/models/app_info_model.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:swm_peech_flutter/features/common/platform/is_mobile_on_mobile.dart'
-    if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/is_mobile_on_web.dart' as platform_client;
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 
 class AppInfoController extends GetxController {
   int? appMinVersion;
@@ -19,10 +18,10 @@ class AppInfoController extends GetxController {
   final String _iosAppId = "none"; // TODO iOS 앱스토어 ID
 
   Uri _getStoreUrl(BuildContext context) {
-    if (platform_client.isIOS()) {
+    if (PlatformDeviceInfo.isIOS()) {
       // IOS 기기
       return Uri.parse("https://apps.apple.com/app/$_iosAppId");
-    } else if (platform_client.isAndroid()) {
+    } else if (PlatformDeviceInfo.isAndroid()) {
       // android 기기
       return Uri.parse("https://play.google.com/store/apps/details?id=$_androidAppId");
     } else {
