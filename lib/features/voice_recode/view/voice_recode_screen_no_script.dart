@@ -71,8 +71,23 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
                               const SizedBox(
                                 width: 4,
                               ),
-                              Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
-                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFFD13853), height: 16 / 15)),
+                              Text(
+                                _controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFD13853),
+                                  height: 16 / 15,
+                                ),
+                              ),
+                              Text(
+                                ' / ${_controller.maxAudioTime.value?.text ?? ''}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(
