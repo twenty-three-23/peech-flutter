@@ -4,10 +4,8 @@ import 'package:swm_peech_flutter/features/common/controllers/app_info_controlle
 import 'package:swm_peech_flutter/features/common/controllers/platform_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/review_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
-import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
-import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      userInfoController.getUserAudioTimeInfo();
+      // userInfoController.getUserAudioTimeInfo();
       platformInfoController.checkDeviceRecordAvailable(context);
       platformInfoController.checkAppDownloadPopupOnWeb(context);
       appInfoController.checkAppAvailable(context);
