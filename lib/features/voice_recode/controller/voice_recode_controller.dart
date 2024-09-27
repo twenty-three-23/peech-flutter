@@ -142,9 +142,18 @@ class VoiceRecodeCtr extends GetxController {
     }
   }
 
+  // 녹음 자동 종료
   void checkRecodingTimeLimit(Stopwatch recodingStopWatch) {
     if (recodingStopWatch.elapsedMilliseconds >= (_maxAudioTime?.second ?? 0) * 1000) {
       _stopRecording();
+      showCommonDialog(
+        context: Get.context!,
+        title: '녹음이 자동 종료됨',
+        message: '최대 녹음 가능 시간은 ${_maxAudioTime?.text} 입니다. 제한 시간에 도달하여 녹음이 종료되었습니다.',
+        showFirstButton: false,
+        secondButtonText: '확인',
+        isSecondButtonToClose: true,
+      );
     }
   }
 
