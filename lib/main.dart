@@ -8,6 +8,7 @@ import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
 import 'package:swm_peech_flutter/initialize/app_initializer.dart';
+import 'package:swm_peech_flutter/navigator_observers/home_navigator_observer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
@@ -136,6 +137,9 @@ class _MyAppState extends State<MyApp> {
       //android, ios 인 경우
       return GetMaterialApp(
         navigatorKey: widget.navigatorKey,
+        navigatorObservers: [
+          HomeNavigatorObserver(),
+        ],
         getPages: Routers.routers,
         initialRoute: Routers.INITIAL,
         localizationsDelegates: const [
