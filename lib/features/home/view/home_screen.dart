@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // userInfoController.getUserAudioTimeInfo();
       platformInfoController.checkDeviceRecordAvailable(context);
       platformInfoController.checkAppDownloadPopupOnWeb(context);
       appInfoController.checkAppAvailable(context);
