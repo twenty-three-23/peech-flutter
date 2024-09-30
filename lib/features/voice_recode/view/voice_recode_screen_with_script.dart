@@ -44,7 +44,8 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
             children: [
               if (_controller.practiceState.value == PracticeState.recoding ||
                   _controller.practiceState.value == PracticeState.beforeToStart ||
-                  _controller.practiceState.value == PracticeState.pause)
+                  _controller.practiceState.value == PracticeState.pause ||
+                  _controller.practiceState.value == PracticeState.end)
                 Column(
                   children: [
                     Container(height: _controller.scriptListViewSize.value * 4 / 10),
@@ -71,8 +72,23 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                         const SizedBox(
                           width: 4,
                         ),
-                        Text(_controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFFD13853), height: 16 / 12)),
+                        Text(
+                          _controller.recodingStopWatch.value.elapsed.toString().substring(0, 10),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFD13853),
+                            height: 16 / 12,
+                          ),
+                        ),
+                        Text(
+                          ' / ${_controller.maxAudioTime.value?.text ?? ''}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -225,7 +241,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                 ),
                               ],
                             )
-                          else if (_controller.practiceState.value == PracticeState.pause)
+                          else if (_controller.practiceState.value == PracticeState.pause || _controller.practiceState.value == PracticeState.end)
                             Row(
                               children: [
                                 GestureDetector(
