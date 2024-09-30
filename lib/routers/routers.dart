@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
@@ -91,6 +92,11 @@ class Routers {
         Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
       }),
       transition: Transition.noTransition
+    ),
+    GetPage(
+        name: '/mypage',
+        page: () => const MyPageScreen(),
+        transition: Transition.noTransition
     ),
   ];
 
