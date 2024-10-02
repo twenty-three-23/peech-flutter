@@ -20,11 +20,11 @@ class MyPageScreen extends StatelessWidget {
                   children: [
                     Text('닉네임',
                         style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold)),
+                            fontSize: 25, fontWeight: FontWeight.w700)),
                     Text(
                       "의 연습기록입니다.",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     )
                   ],
                 )),
@@ -43,7 +43,7 @@ class MyPageScreen extends StatelessWidget {
                         children: [
                           Text('총 12시간 20분 20초 사용 가능',
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                                  fontSize: 20, fontWeight: FontWeight.w700)),
                           IconButton(
                               icon: Icon(Icons.refresh), onPressed: () {}),
                         ],
@@ -53,7 +53,7 @@ class MyPageScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                       child: Text(
                         '1회 최대 15분 연습 가능',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
                       ),
                     )
                   ]),
@@ -66,7 +66,7 @@ class MyPageScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "문의하기",
-                    style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43)),
+                    style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400),
                   ),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
@@ -80,7 +80,7 @@ class MyPageScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "이용 규칙",
-                    style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43)),
+                    style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400),
                   ),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
@@ -99,7 +99,7 @@ class MyPageScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
                       child: Text(
                         '로그아웃',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
                       ),
                     ),
                     style: ButtonStyle(
@@ -118,7 +118,7 @@ class MyPageScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
                       child: Text(
                         '회원 탈퇴',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
                       ),
                     ),
                     style: ButtonStyle(
@@ -141,7 +141,7 @@ class MyPageScreen extends StatelessWidget {
                         color: Color(0xFFF4F6FA)),
                     child: Text(
                       "앱 버전 1.0.0",
-                      style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43)),
+                      style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400),
                     ),),),
           ],
         ),
