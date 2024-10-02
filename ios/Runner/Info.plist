@@ -9,10 +9,20 @@
 	<key>CFBundleDisplayName</key>
 	<string>피치</string>
 	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict/>
-		<dict/>
-	</array>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Document Type</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>public.content</string>
+            </array>
+        </dict>
+    </array>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <string>YES</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
