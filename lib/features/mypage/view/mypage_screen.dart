@@ -123,7 +123,7 @@ class MyPageScreen extends StatelessWidget {
                   child: TextButton(
                     onPressed: () {
                       myPageController.logOut();
-                      Get.to(HomeScreen());
+                      Navigator.of(context).pushNamed('/home');
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
