@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:swm_peech_flutter/features/common/widgets/custom_bottom_navigation.dart';
 
-class CommonScaffold extends StatelessWidget {
+class CommonScaffold extends StatefulWidget {
   final String? appBarTitle;
   final Widget child;
   final Function()? backAction;
-  const CommonScaffold({super.key, this.appBarTitle, required this.child, this.backAction});
+  final Widget? bottomNavigationBar;
 
+  CommonScaffold({
+    super.key,
+    this.appBarTitle,
+    required this.child,
+    this.backAction,
+    this.bottomNavigationBar,
+  });
+
+  @override
+  State<CommonScaffold> createState() => _CommonScaffoldState();
+}
+
+class _CommonScaffoldState extends State<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: widget.bottomNavigationBar,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
@@ -18,21 +33,22 @@ class CommonScaffold extends StatelessWidget {
           height: 56,
           child: Stack(
             children: [
-              if (appBarTitle != null)
+              if (widget.appBarTitle != null)
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Row(
                     children: [
                       IconButton(
                           onPressed: () {
-                            if (backAction == null) {
+                            if (widget.backAction == null) {
                               Navigator.of(context).pop();
                             } else {
-                              backAction!();
+                              widget.backAction!();
                             }
                           },
                           icon: const Icon(Icons.arrow_back_ios)),
-                      Text(appBarTitle ?? '', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF3B3E43), height: 34 / 22)),
+                      Text(widget.appBarTitle ?? '',
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF3B3E43), height: 34 / 22)),
                     ],
                   ),
                 )
@@ -50,7 +66,7 @@ class CommonScaffold extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(child: child),
+      body: SafeArea(child: widget.child),
     );
   }
 }
