@@ -8,6 +8,7 @@ class CommonScaffold extends StatefulWidget {
   final Function()? backAction;
   final Widget? bottomNavigationBar;
   final bool hideAppBar;
+  final bool hideBackButton;
 
   CommonScaffold({
     super.key,
@@ -16,6 +17,7 @@ class CommonScaffold extends StatefulWidget {
     this.backAction,
     this.bottomNavigationBar,
     this.hideAppBar = false,
+    this.hideBackButton = false,
   });
 
   @override
@@ -42,15 +44,16 @@ class _CommonScaffoldState extends State<CommonScaffold> {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: [
-                            IconButton(
-                                onPressed: () {
-                                  if (widget.backAction == null) {
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    widget.backAction!();
-                                  }
-                                },
-                                icon: const Icon(Icons.arrow_back_ios)),
+                            if (widget.hideBackButton == false)
+                              IconButton(
+                                  onPressed: () {
+                                    if (widget.backAction == null) {
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      widget.backAction!();
+                                    }
+                                  },
+                                  icon: const Icon(Icons.arrow_back_ios)),
                             Text(widget.appBarTitle ?? '',
                                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF3B3E43), height: 34 / 22)),
                           ],
