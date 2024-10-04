@@ -83,15 +83,37 @@ class MyPageScreen extends StatelessWidget {
             Column(children: [
               Container(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        child: Text("공지사항",  style: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xFF3B3E43),
+                    fontWeight: FontWeight.w400)),
+                        onPressed: () {
+                          myPageController.gotoAnnouncement();
+                        },
+                      ),
+                      IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios),
+                          onPressed: () {
+                            myPageController.gotoAnnouncement();
+                          })
+                    ],
+                  )),
+              SizedBox(height: 24),
+              Container(
+                  child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                   TextButton(
+                    child: Text(
                     "문의하기",
                     style: TextStyle(
                         fontSize: 20,
                         color: Color(0xFF3B3E43),
-                        fontWeight: FontWeight.w400),
-                  ),
+                        fontWeight: FontWeight.w400)),
+                        onPressed: (){}),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
                       onPressed: () {})
@@ -102,18 +124,47 @@ class MyPageScreen extends StatelessWidget {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "이용 규칙",
+                   TextButton(
+                     child: Text(
+                    "이용 방법",
                     style: TextStyle(
                         fontSize: 20,
                         color: Color(0xFF3B3E43),
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.w400)),
+                     onPressed: () {
+                       myPageController.gotoUsageGuide();
+                     }
                   ),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
-                      onPressed: () {})
+                      onPressed: () {
+                        myPageController.gotoUsageGuide();
+                      })
                 ],
               )),
+              SizedBox(height: 24),
+              Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                          child: Text(
+                              "개인정보 처리방침",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xFF3B3E43),
+                                  fontWeight: FontWeight.w400)),
+                          onPressed: () {
+                            myPageController.gotoPrivacyPolicy();
+                          }
+                      ),
+                      IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios),
+                          onPressed: () {
+                            myPageController.gotoPrivacyPolicy();
+                          })
+                    ],
+                  )),
             ]),
             SizedBox(height: 28),
             Row(
