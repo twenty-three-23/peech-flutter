@@ -6,6 +6,7 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_script
 
 class LocalStorageInitializer {
   Future<void> initialize() async {
+    print("[LocalStorageInitializer] initialize");
     await Future.wait([
       LocalScriptStorage().init(),
       LocalPracticeModeStorage().init(),
