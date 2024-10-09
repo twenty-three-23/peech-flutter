@@ -49,27 +49,31 @@ class InterviewQuestionInputScreen extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Color(0xff3B3E43),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: TextButton(
-                    onPressed: () {
-                      controller.getInterviewQuestions();
-                      Navigator.pushNamed(context, "/interviewQuestionsResult");
-                    },
+              TextButton(
+                  onPressed: () {
+                    controller.getInterviewQuestions();
+                    Navigator.pushNamed(context, "/interviewQuestionsResult");
+                  },
+                  style:
+                  TextButton.styleFrom(
+                    minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: Color(0xff3B3E43), width: 1.0),// 둥근 모서리 설정
+                    ),
+                    backgroundColor: Color(0xff3B3E43),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                     child: Text(
                       "입력 완료",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.white
                       ),
-                    )),
-              ),
+                    ),
+                  )),
               SizedBox(height: 8),
             ],
 
