@@ -20,6 +20,8 @@ import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen
 import '../features/interview_question/controller/interview_question_input_controller.dart';
 import '../features/interview_question/view/interview_question_input_screen.dart';
 
+import '../features/home/view/home_screen2.dart';
+
 class Routers {
   static const INITIAL = '/root';
 
@@ -27,7 +29,7 @@ class Routers {
     GetPage(name: '/root', page: () => RootScreen(), transition: Transition.noTransition),
     GetPage(
         name: '/home',
-        page: () => const HomeScreen(),
+        page: () => const HomeScreen2(),
         binding: BindingsBuilder(() {
           Get.lazyPut<HomeCtr>(() => HomeCtr());
         }),
