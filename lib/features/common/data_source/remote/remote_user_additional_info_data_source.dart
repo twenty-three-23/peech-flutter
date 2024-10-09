@@ -2,6 +2,7 @@ import 'package:retrofit/retrofit.dart' as retrofit;
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/models/auth_token_model.dart';
+import 'package:swm_peech_flutter/features/common/models/theme_id_model.dart';
 
 part 'remote_user_additional_info_data_source.g.dart';
 
@@ -15,4 +16,8 @@ abstract class RemoteUserAdditionalInfoDataSource {
     @retrofit.Query('funnel') String funnel,
     @retrofit.Body() Map<String, dynamic> userAdditionalInfo,
   );
+
+  @retrofit.GET('api/v2/theme')
+  @retrofit.Headers({'accessToken' : 'true'})
+  Future<ThemeIdModel> getDefaultTheme();
 }
