@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/interview_question/view/interview_question_result_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
@@ -15,6 +16,9 @@ import 'package:swm_peech_flutter/features/theme_input/view/theme_input_screen.d
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_no_script.dart';
 import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_with_script.dart';
+
+import '../features/interview_question/controller/interview_question_input_controller.dart';
+import '../features/interview_question/view/interview_question_input_screen.dart';
 
 class Routers {
   static const INITIAL = '/root';
@@ -84,5 +88,17 @@ class Routers {
           Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
         }),
         transition: Transition.noTransition),
+    GetPage(
+        name: '/interviewQuestions',
+        page: () => const InterviewQuestionInputScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+        }),),
+    GetPage(
+      name: '/interviewQuestionsResult',
+      page: () => const InterviewQuestionResultScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+      }),),
   ];
 }
