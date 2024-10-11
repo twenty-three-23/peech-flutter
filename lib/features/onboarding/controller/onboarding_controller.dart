@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_user_info_storage.dart';
 
 class OnboardingController extends GetxController {
   Rx<int> currentIndex = Rx<int>(0); // 현재 페이지 인덱스
@@ -46,6 +47,7 @@ class OnboardingController extends GetxController {
   }
 
   void startButton(BuildContext context) {
+    LocalUserInfoStorage().setIsOnboardingFinished(true); // 온보딩 완료 처리
     Navigator.of(context).pushNamed('/root');
   }
 }

@@ -3,11 +3,13 @@ import 'package:swm_peech_flutter/features/common/data_source/local/local_practi
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_review_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_user_info_storage.dart';
 
 class LocalStorageInitializer {
   Future<void> initialize() async {
     print("[LocalStorageInitializer] initialize");
     await Future.wait([
+      LocalUserInfoStorage().init(),
       LocalScriptStorage().init(),
       LocalPracticeModeStorage().init(),
       LocalPracticeThemeStorage().init(),
