@@ -93,6 +93,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/onboarding/
     - assets/config/
 
   # The following line ensures that the Material Icons font is

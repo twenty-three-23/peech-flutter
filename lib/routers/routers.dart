@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/onboarding/view/onboarding_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
@@ -17,9 +18,14 @@ import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen
 import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_with_script.dart';
 
 class Routers {
-  static const INITIAL = '/root';
+  static const INITIAL = '/home';
 
   static final routers = [
+    GetPage(
+      name: '/onboarding',
+      page: () => OnboardingScreen(),
+      transition: Transition.noTransition,
+    ),
     GetPage(
       name: '/root',
       page: () => RootScreen(),
