@@ -11,10 +11,6 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController pageController = PageController(
-    initialPage: 0,
-  );
-
   final _controller = Get.find<OnboardingController>();
 
   @override
@@ -60,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: SizedBox(
               height: 500,
               child: PageView(
-                controller: pageController,
+                controller: _controller.pageController,
                 onPageChanged: (index) {
                   _controller.onPageChange(index);
                 },
@@ -110,7 +106,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          GetX<OnboardingController>(
+            builder: (_) {
+              if (_controller.currentIndex.value != 0)
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    iconSize: 40,
+                    onPressed: () {
+                      _controller.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    },
+                    icon: Icon(Icons.arrow_circle_left),
+                  ),
+                );
+              else
+                return SizedBox();
+            },
+          ),
+          GetX<OnboardingController>(
+            builder: (_) {
+              if (_controller.currentIndex.value != _controller.lastPage)
+                return Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    iconSize: 40,
+                    onPressed: () {
+                      _controller.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    },
+                    icon: Icon(Icons.arrow_circle_right),
+                  ),
+                );
+              else
+                return SizedBox();
+            },
+          ),
         ],
       ),
     );

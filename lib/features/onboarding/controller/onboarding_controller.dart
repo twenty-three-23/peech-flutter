@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_user_info_storage.dart';
 
 class OnboardingController extends GetxController {
+  final PageController pageController = PageController(
+    initialPage: 0,
+  );
+
   Rx<int> currentIndex = Rx<int>(0); // 현재 페이지 인덱스
   Rx<int> currentTextIndex = Rx<int>(0); // 현재 표시되고 있는 텍스트 이미지 인덱스
   final int lastPage = 2; // 마지막 페이지
