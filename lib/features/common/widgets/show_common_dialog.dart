@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 
 void showCommonDialog({
   required BuildContext context,

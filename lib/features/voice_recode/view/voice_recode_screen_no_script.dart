@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
-import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
 import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
 

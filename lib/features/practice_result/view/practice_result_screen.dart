@@ -5,7 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
-import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
