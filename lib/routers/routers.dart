@@ -18,8 +18,12 @@ import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_
 import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_no_script.dart';
 import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_with_script.dart';
 
+import '../features/interview_question/controller/interview_question_input_controller.dart';
+import '../features/interview_question/view/interview_question_input_screen.dart';
+import '../features/interview_question/view/interview_question_result_screen.dart';
+
 class Routers {
-  static const INITIAL = '/home';
+  static const INITIAL = '/root';
 
   static final routers = [
     GetPage(
@@ -110,6 +114,20 @@ class Routers {
         Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
       }),
       transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: '/interviewQuestions',
+      page: () => const InterviewQuestionInputScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+      }),
+    ),
+    GetPage(
+      name: '/interviewQuestionsResult',
+      page: () => const InterviewQuestionResultScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+      }),
     ),
   ];
 }
