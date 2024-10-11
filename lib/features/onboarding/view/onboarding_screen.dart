@@ -55,31 +55,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
-          PageView(
-            controller: pageController,
-            onPageChanged: (index) {
-              _controller.onPageChange(index);
-            },
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/onboarding/onboarding_image_1.png',
-                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 500,
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (index) {
+                  _controller.onPageChange(index);
+                },
+                children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      'assets/images/onboarding/onboarding_image_1.png',
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      'assets/images/onboarding/onboarding_image_2.png',
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Image.asset(
+                      'assets/images/onboarding/onboarding_image_3.png',
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/onboarding/onboarding_image_2.png',
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/onboarding/onboarding_image_3.png',
-                ),
-              ),
-            ],
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
