@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
+import 'package:swm_peech_flutter/features/interview_question/controller/interview_question_input_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
@@ -18,7 +19,8 @@ class PracticeResultScreen extends StatefulWidget {
 
 class _PracticeResultScreenState extends State<PracticeResultScreen> {
   PracticeResultCtr controller = Get.find<PracticeResultCtr>();
-
+  InterviewQuestionInputController interviewQuestionInputController = Get.put(InterviewQuestionInputController());
+  
   @override
   void initState() {
     super.initState();
@@ -265,9 +267,10 @@ class _PracticeResultScreenState extends State<PracticeResultScreen> {
                         if (controller.isLoading.value == false)
                           Expanded(
                             child: ColoredButton(
-                              text: '수정사항 적용',
+                              text: '예상 면접 질문 받아보기',
                               onPressed: () {
-                                controller.editingFinishBtn();
+                                interviewQuestionInputController.getInterviewQuestionsBySTTResult(controller.getScriptContent());
+                                Navigator.pushNamed(context, "/interviewQuestionsResult");
                               },
                               backgroundColor: const Color(0xFF3B3E43),
                               textColor: const Color(0xFFFFFFFF),
