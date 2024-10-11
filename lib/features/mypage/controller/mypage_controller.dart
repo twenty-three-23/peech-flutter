@@ -20,7 +20,7 @@ class MyPageController extends GetxController {
     if (await canLaunchUrl(inquiryUri)) {
       await launchUrl(inquiryUri, mode: LaunchMode.inAppWebView);
     } else {
-        throw '[gotoStore] Could not launch $inquiryUri';
+        throw '[gotoAnnouncement] Could not launch $inquiryUri';
     }
   }
 
@@ -31,7 +31,7 @@ class MyPageController extends GetxController {
     if (await canLaunchUrl(usageGuideUri)) {
       await launchUrl(usageGuideUri, mode: LaunchMode.inAppWebView);
     } else {
-      throw '[gotoStore] Could not launch $usageGuideUri';
+      throw '[gotoUsageGuide] Could not launch $usageGuideUri';
     }
   }
 
@@ -42,7 +42,7 @@ class MyPageController extends GetxController {
     if (await canLaunchUrl(privacyPolicyUri)) {
       await launchUrl(privacyPolicyUri, mode: LaunchMode.inAppWebView);
     } else {
-      throw '[gotoStore] Could not launch $privacyPolicyUri';
+      throw '[gotoPrivacyPolicy] Could not launch $privacyPolicyUri';
     }
   }
 
