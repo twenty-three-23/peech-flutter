@@ -33,6 +33,10 @@ class Routers {
     GetPage(
       name: '/root',
       page: () => RootScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HomeCtr>(() => HomeCtr());
+        Get.lazyPut<HistoryCtr>(() => HistoryCtr());
+      }),
       transition: Transition.noTransition,
     ),
     GetPage(
