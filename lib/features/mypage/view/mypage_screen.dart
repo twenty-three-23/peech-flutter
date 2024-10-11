@@ -197,7 +197,10 @@ class MyPageScreen extends StatelessWidget {
                 SizedBox(width: 16),
                 Container(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      myPageController.deleteUser();
+                      Navigator.pushNamed(context, '/home');
+                    },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
                       child: Text(
