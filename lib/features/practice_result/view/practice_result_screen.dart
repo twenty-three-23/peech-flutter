@@ -290,13 +290,15 @@ class _PracticeResultScreenState extends State<PracticeResultScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text("나가기",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              height: 26 / 18,
-                                            )),
+                                        title: const Text(
+                                          "나가기",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            height: 26 / 18,
+                                          ),
+                                        ),
                                         content: const Text(
                                           "반영되지 않은 수정 사항이 있다면\n저장하기를 눌러주세요\n'기록보기'에서 확인할 수 있습니다.",
                                           textAlign: TextAlign.center,

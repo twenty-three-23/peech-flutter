@@ -193,7 +193,7 @@ class PracticeResultCtr extends GetxController {
       await putEditedScript();
     }
     reviewRequired(context);
-    Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, "/root", (route) => false);
     isLoading.value = false;
   }
 

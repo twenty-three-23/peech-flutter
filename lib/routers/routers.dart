@@ -24,6 +24,8 @@ import '../features/interview_question/controller/interview_question_input_contr
 import '../features/interview_question/view/interview_question_input_screen.dart';
 import '../features/interview_question/view/interview_question_result_screen.dart';
 
+import '../features/home/view/home_screen2.dart';
+
 class Routers {
   static const INITIAL = '/root';
 
@@ -47,7 +49,7 @@ class Routers {
     ),
     GetPage(
       name: '/home',
-      page: () => const HomeScreen(),
+      page: () => const HomeScreen2(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HomeCtr>(() => HomeCtr());
       }),
@@ -110,32 +112,40 @@ class Routers {
       transition: Transition.noTransition,
     ),
     GetPage(
-        name: '/practiceResult',
-        page: () => const PracticeResultScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
-        }),
-        transition: Transition.noTransition),
+      name: '/practiceResult',
+      page: () => const PracticeResultScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
+      }),
+      transition: Transition.noTransition,
+    ),
     GetPage(
-        name: '/mypage',
-        page: () => const MyPageScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<MyPageController>(() => MyPageController());
-        }),
-        transition: Transition.noTransition),
+      name: '/mypage',
+      page: () => const MyPageScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<MyPageController>(() => MyPageController());
+      }),
+      transition: Transition.noTransition,
+    ),
     GetPage(
       name: '/interviewQuestions',
       page: () => const InterviewQuestionInputScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+        Get.lazyPut<InterviewQuestionInputController>(
+          () => InterviewQuestionInputController(),
+        );
       }),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: '/interviewQuestionsResult',
       page: () => const InterviewQuestionResultScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+        Get.lazyPut<InterviewQuestionInputController>(
+          () => InterviewQuestionInputController(),
+        );
       }),
+      transition: Transition.noTransition,
     ),
   ];
 }
