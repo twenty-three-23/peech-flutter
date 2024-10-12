@@ -7,6 +7,8 @@ import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
 
+import '../../home/view/home_screen2.dart';
+
 class RootScreen extends StatefulWidget {
   RootScreen({super.key});
 
@@ -37,7 +39,7 @@ class _RootScreenState extends State<RootScreen> {
       child: IndexedStack(
         index: _currentIndex,
         children: [
-          HomeScreen(),
+          HomeScreen2(),
           HistoryScreen(),
         ],
       ),
