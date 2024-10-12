@@ -65,26 +65,28 @@ class HomeScreen2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/interview_question.png', width: 120, height: 120),
-                  Column(
-                    children: [
-                      Text(
-                        "예상 면접질문 받기",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 18,
-                          color: const Color(0xff3B3E43),
+                  Expanded(child: Image.asset('assets/images/interview_question.png', width: 120, height: 120)),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          "예상 면접질문 받기",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 18,
+                            color: const Color(0xff3B3E43),
+                          ),
                         ),
-                      ),
-                      Text(
-                        "자기소개 입력하고 확인해보기!",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xffFF5468),
+                        Text(
+                          "자기소개 입력하고 확인해보기!",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xffFF5468),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                 ],
               )),
