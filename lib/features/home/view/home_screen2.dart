@@ -67,7 +67,7 @@ class HomeScreen2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/interview_question.png', width: 200, height: 200),
+                  Image.asset('assets/images/interview_question.png', width: 120, height: 120),
                   Column(
                     children: [
                       Text(
