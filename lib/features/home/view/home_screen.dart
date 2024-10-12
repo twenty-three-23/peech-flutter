@@ -5,7 +5,7 @@ import 'package:swm_peech_flutter/features/common/controllers/platform_info_cont
 import 'package:swm_peech_flutter/features/common/controllers/review_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
-import 'package:swm_peech_flutter/features/common/widgets/primary_color_button.dart';
+import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
-            TextButton(onPressed: () { Navigator.of(context).pushNamed('/mypage'); }, child: const Text("마이페이지")),
+            // TextButton(onPressed: () { Navigator.of(context).pushNamed('/onboarding'); }, child: const Text("온보딩")),
             const SizedBox(
               height: 16,
             ),
