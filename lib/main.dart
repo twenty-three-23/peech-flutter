@@ -1,24 +1,41 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_user_info_storage.dart';
 import 'package:swm_peech_flutter/features/common/event_bus/app_event_bus.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_social_login_bottom_sheet.dart';
-import 'package:swm_peech_flutter/initialize/app_initializer.dart';
+import 'package:swm_peech_flutter/initialization/app_initializer.dart';
 import 'package:swm_peech_flutter/navigator_observers/home_navigator_observer.dart';
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
 
+late final _firstScreen;
+
 void main() async {
+  // 앱 전역 에러 처리
   runZonedGuarded(() async {
-    // 앱 전역 에러 처리
-    WidgetsFlutterBinding.ensureInitialized(); // 앱 초기화(비동기 처리 전에 실행되어야 함)
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized(); // 앱 초기화(비동기 처리 전에 실행되어야 함)
+
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding); // splash screen 유지
 
     await AppInitializer().initialize(); // 앱 초기화(비동기 처리)
+
+    // 첫 화면 결정
+    if (LocalUserInfoStorage().getIsOnboardingFinished()) {
+      print('온보딩을 이미 완료함.');
+      _firstScreen = Routers.INITIAL;
+    } else {
+      print('온보딩을 완료하지 않았습니다. 첫 화면을 온보딩 화면으로 설정합니다.');
+      _firstScreen = '/onboarding';
+    }
+
+    FlutterNativeSplash.remove(); // splash screen 제거
 
     // Flutter 에러 처리
     FlutterError.onError = (FlutterErrorDetails details) {
@@ -76,7 +93,7 @@ class _MyAppState extends State<MyApp> {
                 child: GetMaterialApp(
                   navigatorKey: widget.navigatorKey,
                   getPages: Routers.routers,
-                  initialRoute: Routers.INITIAL,
+                  initialRoute: _firstScreen,
                   localizationsDelegates: const [
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
@@ -141,7 +158,7 @@ class _MyAppState extends State<MyApp> {
           HomeNavigatorObserver(),
         ],
         getPages: Routers.routers,
-        initialRoute: Routers.INITIAL,
+        initialRoute: _firstScreen,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

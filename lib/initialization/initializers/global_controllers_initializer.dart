@@ -6,6 +6,7 @@ import 'package:swm_peech_flutter/features/common/controllers/user_info_controll
 
 class GlobalControllersInitializer {
   Future<void> initialize() async {
+    print("[GlobalControllersInitializer] initialize");
     Get.put(UserInfoController()); //유저 정보 전역 컨트롤러
     Get.put(AppInfoController()); // 앱 정보 전역 컨트롤러
     Get.put(ReviewController()); // 리뷰 전역 컨트롤러
