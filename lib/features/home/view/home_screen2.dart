@@ -10,10 +10,8 @@ import '../../common/data_source/local/local_practice_mode_storage.dart';
 class HomeScreen2 extends StatelessWidget {
   const HomeScreen2({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-
     var controller = Get.put(SocialLoginCtr());
 
     return CommonScaffold(
@@ -117,9 +115,7 @@ class HomeScreen2 extends StatelessWidget {
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(148, 164),
-                      side: BorderSide(
-                          color: const Color(0xffE5E8F0),
-                          width: 1.0), // 테두리 색상과 두께 설정
+                      side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16), // 모서리 둥글기 설정
                       ),
@@ -175,13 +171,12 @@ class HomeScreen2 extends StatelessWidget {
                 child: OutlinedButton(
                     onPressed: () {
                       controller.saveDefaultTheme();
+                      LocalPracticeModeStorage().setMode(PracticeMode.withScript);
                       Navigator.pushNamed(context, '/scriptInput/input');
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(148, 164),
-                      side: BorderSide(
-                          color: const Color(0xffE5E8F0),
-                          width: 1.0), // 테두리 색상과 두께 설정
+                      side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16), // 모서리 둥글기 설정
                       ),
