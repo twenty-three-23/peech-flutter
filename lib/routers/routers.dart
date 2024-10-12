@@ -112,32 +112,40 @@ class Routers {
       transition: Transition.noTransition,
     ),
     GetPage(
-        name: '/practiceResult',
-        page: () => const PracticeResultScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
-        }),
-        transition: Transition.noTransition),
+      name: '/practiceResult',
+      page: () => const PracticeResultScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
+      }),
+      transition: Transition.noTransition,
+    ),
     GetPage(
-        name: '/mypage',
-        page: () => const MyPageScreen(),
-        binding: BindingsBuilder(() {
-          Get.lazyPut<MyPageController>(() => MyPageController());
-        }),
-        transition: Transition.noTransition),
+      name: '/mypage',
+      page: () => const MyPageScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<MyPageController>(() => MyPageController());
+      }),
+      transition: Transition.noTransition,
+    ),
     GetPage(
       name: '/interviewQuestions',
       page: () => const InterviewQuestionInputScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+        Get.lazyPut<InterviewQuestionInputController>(
+          () => InterviewQuestionInputController(),
+        );
       }),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: '/interviewQuestionsResult',
       page: () => const InterviewQuestionResultScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<InterviewQuestionInputController>(() => InterviewQuestionInputController());
+        Get.lazyPut<InterviewQuestionInputController>(
+          () => InterviewQuestionInputController(),
+        );
       }),
+      transition: Transition.noTransition,
     ),
   ];
 }
