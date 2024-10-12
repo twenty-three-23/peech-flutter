@@ -15,4 +15,9 @@ class ParagraphListModel {
 
   factory ParagraphListModel.fromJson(Map<String, dynamic> json) => _$ParagraphListModelFromJson(json);
   Map<String, dynamic> toJson() => _$ParagraphListModelToJson(this);
+
+  String getScriptContent() {
+    script?.sort((a, b) => a.paragraphOrder?.compareTo(b.paragraphOrder ?? 0) ?? 0);
+    return script?.map((paragraph) => paragraph.paragraphSentence).join(" ") ?? "";
+  }
 }
