@@ -184,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
             // TextButton(onPressed: () { Navigator.of(context).pushNamed('/onboarding'); }, child: const Text("온보딩")),
+            // TextButton(onPressed: () { Navigator.of(context).pushNamed('/mypage'); }, child: const Text("마이페이지")),
             const SizedBox(
               height: 16,
             ),

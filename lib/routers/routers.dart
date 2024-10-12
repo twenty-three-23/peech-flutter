@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.dart';
+import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/onboarding/controller/onboarding_controller.dart';
 import 'package:swm_peech_flutter/features/onboarding/view/onboarding_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
@@ -108,13 +110,19 @@ class Routers {
       transition: Transition.noTransition,
     ),
     GetPage(
-      name: '/practiceResult',
-      page: () => const PracticeResultScreen(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
-      }),
-      transition: Transition.noTransition,
-    ),
+        name: '/practiceResult',
+        page: () => const PracticeResultScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<PracticeResultCtr>(() => PracticeResultCtr());
+        }),
+        transition: Transition.noTransition),
+    GetPage(
+        name: '/mypage',
+        page: () => const MyPageScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut<MyPageController>(() => MyPageController());
+        }),
+        transition: Transition.noTransition),
     GetPage(
       name: '/interviewQuestions',
       page: () => const InterviewQuestionInputScreen(),
