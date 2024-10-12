@@ -6,6 +6,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 class FirebaseInitializer {
   Future<void> initialize() async {
+    print("[FirebaseInitializer] initialize");
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

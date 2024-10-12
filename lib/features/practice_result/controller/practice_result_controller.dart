@@ -282,4 +282,8 @@ class PracticeResultCtr extends GetxController {
     }
     return reqParagraphsModel;
   }
+
+  String getScriptContent() {
+    return practiceResult.value?.getScriptContent() ?? "";
+  }
 }
