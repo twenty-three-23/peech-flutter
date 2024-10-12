@@ -67,6 +67,7 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_analytics: ^10.8.0
   sign_in_with_apple: ^6.1.2
+  flutter_native_splash: ^2.4.1
 #  firebase_auth: ^4.16.0 # web build error occur
 
 dev_dependencies:
@@ -92,6 +93,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/onboarding/
     - assets/config/
 
   # The following line ensures that the Material Icons font is

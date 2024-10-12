@@ -9,6 +9,8 @@ class CommonScaffold extends StatefulWidget {
   final Widget? bottomNavigationBar;
   final bool hideAppBar;
   final bool hideBackButton;
+  final Color backgroundColor;
+  final Color appBarColor;
 
   CommonScaffold({
     super.key,
@@ -18,6 +20,8 @@ class CommonScaffold extends StatefulWidget {
     this.bottomNavigationBar,
     this.hideAppBar = false,
     this.hideBackButton = false,
+    this.backgroundColor = Colors.white,
+    this.appBarColor = Colors.white,
   });
 
   @override
@@ -28,13 +32,13 @@ class _CommonScaffoldState extends State<CommonScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: widget.backgroundColor,
       bottomNavigationBar: widget.bottomNavigationBar,
       appBar: widget.hideAppBar == true
           ? null
           : AppBar(
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.white,
+              backgroundColor: widget.appBarColor,
               title: SizedBox(
                 height: 56,
                 child: Stack(

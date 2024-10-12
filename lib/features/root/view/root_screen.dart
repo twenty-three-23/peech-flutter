@@ -21,8 +21,6 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   void initState() {
-    Get.lazyPut<HomeCtr>(() => HomeCtr());
-    Get.lazyPut<HistoryCtr>(() => HistoryCtr());
     super.initState();
   }
 
