@@ -183,7 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // TextButton(onPressed: () { showSocialLoginBottomSheet(context, SocialLoginBottomSheetState.choiceView); }, child: const Text("소셜 로그인")),
             // TextButton(onPressed: () { controller.kakaoUnlink(); }, child: const Text("회원탈퇴")),
             // TextButton(onPressed: () { controller.logOut(); }, child: const Text("로그아웃")),
-            // TextButton(onPressed: () { Navigator.of(context).pushNamed('/onboarding'); }, child: const Text("온보딩")),
             const SizedBox(
               height: 16,
             ),
