@@ -36,4 +36,25 @@ class InterviewQuestionInputController extends GetxController {
     }
   }
 
+  void getInterviewQuestionsBySTTResult(String text) async {
+    try {
+      isLoading.value = true;
+      final remoteDataSource = RemoteInterviewQuestionDataSource(AuthDioFactory().dio);
+      interviewQuestions.value = await remoteDataSource.getInterviewQuestions(InterviewScriptModel(scriptContent: text));
+      isLoading.value = false;
+    } on DioException catch (e) {
+      isLoading.value = false;
+      print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      rethrow;
+    } catch (e) {
+      isLoading.value = false;
+      print("[getMajorList] [Exception] $e");
+      if(e.toString() == "자기소개서의 주인이 아닙니다.") {
+        //에러  처리
+      }
+      rethrow;
+    }
+
+  }
+
 }
