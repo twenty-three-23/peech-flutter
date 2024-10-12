@@ -19,8 +19,7 @@ class MyPageScreen extends StatelessWidget {
     userInfoController.getUserAudioTimeInfo();
 
     return CommonScaffold(
-      child:
-          ListView(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0), children: [
+      child: ListView(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0), children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -30,93 +29,60 @@ class MyPageScreen extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Obx(() =>
-                    Text('${userInfoController.userNickname ?? "GUEST"}',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w700))),
+                    Obx(() => Text('${userInfoController.userNickname ?? "GUEST"}', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700))),
                     Text(
                       "의 연습기록입니다.",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     )
-                    ],
+                  ],
                 )),
             SizedBox(height: 24),
             Container(
               alignment: Alignment.topLeft,
-              decoration: BoxDecoration(
-                  color: Color(0xFFF4F6FA),
-                  borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GetX<UserInfoController>(
-                              builder: (_) => Text(
-                                      '총 ${userInfoController.remainingTime?.text ?? "?"} 사용 가능',
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700))),
-                          IconButton(
-                              icon: Icon(Icons.refresh),
-                              onPressed: () {
-                                userInfoController.getUserAudioTimeInfo();
-                              }),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: GetX<UserInfoController>(
-                          builder: (_) => Text(
-                                '1회 최대 ${userInfoController.maxAudioTime?.text ?? "?"}분 연습 가능',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
-                              )),
-                    )
-                  ]),
+              decoration: BoxDecoration(color: Color(0xFFF4F6FA), borderRadius: BorderRadius.circular(16)),
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GetX<UserInfoController>(
+                          builder: (_) => Text('총 ${userInfoController.remainingTime?.text ?? "?"} 사용 가능',
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700))),
+                      IconButton(
+                          icon: Icon(Icons.refresh),
+                          onPressed: () {
+                            userInfoController.getUserAudioTimeInfo();
+                          }),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: GetX<UserInfoController>(
+                      builder: (_) => Text(
+                            '1회 최대 ${userInfoController.maxAudioTime?.text ?? "?"}분 연습 가능',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                          )),
+                )
+              ]),
             ),
             SizedBox(height: 60),
             Column(children: [
               Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        child: Text("공지사항",  style: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF3B3E43),
-                    fontWeight: FontWeight.w400)),
-                        onPressed: () {
-                          myPageController.gotoAnnouncement();
-                        },
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios),
-                          onPressed: () {
-                            myPageController.gotoAnnouncement();
-                          })
-                    ],
-                  )),
-              SizedBox(height: 24),
-              Container(
-                  child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   TextButton(
-                    child: Text(
-                    "문의하기",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xFF3B3E43),
-                        fontWeight: FontWeight.w400)),
-                        onPressed: (){}),
+                  TextButton(
+                    child: Text("공지사항", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
+                    onPressed: () {
+                      myPageController.gotoAnnouncement();
+                    },
+                  ),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
-                      onPressed: () {})
+                      onPressed: () {
+                        myPageController.gotoAnnouncement();
+                      })
                 ],
               )),
               SizedBox(height: 24),
@@ -124,17 +90,20 @@ class MyPageScreen extends StatelessWidget {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   TextButton(
-                     child: Text(
-                    "이용 방법",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xFF3B3E43),
-                        fontWeight: FontWeight.w400)),
-                     onPressed: () {
-                       myPageController.gotoUsageGuide();
-                     }
-                  ),
+                  TextButton(child: Text("문의하기", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)), onPressed: () {}),
+                  IconButton(icon: const Icon(Icons.arrow_forward_ios), onPressed: () {})
+                ],
+              )),
+              SizedBox(height: 24),
+              Container(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      child: Text("이용 방법", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
+                      onPressed: () {
+                        myPageController.gotoUsageGuide();
+                      }),
                   IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
                       onPressed: () {
@@ -145,26 +114,20 @@ class MyPageScreen extends StatelessWidget {
               SizedBox(height: 24),
               Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                          child: Text(
-                              "개인정보 처리방침",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color(0xFF3B3E43),
-                                  fontWeight: FontWeight.w400)),
-                          onPressed: () {
-                            myPageController.gotoPrivacyPolicy();
-                          }
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios),
-                          onPressed: () {
-                            myPageController.gotoPrivacyPolicy();
-                          })
-                    ],
-                  )),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      child: Text("개인정보 처리방침", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
+                      onPressed: () {
+                        myPageController.gotoPrivacyPolicy();
+                      }),
+                  IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      onPressed: () {
+                        myPageController.gotoPrivacyPolicy();
+                      })
+                ],
+              )),
             ]),
             SizedBox(height: 28),
             Row(
@@ -173,24 +136,18 @@ class MyPageScreen extends StatelessWidget {
                 Container(
                   child: TextButton(
                     onPressed: () {
-                      myPageController.logOut();
-                      Navigator.of(context).pushNamed('/home');
+                      myPageController.logOutButton(context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
                       child: Text(
                         '로그아웃',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400),
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
                       ),
                     ),
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Color(0xFFF4F6FA)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
+                      backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
@@ -198,24 +155,18 @@ class MyPageScreen extends StatelessWidget {
                 Container(
                   child: TextButton(
                     onPressed: () {
-                      myPageController.deleteUser();
-                      Navigator.pushNamed(context, '/home');
+                      myPageController.deleteUserButton(context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
                       child: Text(
                         '회원 탈퇴',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400),
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
                       ),
                     ),
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Color(0xFFF4F6FA)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
+                      backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
@@ -226,15 +177,10 @@ class MyPageScreen extends StatelessWidget {
               onPressed: () {},
               child: Container(
                 padding: const EdgeInsets.fromLTRB(180, 10, 180, 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Color(0xFFF4F6FA)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Color(0xFFF4F6FA)),
                 child: Text(
                   "앱 버전 1.0.0",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0xFF3B3E43),
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400),
                 ),
               ),
             ),
