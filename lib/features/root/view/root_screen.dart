@@ -4,6 +4,7 @@ import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/custom_bottom_navigation.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
+import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
 
@@ -41,6 +42,7 @@ class _RootScreenState extends State<RootScreen> {
         children: [
           HomeScreen2(),
           HistoryScreen(),
+          MyPageScreen(),
         ],
       ),
     );
