@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
-import 'package:swm_peech_flutter/features/home/view/home_screen.dart';
 import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.dart';
 import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/onboarding/controller/onboarding_controller.dart';
