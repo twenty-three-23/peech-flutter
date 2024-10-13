@@ -224,7 +224,7 @@ class HomeScreen2 extends StatelessWidget {
             SizedBox(
               height: 22,
             ),
-            TextButton(onPressed: (){Navigator.pushNamed(context, "/defaultScripts");}, child: Text("기본 대본"))
+            //TextButton(onPressed: (){Navigator.pushNamed(context, "/defaultScripts");}, child: Text("기본 대본"))
           ],
         ),
       ),
