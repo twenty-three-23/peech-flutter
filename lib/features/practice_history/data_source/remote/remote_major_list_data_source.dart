@@ -1,6 +1,7 @@
 import 'package:retrofit/retrofit.dart' as retrofit;
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/default_script_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 
 part 'remote_major_list_data_source.g.dart';
@@ -12,4 +13,8 @@ abstract class RemoteMajorListDataSource {
   @retrofit.GET('api/v1/themes/{themeId}/scripts/majors')
   @retrofit.Headers({'accessToken' : 'true'})
   Future<HistoryMajorListModel> getMajorList(@retrofit.Path() int themeId);
+
+  @retrofit.GET('api/v2/theme/{themeId}/scripts')
+  @retrofit.Headers({'accessToken' : 'true'})
+  Future<DefaultScriptListModel> getDefaultScriptList(@retrofit.Path() int themeId);
 }

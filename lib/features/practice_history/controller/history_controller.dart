@@ -16,6 +16,7 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/remote/r
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/default_script_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_detail_model.dart';
@@ -30,6 +31,8 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   HistoryMinorListModel? _minorList;
   Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
+  DefaultScriptListModel? _defaultList;
+  Rx<DefaultScriptListModel?> defaultList = Rx<DefaultScriptListModel?>(null);
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -51,6 +54,7 @@ class HistoryCtr extends GetxController {
   void onInit() {
     addGetCurrentListListener();
     super.onInit();
+    getDefaultList();
   }
 
   @override
@@ -324,5 +328,25 @@ class HistoryCtr extends GetxController {
     await LocalPracticeModeStorage().setMode(PracticeMode.withScript); //연습 모드 스크립트 기반 모드로 저장
     Navigator.pushNamed(context, 'scriptInput/result');
     isLoading.value = false;
+  }
+
+
+  void getDefaultList() async {
+    try {
+      isLoading.value = true;
+      final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
+      int themeId = LocalPracticeThemeStorage().getThemeId() as int;
+      _defaultList = await historyMajorDataSource.getDefaultScriptList( themeId );
+      defaultList.value = _defaultList;
+      isLoading.value = false;
+    } on DioException catch (e) {
+      print("[getDefaultList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
+      rethrow;
+    } catch (e) {
+      print("[getDefaultList] [Exception] $e");
+      isLoading.value = false;
+      rethrow;
+    }
   }
 }
