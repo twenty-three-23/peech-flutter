@@ -8,6 +8,7 @@ part 'default_script_list_model.g.dart';
 @JsonSerializable()
 class DefaultScriptListModel {
 
+  @JsonKey(name: 'scriptHistoryList')
   final List<DefaultScriptModel>? defaultScripts;
 
   DefaultScriptListModel({this.defaultScripts});

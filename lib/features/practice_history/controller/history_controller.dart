@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -40,6 +41,8 @@ class HistoryCtr extends GetxController {
 
   ScrollController pathScrollController = ScrollController();
 
+  var socialLoginController = Get.put(SocialLoginCtr());
+
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
 
   Rx<HistoryMajorParagraphsModel?> majorDetail = Rx<HistoryMajorParagraphsModel?>(null);
@@ -54,7 +57,6 @@ class HistoryCtr extends GetxController {
   void onInit() {
     addGetCurrentListListener();
     super.onInit();
-    getDefaultList();
   }
 
   @override
@@ -335,9 +337,16 @@ class HistoryCtr extends GetxController {
     try {
       isLoading.value = true;
       final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
-      int themeId = LocalPracticeThemeStorage().getThemeId() as int;
-      _defaultList = await historyMajorDataSource.getDefaultScriptList( themeId );
+      int? themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+
+      if(themeId == 0) {
+        await socialLoginController.saveDefaultTheme();
+        themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+      }
+
+      _defaultList = await historyMajorDataSource.getDefaultScriptList(themeId);
       defaultList.value = _defaultList;
+      print("디폴트 리스트 개수: ${defaultList.value}");
       isLoading.value = false;
     } on DioException catch (e) {
       print("[getDefaultList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");

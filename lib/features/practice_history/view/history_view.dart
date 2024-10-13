@@ -5,19 +5,34 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 
-class HistoryView extends StatelessWidget {
+class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
+
+  @override
+  State<HistoryView> createState() => _HistoryViewState();
+}
+
+class _HistoryViewState extends State<HistoryView> {
+
+  late HistoryCtr historyController;
+
+  @override
+  void initState() {
+    super.initState();
+    historyController = Get.put(HistoryCtr());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      historyController.getDefaultList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    var historyController = Get.put(HistoryCtr());
-
     return CommonScaffold(
         appBarTitle: '발표 기록',
         child: Obx( () {
-          if (historyController.defaultList.value == null) {
-            return Center(child: CircularProgressIndicator());
+          if (historyController.defaultList.value?.defaultScripts == null) {
+            return Center(child: Text("데이터가 없습니다."));
           }
           return ListView.builder(
               padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
@@ -37,7 +52,7 @@ class HistoryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "",
+                          "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
                           style: TextStyle(
                               fontSize: 12,
                               color: const Color(0xff6D6F78),
@@ -47,7 +62,7 @@ class HistoryView extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "${historyController.defaultList.value?.defaultScripts?[index]}",
+                            "${historyController.defaultList.value?.defaultScripts?[index].scriptContent}",
                             style: TextStyle(
                                 fontSize: 12,
                                 color: const Color(0xff3B3E43),
