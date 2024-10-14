@@ -150,6 +150,9 @@ class Routers {
     GetPage(
       name: '/defaultScripts',
       page: () => const HistoryView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HistoryCtr>(() => HistoryCtr());
+      }),
       transition: Transition.noTransition,
     ),
   ];

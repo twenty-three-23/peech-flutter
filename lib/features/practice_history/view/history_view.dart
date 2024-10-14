@@ -13,24 +13,19 @@ class HistoryView extends StatefulWidget {
 }
 
 class _HistoryViewState extends State<HistoryView> {
-
-  late HistoryCtr historyController;
+  late HistoryCtr historyController = Get.find<HistoryCtr>();
 
   @override
   void initState() {
     super.initState();
-    historyController = Get.put(HistoryCtr());
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      historyController.getDefaultList();
-    });
+    historyController.getDefaultList();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return CommonScaffold(
         appBarTitle: '발표 기록',
-        child: Obx( () {
+        child: Obx(() {
           if (historyController.defaultList.value?.defaultScripts == null) {
             return Center(child: Text("데이터가 없습니다."));
           }
@@ -53,22 +48,12 @@ class _HistoryViewState extends State<HistoryView> {
                       children: [
                         Text(
                           "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: const Color(0xff6D6F78),
-                              fontWeight: FontWeight.normal,
-                              height: 1.6
-                          ),
+                          style: TextStyle(fontSize: 12, color: const Color(0xff6D6F78), fontWeight: FontWeight.normal, height: 1.6),
                         ),
                         Expanded(
                           child: Text(
                             "${historyController.defaultList.value?.defaultScripts?[index].scriptContent}",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: const Color(0xff3B3E43),
-                                fontWeight: FontWeight.normal,
-                                height: 1.8
-                            ),
+                            style: TextStyle(fontSize: 12, color: const Color(0xff3B3E43), fontWeight: FontWeight.normal, height: 1.8),
                           ),
                         ),
                         Container(
@@ -79,16 +64,13 @@ class _HistoryViewState extends State<HistoryView> {
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 side: MaterialStateProperty.all(
-                                  BorderSide(
-                                      color: Colors.black, width: 1), // 외곽선 설정
+                                  BorderSide(color: Colors.black, width: 1), // 외곽선 설정
                                 ),
-                                backgroundColor: MaterialStateProperty.all(
-                                    const Color(0xffF4F6FA)),
+                                backgroundColor: MaterialStateProperty.all(const Color(0xffF4F6FA)),
                               ),
                               child: Text(
                                 "녹음 기록 보기",
@@ -104,7 +86,6 @@ class _HistoryViewState extends State<HistoryView> {
                   ),
                 );
               });
-        })
-        );
+        }));
   }
 }
