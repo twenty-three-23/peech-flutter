@@ -59,7 +59,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: GetX<UserInfoController>(
                       builder: (_) => Text(
-                            '1회 최대 ${userInfoController.maxAudioTime?.text ?? "?"}분 연습 가능',
+                            '1회 최대 ${userInfoController.maxAudioTime?.text ?? "?"} 연습 가능',
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
                           )),
                 )
