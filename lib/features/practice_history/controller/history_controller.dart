@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -41,8 +42,6 @@ class HistoryCtr extends GetxController {
 
   ScrollController pathScrollController = ScrollController();
 
-  var socialLoginController = Get.put(SocialLoginCtr());
-
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
 
   Rx<HistoryMajorParagraphsModel?> majorDetail = Rx<HistoryMajorParagraphsModel?>(null);
@@ -50,6 +49,8 @@ class HistoryCtr extends GetxController {
 
   Rx<HistoryMinorDetailModel?> minorDetail = Rx<HistoryMinorDetailModel?>(null);
   HistoryMinorDetailModel? _minorDetail;
+
+  final userInfoController = Get.find<UserInfoController>();
 
   Rx<bool> isLoading = false.obs;
 
@@ -344,7 +345,7 @@ class HistoryCtr extends GetxController {
       int? themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
 
       if (themeId == 0) {
-        await socialLoginController.saveDefaultTheme();
+        await userInfoController.saveDefaultTheme();
         themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
       }
 
