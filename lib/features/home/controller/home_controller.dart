@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_auth_token_storage.dart';
+import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_user_nickname_data_source.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/user_nickname_model.dart';
@@ -88,5 +89,21 @@ class HomeCtr extends GetxController {
         );
       }
     }
+  }
+
+  void gotoExpectedTimeBtn(BuildContext context) {
+    userInfoController.saveDefaultTheme();
+    LocalPracticeModeStorage().setMode(PracticeMode.withScript);
+    Navigator.pushNamed(context, '/scriptInput/input');
+  }
+
+  void gotoSpeedAnalyticsBtn(BuildContext context) {
+    LocalPracticeModeStorage().setMode(PracticeMode.noScript);
+    userInfoController.saveDefaultTheme();
+    Navigator.pushNamed(context, "/voiceRecodeNoScript");
+  }
+
+  void gotoInterviewQuestionsBtn(BuildContext context) {
+    Navigator.pushNamed(context, "/interviewQuestions");
   }
 }
