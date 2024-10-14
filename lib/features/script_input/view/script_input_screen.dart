@@ -32,13 +32,6 @@ class _ScriptInputScreenState extends State<ScriptInputScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
-                  Expanded(
-                    child: SvgPicture.asset(
-                      'assets/images/progress_indicator_filled.svg',
-                      semanticsLabel: 'progress bar',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
                   const SizedBox(
                     width: 4,
                   ),

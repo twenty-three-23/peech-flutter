@@ -61,16 +61,6 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
                       ),
                       Expanded(
                         child: SvgPicture.asset(
-                          'assets/images/progress_indicator_filled.svg',
-                          semanticsLabel: 'progress bar',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        child: SvgPicture.asset(
                           'assets/images/progress_indicator_empty.svg',
                           semanticsLabel: 'progress bar',
                           fit: BoxFit.fill,
