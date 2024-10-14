@@ -6,15 +6,18 @@ import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 
 import '../controller/interview_question_input_controller.dart';
 
-class InterviewQuestionResultScreen extends StatelessWidget {
+class InterviewQuestionResultScreen extends StatefulWidget {
   const InterviewQuestionResultScreen({super.key});
 
   @override
+  State<InterviewQuestionResultScreen> createState() => _InterviewQuestionResultScreenState();
+}
+
+class _InterviewQuestionResultScreenState extends State<InterviewQuestionResultScreen> {
+  InterviewQuestionInputController controller = Get.find<InterviewQuestionInputController>();
+
+  @override
   Widget build(BuildContext context) {
-    InterviewQuestionInputController controller = Get.find<InterviewQuestionInputController>();
-
-    List<Widget> widgetList = [];
-
     return CommonScaffold(
       appBarTitle: '',
       child: ListView(
@@ -42,7 +45,7 @@ class InterviewQuestionResultScreen extends StatelessWidget {
             // interviewQuestions가 null이거나 비어있는 경우 처리
             final List<String>? interviewQuestions = controller.interviewQuestions.value.interviewQuestions;
 
-            if (interviewQuestions == null || interviewQuestions.isEmpty) {
+            if (controller.isLoading.value || interviewQuestions == null || interviewQuestions.isEmpty) {
               return Center(child: CircularProgressIndicator());
             }
 
@@ -52,6 +55,7 @@ class InterviewQuestionResultScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
                   child: Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Color(0xffC6C9D3)),

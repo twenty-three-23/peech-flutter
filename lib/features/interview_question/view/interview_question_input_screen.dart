@@ -5,14 +5,18 @@ import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
 import 'package:swm_peech_flutter/features/interview_question/controller/interview_question_input_controller.dart';
 
-class InterviewQuestionInputScreen extends StatelessWidget {
+class InterviewQuestionInputScreen extends StatefulWidget {
   const InterviewQuestionInputScreen({super.key});
 
   @override
+  State<InterviewQuestionInputScreen> createState() => _InterviewQuestionInputScreenState();
+}
+
+class _InterviewQuestionInputScreenState extends State<InterviewQuestionInputScreen> {
+  final controller = Get.find<InterviewQuestionInputController>();
+
+  @override
   Widget build(BuildContext context) {
-
-    final controller = Get.find<InterviewQuestionInputController>();
-
     return CommonScaffold(
         appBarTitle: "예상 면접 질문",
         child: Padding(
@@ -54,12 +58,11 @@ class InterviewQuestionInputScreen extends StatelessWidget {
                     controller.getInterviewQuestions();
                     Navigator.pushNamed(context, "/interviewQuestionsResult");
                   },
-                  style:
-                  TextButton.styleFrom(
+                  style: TextButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: Color(0xff3B3E43), width: 1.0),// 둥근 모서리 설정
+                      side: BorderSide(color: Color(0xff3B3E43), width: 1.0), // 둥근 모서리 설정
                     ),
                     backgroundColor: Color(0xff3B3E43),
                   ),
@@ -67,16 +70,11 @@ class InterviewQuestionInputScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                     child: Text(
                       "입력 완료",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   )),
               SizedBox(height: 8),
             ],
-
           ),
         ));
   }
