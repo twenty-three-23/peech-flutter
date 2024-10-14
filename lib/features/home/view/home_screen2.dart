@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
+import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
-import '../../common/controllers/social_login_controller.dart';
-import '../../common/data_source/local/local_practice_mode_storage.dart';
-
-class HomeScreen2 extends StatelessWidget {
+class HomeScreen2 extends StatefulWidget {
   const HomeScreen2({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var controller = Get.put(SocialLoginCtr());
+  State<HomeScreen2> createState() => _HomeScreen2State();
+}
 
+class _HomeScreen2State extends State<HomeScreen2> {
+  final controller = Get.find<HomeCtr>();
+
+  @override
+  Widget build(BuildContext context) {
     return CommonScaffold(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
@@ -54,7 +57,7 @@ class HomeScreen2 extends StatelessWidget {
               ),
               child: OutlinedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/interviewQuestions");
+                  controller.gotoInterviewQuestionsBtn(context);
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size(double.infinity, 152),
@@ -115,9 +118,7 @@ class HomeScreen2 extends StatelessWidget {
                     ),
                     child: OutlinedButton(
                         onPressed: () {
-                          LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-                          controller.saveDefaultTheme();
-                          Navigator.pushNamed(context, "/voiceRecodeNoScript");
+                          controller.gotoSpeedAnalyticsBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
                           minimumSize: Size(148, 164),
@@ -176,9 +177,7 @@ class HomeScreen2 extends StatelessWidget {
                     ),
                     child: OutlinedButton(
                         onPressed: () {
-                          controller.saveDefaultTheme();
-                          LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-                          Navigator.pushNamed(context, '/scriptInput/input');
+                          controller.gotoExpectedTimeBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
                           minimumSize: Size(148, 164),

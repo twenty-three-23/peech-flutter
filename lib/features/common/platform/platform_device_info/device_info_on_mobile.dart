@@ -10,6 +10,10 @@ String get type {
   }
 }
 
+bool isWeb() {
+  return false;
+}
+
 bool isMobile() {
   return true;
 }

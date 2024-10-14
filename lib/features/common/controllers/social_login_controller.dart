@@ -18,13 +18,10 @@ import 'package:swm_peech_flutter/features/common/models/auth_token_response_mod
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
-import 'package:swm_peech_flutter/features/common/models/theme_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_funnel/platform_funnel.dart';
-
-import '../data_source/local/local_practice_theme_storage.dart';
 
 class SocialLoginCtr extends GetxController {
   bool isShowed = false;
@@ -38,8 +35,6 @@ class SocialLoginCtr extends GetxController {
   Rx<String> nickname = Rx<String>('');
   Rx<UserAdditionalInfoViewState> userAdditionalInfoViewState = Rx<UserAdditionalInfoViewState>(UserAdditionalInfoViewState.input);
   Rx<bool> userAdditionalInfoViewLoginFailed = Rx<bool>(false);
-
-  bool checkDefaultThemeId = false;
 
   final userInfoController = Get.find<UserInfoController>();
 
@@ -269,15 +264,6 @@ class SocialLoginCtr extends GetxController {
       case UserGender.unknown:
         return 'UNKNOWN';
     }
-  }
-
-  Future<int> saveDefaultTheme() async {
-    RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
-    ThemeIdModel themeIdModel = await remoteUserAdditionalInfoDataSource.getDefaultTheme();
-    int defaultThemeId = themeIdModel.themeId;
-    await LocalPracticeThemeStorage().setThemeId(defaultThemeId.toString());
-    checkDefaultThemeId = true;
-    return defaultThemeId;
   }
 
   void initialViewState() {

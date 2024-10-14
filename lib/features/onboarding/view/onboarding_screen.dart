@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
 import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 import 'package:swm_peech_flutter/features/onboarding/controller/onboarding_controller.dart';
 
@@ -107,40 +108,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          GetX<OnboardingController>(
-            builder: (_) {
-              if (_controller.currentIndex.value != 0)
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    iconSize: 40,
-                    onPressed: () {
-                      _controller.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    icon: Icon(Icons.arrow_circle_left),
-                  ),
-                );
-              else
-                return SizedBox();
-            },
-          ),
-          GetX<OnboardingController>(
-            builder: (_) {
-              if (_controller.currentIndex.value != _controller.lastPage)
-                return Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    iconSize: 40,
-                    onPressed: () {
-                      _controller.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    },
-                    icon: Icon(Icons.arrow_circle_right),
-                  ),
-                );
-              else
-                return SizedBox();
-            },
-          ),
+          if (PlatformDeviceInfo.isWeb())
+            GetX<OnboardingController>(
+              builder: (_) {
+                if (_controller.currentIndex.value != 0)
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      iconSize: 40,
+                      onPressed: () {
+                        _controller.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      },
+                      icon: Icon(Icons.arrow_circle_left),
+                    ),
+                  );
+                else
+                  return SizedBox();
+              },
+            ),
+          if (PlatformDeviceInfo.isWeb())
+            GetX<OnboardingController>(
+              builder: (_) {
+                if (_controller.currentIndex.value != _controller.lastPage)
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      iconSize: 40,
+                      onPressed: () {
+                        _controller.pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                      },
+                      icon: Icon(Icons.arrow_circle_right),
+                    ),
+                  );
+                else
+                  return SizedBox();
+              },
+            ),
         ],
       ),
     );
