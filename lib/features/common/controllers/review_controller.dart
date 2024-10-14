@@ -6,13 +6,13 @@ import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/models/user_feedback_model.dart';
 
 class ReviewController extends GetxController {
-  Rx<String> reviewText = "".obs;
+  String _reviewText = "";
 
   void reviewRequired({
     required BuildContext context,
     Function()? endFunction,
   }) {
-    reviewText.value = '';
+    _reviewText = '';
     RemoteUserFeedbacksDataSource remoteUserFeedbacksDataSource = RemoteUserFeedbacksDataSource(AuthDioFactory().dio);
 
     showDialog(
@@ -25,7 +25,7 @@ class ReviewController extends GetxController {
             maxLines: null,
             decoration: const InputDecoration(hintText: '소중한 의견을 남겨주세요.'),
             onChanged: (value) {
-              reviewText.value = value;
+              _reviewText = value;
             },
           ),
           actions: <Widget>[
@@ -33,7 +33,7 @@ class ReviewController extends GetxController {
               child: const Text('전송'),
               onPressed: () {
                 Navigator.pop(context);
-                UserFeedbackModel userFeedbackModel = UserFeedbackModel(message: reviewText.value);
+                UserFeedbackModel userFeedbackModel = UserFeedbackModel(message: _reviewText);
                 remoteUserFeedbacksDataSource.sendUserFeedback(userFeedbackModel.toJson()).then((value) {
                   Get.snackbar('피드백 전송 완료', '소중한 피드백 감사합니다');
                 });

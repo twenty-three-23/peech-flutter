@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/review_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.dart';
@@ -17,6 +17,7 @@ class MyPageScreen extends StatefulWidget {
 class _MyPageScreenState extends State<MyPageScreen> {
   UserInfoController userInfoController = Get.find<UserInfoController>();
   MyPageController myPageController = Get.find<MyPageController>();
+  ReviewController reviewController = Get.find<ReviewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +80,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 ),
                 MypageItemButton(
                   text: '문의하기',
-                  onTap: () {},
+                  onTap: () {
+                    reviewController.reviewRequired(context: context);
+                  },
                 ),
                 MypageItemButton(
                   text: '이용 방법',
