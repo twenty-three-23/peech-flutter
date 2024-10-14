@@ -30,58 +30,101 @@ class _HistoryViewState extends State<HistoryView> {
             return Center(child: Text("데이터가 없습니다."));
           }
           return ListView.builder(
-              padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
               itemCount: historyController.defaultList.value?.defaultScripts?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 166,
-                  width: 312,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xffE5E8F0)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
-                          style: TextStyle(fontSize: 12, color: const Color(0xff6D6F78), fontWeight: FontWeight.normal, height: 1.6),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "${historyController.defaultList.value?.defaultScripts?[index].scriptContent}",
-                            style: TextStyle(fontSize: 12, color: const Color(0xff3B3E43), fontWeight: FontWeight.normal, height: 1.8),
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  child: Container(
+                    height: 166,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xffE5E8F0)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: const Color(0xff6D6F78),
+                              fontWeight: FontWeight.w600,
+                              height: 1.6,
+                            ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                          width: 1000,
-                          child: OutlinedButton(
-                              onPressed: () {},
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                side: MaterialStateProperty.all(
-                                  BorderSide(color: Colors.black, width: 1), // 외곽선 설정
-                                ),
-                                backgroundColor: MaterialStateProperty.all(const Color(0xffF4F6FA)),
+                          Expanded(
+                            child: Text(
+                              "${historyController.defaultList.value?.defaultScripts?[index].scriptContent}",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: const Color(0xff3B3E43),
+                                fontWeight: FontWeight.w400,
+                                height: 1.8,
                               ),
-                              child: Text(
-                                "녹음 기록 보기",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: const Color(0xff3B3E43),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )),
-                        ),
-                      ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton(
+                                    onPressed: () {},
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      side: MaterialStateProperty.all(
+                                        BorderSide(color: Colors.black, width: 1), // 외곽선 설정
+                                      ),
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xffF4F6FA)),
+                                    ),
+                                    child: Text(
+                                      "분석 보기",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: const Color(0xff3B3E43),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Expanded(
+                                child: OutlinedButton(
+                                    onPressed: () {},
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      side: MaterialStateProperty.all(
+                                        BorderSide(color: Color(0xFF3B3E43), width: 1), // 외곽선 설정
+                                      ),
+                                      backgroundColor: MaterialStateProperty.all(const Color(0xFF3B3E43)),
+                                    ),
+                                    child: Text(
+                                      "예상 면접질문 받아보기",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: const Color(0xFFFFFFFF),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
