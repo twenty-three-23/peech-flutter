@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/controllers/app_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.dart';
+import 'package:swm_peech_flutter/features/mypage/widget/app_version_button.dart';
 import 'package:swm_peech_flutter/features/mypage/widget/mypage_item_button.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -137,17 +139,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
               ],
             ),
             SizedBox(height: 24),
-            TextButton(
-              onPressed: () {},
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(180, 10, 180, 10),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Color(0xFFF4F6FA)),
-                child: Text(
-                  "앱 버전 1.0.0",
-                  style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
+            AppVersionButton(),
           ],
         ),
       ]),
