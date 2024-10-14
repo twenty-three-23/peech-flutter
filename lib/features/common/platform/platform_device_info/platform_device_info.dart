@@ -8,6 +8,10 @@ class PlatformDeviceInfo {
     return device.isMobile();
   }
 
+  static bool isWeb() {
+    return device.isWeb();
+  }
+
   static bool isRecordUnavailableClient() {
     return device.isRecordUnavailableClient();
   }
