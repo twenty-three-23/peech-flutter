@@ -54,7 +54,9 @@ class HistoryCtr extends GetxController {
   Rx<bool> isLoading = false.obs;
 
   // 바텀 네비게이션 통해서 진입시 실행되는 함수
-  void enter() {}
+  void enter() {
+    getDefaultList();
+  }
 
   @override
   void onInit() {
@@ -335,14 +337,13 @@ class HistoryCtr extends GetxController {
     isLoading.value = false;
   }
 
-
   void getDefaultList() async {
     try {
       isLoading.value = true;
       final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
       int? themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
 
-      if(themeId == 0) {
+      if (themeId == 0) {
         await socialLoginController.saveDefaultTheme();
         themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
       }

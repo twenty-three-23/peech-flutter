@@ -16,18 +16,14 @@ class _HistoryViewState extends State<HistoryView> {
   late HistoryCtr historyController = Get.find<HistoryCtr>();
 
   @override
-  void initState() {
-    super.initState();
-    historyController.getDefaultList();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CommonScaffold(
         appBarTitle: '발표 기록',
         child: Obx(() {
           if (historyController.defaultList.value?.defaultScripts == null) {
             return Center(child: Text("데이터가 없습니다."));
+          } else if (historyController.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
           }
           return ListView.builder(
               itemCount: historyController.defaultList.value?.defaultScripts?.length ?? 0,
