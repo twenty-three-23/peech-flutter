@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.dart';
+import 'package:swm_peech_flutter/features/mypage/widget/mypage_item_button.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -65,70 +66,34 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 )
               ]),
             ),
-            SizedBox(height: 60),
-            Column(children: [
-              Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    child: Text("공지사항", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
-                    onPressed: () {
-                      myPageController.gotoAnnouncement();
-                    },
-                  ),
-                  IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      onPressed: () {
-                        myPageController.gotoAnnouncement();
-                      })
-                ],
-              )),
-              SizedBox(height: 24),
-              Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(child: Text("문의하기", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)), onPressed: () {}),
-                  IconButton(icon: const Icon(Icons.arrow_forward_ios), onPressed: () {})
-                ],
-              )),
-              SizedBox(height: 24),
-              Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      child: Text("이용 방법", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
-                      onPressed: () {
-                        myPageController.gotoUsageGuide();
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      onPressed: () {
-                        myPageController.gotoUsageGuide();
-                      })
-                ],
-              )),
-              SizedBox(height: 24),
-              Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      child: Text("개인정보 처리방침", style: TextStyle(fontSize: 20, color: Color(0xFF3B3E43), fontWeight: FontWeight.w400)),
-                      onPressed: () {
-                        myPageController.gotoPrivacyPolicy();
-                      }),
-                  IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      onPressed: () {
-                        myPageController.gotoPrivacyPolicy();
-                      })
-                ],
-              )),
-            ]),
-            SizedBox(height: 28),
+            SizedBox(height: 48),
+            Column(
+              children: [
+                MypageItemButton(
+                  text: '공지사항',
+                  onTap: () {
+                    myPageController.gotoAnnouncement();
+                  },
+                ),
+                MypageItemButton(
+                  text: '문의하기',
+                  onTap: () {},
+                ),
+                MypageItemButton(
+                  text: '이용 방법',
+                  onTap: () {
+                    myPageController.gotoUsageGuide();
+                  },
+                ),
+                MypageItemButton(
+                  text: '개인정보 처리방침',
+                  onTap: () {
+                    myPageController.gotoPrivacyPolicy();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
