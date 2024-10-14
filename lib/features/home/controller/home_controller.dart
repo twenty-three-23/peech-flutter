@@ -12,6 +12,9 @@ import 'package:url_launcher/url_launcher.dart';
 class HomeCtr extends GetxController {
   final userInfoController = Get.find<UserInfoController>();
 
+  // 바텀 네비게이션 통해서 진입시 실행되는 함수
+  void enter() {}
+
   void kakaoLogin() async {
     if (await isKakaoTalkInstalled()) {
       try {

@@ -44,6 +44,7 @@ class Routers {
       binding: BindingsBuilder(() {
         Get.lazyPut<HomeCtr>(() => HomeCtr());
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
+        Get.lazyPut<MyPageController>(() => MyPageController());
       }),
       transition: Transition.noTransition,
     ),

@@ -53,6 +53,9 @@ class HistoryCtr extends GetxController {
 
   Rx<bool> isLoading = false.obs;
 
+  // 바텀 네비게이션 통해서 진입시 실행되는 함수
+  void enter() {}
+
   @override
   void onInit() {
     addGetCurrentListListener();

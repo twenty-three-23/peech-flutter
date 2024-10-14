@@ -1,5 +1,15 @@
 import 'dart:io';
 
+String get type {
+  if (isIOS()) {
+    return 'iOS';
+  } else if (isAndroid()) {
+    return 'Android';
+  } else {
+    return '?';
+  }
+}
+
 bool isMobile() {
   return true;
 }
