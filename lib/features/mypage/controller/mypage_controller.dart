@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/mypage/data_source/remote/remote_user_data_source.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,6 +11,14 @@ import '../../common/data_source/local/local_auth_token_storage.dart';
 import '../../common/dio/auth_dio_factory.dart';
 
 class MyPageController extends GetxController {
+  final userInfoController = Get.find<UserInfoController>();
+
+  // 바텀 네비게이션 통해서 진입시 실행되는 함수
+  void enter() {
+    userInfoController.fetchUserNickname();
+    userInfoController.getUserAudioTimeInfo();
+  }
+
   void logOutButton(BuildContext context) async {
     showCommonDialog(
       context: context,

@@ -16,13 +16,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
   MyPageController myPageController = Get.find<MyPageController>();
 
   @override
-  void initState() {
-    userInfoController.fetchUserNickname();
-    userInfoController.getUserAudioTimeInfo();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CommonScaffold(
       child: ListView(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0), children: [
