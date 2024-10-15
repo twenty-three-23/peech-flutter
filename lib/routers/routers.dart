@@ -7,6 +7,7 @@ import 'package:swm_peech_flutter/features/onboarding/view/onboarding_screen.dar
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
+import 'package:swm_peech_flutter/features/practice_history/view/history_view.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
 import 'package:swm_peech_flutter/features/root/view/root_screen.dart';
@@ -144,6 +145,14 @@ class Routers {
         Get.lazyPut<InterviewQuestionInputController>(
           () => InterviewQuestionInputController(),
         );
+      }),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: '/defaultScripts',
+      page: () => const HistoryView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HistoryCtr>(() => HistoryCtr());
       }),
       transition: Transition.noTransition,
     ),

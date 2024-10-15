@@ -8,6 +8,7 @@ import 'package:swm_peech_flutter/features/mypage/controller/mypage_controller.d
 import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
+import 'package:swm_peech_flutter/features/practice_history/view/history_view.dart';
 
 import '../../home/view/home_screen2.dart';
 
@@ -48,7 +49,7 @@ class _RootScreenState extends State<RootScreen> {
         index: _currentIndex,
         children: [
           HomeScreen2(),
-          HistoryScreen(),
+          HistoryView(),
           MyPageScreen(),
         ],
       ),

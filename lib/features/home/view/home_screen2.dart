@@ -222,7 +222,8 @@ class _HomeScreen2State extends State<HomeScreen2> {
             ),
             SizedBox(
               height: 22,
-            )
+            ),
+            //TextButton(onPressed: (){Navigator.pushNamed(context, "/defaultScripts");}, child: Text("기본 대본"))
           ],
         ),
       ),

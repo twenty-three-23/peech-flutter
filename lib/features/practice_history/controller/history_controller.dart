@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -16,6 +18,7 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/remote/r
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/default_script_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_detail_model.dart';
@@ -30,6 +33,8 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   HistoryMinorListModel? _minorList;
   Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
+  DefaultScriptListModel? _defaultList;
+  Rx<DefaultScriptListModel?> defaultList = Rx<DefaultScriptListModel?>(null);
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -45,10 +50,14 @@ class HistoryCtr extends GetxController {
   Rx<HistoryMinorDetailModel?> minorDetail = Rx<HistoryMinorDetailModel?>(null);
   HistoryMinorDetailModel? _minorDetail;
 
+  final userInfoController = Get.find<UserInfoController>();
+
   Rx<bool> isLoading = false.obs;
 
   // 바텀 네비게이션 통해서 진입시 실행되는 함수
-  void enter() {}
+  void enter() {
+    getDefaultList();
+  }
 
   @override
   void onInit() {
@@ -327,5 +336,31 @@ class HistoryCtr extends GetxController {
     await LocalPracticeModeStorage().setMode(PracticeMode.withScript); //연습 모드 스크립트 기반 모드로 저장
     Navigator.pushNamed(context, 'scriptInput/result');
     isLoading.value = false;
+  }
+
+  void getDefaultList() async {
+    try {
+      isLoading.value = true;
+      final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
+      int? themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+
+      if (themeId == 0) {
+        await userInfoController.saveDefaultTheme();
+        themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+      }
+
+      _defaultList = await historyMajorDataSource.getDefaultScriptList(themeId);
+      defaultList.value = _defaultList;
+      print("디폴트 리스트 개수: ${defaultList.value}");
+      isLoading.value = false;
+    } on DioException catch (e) {
+      print("[getDefaultList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
+      rethrow;
+    } catch (e) {
+      print("[getDefaultList] [Exception] $e");
+      isLoading.value = false;
+      rethrow;
+    }
   }
 }
