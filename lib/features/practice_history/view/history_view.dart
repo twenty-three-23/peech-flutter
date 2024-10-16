@@ -18,6 +18,8 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
+      appBarTitle: '자기소개 녹음 기록',
+      hideBackButton: true,
       child: Obx(
         () {
           if (historyController.isLoading.value) {
@@ -112,7 +114,7 @@ class _HistoryViewState extends State<HistoryView> {
                                       backgroundColor: MaterialStateProperty.all(const Color(0xFF3B3E43)),
                                     ),
                                     child: Text(
-                                      "예상 면접질문 받아보기",
+                                      "예상 질문 받기",
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: const Color(0xFFFFFFFF),
