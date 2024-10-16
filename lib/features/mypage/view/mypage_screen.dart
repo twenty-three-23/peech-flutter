@@ -32,14 +32,27 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Obx(() => Text('${userInfoController.userNickname ?? "GUEST"}', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700))),
+                    Obx(
+                      () => Text(
+                        '${userInfoController.userNickname ?? "GUEST"}',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          height: 34 / 22,
+                        ),
+                      ),
+                    ),
                     Text(
                       "의 연습기록입니다.",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        height: 26 / 18,
+                      ),
                     )
                   ],
                 )),
-            SizedBox(height: 24),
+            SizedBox(height: 8),
             Container(
               alignment: Alignment.topLeft,
               decoration: BoxDecoration(color: Color(0xFFF4F6FA), borderRadius: BorderRadius.circular(16)),
@@ -49,8 +62,15 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GetX<UserInfoController>(
-                          builder: (_) => Text('총 ${userInfoController.remainingTime?.text ?? "?"} 사용 가능',
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700))),
+                        builder: (_) => Text(
+                          '총 ${userInfoController.remainingTime?.text ?? "?"} 사용 가능',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            height: 26 / 18,
+                          ),
+                        ),
+                      ),
                       IconButton(
                           icon: Icon(Icons.refresh),
                           onPressed: () {
@@ -64,7 +84,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   child: GetX<UserInfoController>(
                       builder: (_) => Text(
                             '1회 최대 ${userInfoController.maxAudioTime?.text ?? "?"} 연습 가능',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              height: 22 / 14,
+                            ),
                           )),
                 )
               ]),
@@ -102,38 +126,48 @@ class _MyPageScreenState extends State<MyPageScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
+                  width: 65,
+                  height: 34,
                   child: TextButton(
                     onPressed: () {
                       myPageController.logOutButton(context);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                      child: Text(
-                        '로그아웃',
-                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                    child: Text(
+                      '로그아웃',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 14,
                       ),
                     ),
                     style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
                       backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
                 SizedBox(width: 16),
-                Container(
+                SizedBox(
+                  width: 65,
+                  height: 34,
                   child: TextButton(
                     onPressed: () {
                       myPageController.deleteUserButton(context);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                      child: Text(
-                        '회원 탈퇴',
-                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                    child: Text(
+                      '회원 탈퇴',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 14,
                       ),
                     ),
                     style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
                       backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),

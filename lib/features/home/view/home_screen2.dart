@@ -60,6 +60,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                   controller.gotoInterviewQuestionsBtn(context);
                 },
                 style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.zero,
                   minimumSize: Size(double.infinity, 152),
                   side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0),
                   // 테두리 색상과 두께 설정
@@ -68,12 +69,14 @@ class _HomeScreen2State extends State<HomeScreen2> {
                   ),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(child: Image.asset('assets/images/interview_question.png', width: 120, height: 120)),
-                    Expanded(
+                    Image.asset('assets/images/interview_question.png', width: 120, height: 120),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "예상 면접질문 받기",
@@ -81,6 +84,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                               fontWeight: FontWeight.normal,
                               fontSize: 18,
                               color: const Color(0xff3B3E43),
+                              height: 28 / 18,
                             ),
                           ),
                           Text(
@@ -89,6 +93,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xffFF5468),
+                              height: 18 / 14,
                             ),
                           ),
                         ],
@@ -121,6 +126,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                           controller.gotoSpeedAnalyticsBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
                           minimumSize: Size(148, 164),
                           side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                           shape: RoundedRectangleBorder(
@@ -128,7 +134,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,6 +148,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 16,
                                       color: const Color(0xff3B3E43),
+                                      height: 24 / 16,
                                     ),
                                   ),
                                   Text(
@@ -150,6 +157,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xff6D6F78),
+                                      height: 18 / 14,
                                     ),
                                   ),
                                 ],
@@ -180,6 +188,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                           controller.gotoExpectedTimeBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
                           minimumSize: Size(148, 164),
                           side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                           shape: RoundedRectangleBorder(
@@ -187,7 +196,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,6 +210,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 18,
                                       color: const Color(0xff3B3E43),
+                                      height: 24 / 16,
                                     ),
                                   ),
                                   Text(
@@ -209,6 +219,7 @@ class _HomeScreen2State extends State<HomeScreen2> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xff6D6F78),
+                                      height: 18 / 14,
                                     ),
                                   ),
                                 ],

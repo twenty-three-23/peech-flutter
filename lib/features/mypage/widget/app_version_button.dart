@@ -67,17 +67,21 @@ class _AppVersionButtonState extends State<AppVersionButton> {
           _appInfoController.gotoStore(context);
         },
         child: Container(
-          padding: const EdgeInsets.fromLTRB(180, 10, 180, 10),
+          width: 312,
+          height: 38,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: _color,
           ),
-          child: Text(
-            "앱 버전 $appVersion (${PlatformDeviceInfo.type})",
-            style: TextStyle(
-              fontSize: 20,
-              color: Color(0xFF3B3E43),
-              fontWeight: FontWeight.w400,
+          child: Center(
+            child: Text(
+              "앱 버전 $appVersion (${PlatformDeviceInfo.type})",
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF3B3E43),
+                fontWeight: FontWeight.w400,
+                height: 22 / 14,
+              ),
             ),
           ),
         ),

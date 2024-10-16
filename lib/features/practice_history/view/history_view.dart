@@ -18,6 +18,8 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
+      appBarTitle: '자기소개 녹음 기록',
+      hideBackButton: true,
       child: Obx(
         () {
           if (historyController.isLoading.value) {
@@ -44,12 +46,12 @@ class _HistoryViewState extends State<HistoryView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
+                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt?.year}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.month}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.day} ${historyController.weekday[historyController.defaultList.value?.defaultScripts?[index].createdAt?.weekday ?? 7] ?? ''} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) < 12 ? '오전' : '오후'} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) % 12}:${historyController.defaultList.value?.defaultScripts?[index].createdAt?.minute}",
                             style: TextStyle(
                               fontSize: 12,
                               color: const Color(0xff6D6F78),
                               fontWeight: FontWeight.w600,
-                              height: 1.6,
+                              height: 16 / 12,
                             ),
                           ),
                           Expanded(
@@ -59,8 +61,10 @@ class _HistoryViewState extends State<HistoryView> {
                                 fontSize: 12,
                                 color: const Color(0xff3B3E43),
                                 fontWeight: FontWeight.w400,
-                                height: 1.8,
+                                height: 18 / 12,
                               ),
+                              overflow: TextOverflow.ellipsis, // 남는 텍스트는 생략 표시
+                              maxLines: 3, // 표시할 수 있는 최대 줄 수
                             ),
                           ),
                           SizedBox(
@@ -84,11 +88,7 @@ class _HistoryViewState extends State<HistoryView> {
                                     ),
                                     child: Text(
                                       "분석 보기",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: const Color(0xff3B3E43),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: TextStyle(fontSize: 14, color: const Color(0xff3B3E43), fontWeight: FontWeight.w600, height: 18 / 14),
                                     )),
                               ),
                               SizedBox(
@@ -112,11 +112,12 @@ class _HistoryViewState extends State<HistoryView> {
                                       backgroundColor: MaterialStateProperty.all(const Color(0xFF3B3E43)),
                                     ),
                                     child: Text(
-                                      "예상 면접질문 받아보기",
+                                      "예상 질문 받기",
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: const Color(0xFFFFFFFF),
                                         fontWeight: FontWeight.w600,
+                                        height: 18 / 14,
                                       ),
                                     )),
                               ),
