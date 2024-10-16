@@ -102,38 +102,48 @@ class _MyPageScreenState extends State<MyPageScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
+                  width: 65,
+                  height: 34,
                   child: TextButton(
                     onPressed: () {
                       myPageController.logOutButton(context);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                      child: Text(
-                        '로그아웃',
-                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                    child: Text(
+                      '로그아웃',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 14,
                       ),
                     ),
                     style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
                       backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
                 SizedBox(width: 16),
-                Container(
+                SizedBox(
+                  width: 65,
+                  height: 34,
                   child: TextButton(
                     onPressed: () {
                       myPageController.deleteUserButton(context);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                      child: Text(
-                        '회원 탈퇴',
-                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                    child: Text(
+                      '회원 탈퇴',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 22 / 14,
                       ),
                     ),
                     style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
                       backgroundColor: MaterialStateProperty.all(Color(0xFFF4F6FA)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     ),
