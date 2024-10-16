@@ -363,4 +363,11 @@ class HistoryCtr extends GetxController {
       rethrow;
     }
   }
+
+  void gotoInterviewQuestion(BuildContext context, int index) {
+    Navigator.of(context).pushNamed(
+      '/interviewQuestions',
+      arguments: defaultList.value?.defaultScripts?[index].scriptContent,
+    );
+  }
 }
