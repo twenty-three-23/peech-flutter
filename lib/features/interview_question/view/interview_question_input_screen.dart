@@ -16,6 +16,12 @@ class _InterviewQuestionInputScreenState extends State<InterviewQuestionInputScr
   final controller = Get.find<InterviewQuestionInputController>();
 
   @override
+  void didChangeDependencies() {
+    controller.textFieldString = ModalRoute.of(context)?.settings.arguments as String? ?? '';
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CommonScaffold(
         appBarTitle: "예상 면접 질문",
@@ -46,10 +52,13 @@ class _InterviewQuestionInputScreenState extends State<InterviewQuestionInputScr
               SizedBox(
                 height: 212,
                 child: CommonTextField(
+                  initialText: controller.textFieldString,
                   hintText: "자기소개를 적어주세요",
                   minLines: 10,
                   showCounter: true,
-                  controller: controller.textFieldController,
+                  onChanged: (value) {
+                    controller.textFieldString = value;
+                  },
                 ),
               ),
               Spacer(),

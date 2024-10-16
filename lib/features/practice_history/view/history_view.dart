@@ -20,10 +20,10 @@ class _HistoryViewState extends State<HistoryView> {
     return CommonScaffold(
         appBarTitle: '발표 기록',
         child: Obx(() {
-          if (historyController.defaultList.value?.defaultScripts == null) {
-            return Center(child: Text("데이터가 없습니다."));
-          } else if (historyController.isLoading.value) {
+          if (historyController.isLoading.value) {
             return Center(child: CircularProgressIndicator());
+          } else if (historyController.defaultList.value?.defaultScripts == null) {
+            return Center(child: Text("데이터가 없습니다."));
           }
           return ListView.builder(
               itemCount: historyController.defaultList.value?.defaultScripts?.length ?? 0,
@@ -96,7 +96,10 @@ class _HistoryViewState extends State<HistoryView> {
                               ),
                               Expanded(
                                 child: OutlinedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      print("index : $index");
+                                      historyController.gotoInterviewQuestion(context, index);
+                                    },
                                     style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
