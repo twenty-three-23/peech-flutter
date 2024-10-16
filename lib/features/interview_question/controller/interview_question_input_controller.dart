@@ -16,7 +16,6 @@ class InterviewQuestionInputController extends GetxController {
     try {
       isLoading.value = true;
       final remoteDataSource = RemoteInterviewQuestionDataSource(AuthDioFactory().dio);
-      print("textFieldString : $textFieldString");
       interviewQuestions.value = await remoteDataSource.getInterviewQuestions(InterviewScriptModel(scriptContent: textFieldString));
       isLoading.value = false;
     } on DioException catch (e) {

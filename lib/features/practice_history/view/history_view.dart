@@ -97,7 +97,6 @@ class _HistoryViewState extends State<HistoryView> {
                               Expanded(
                                 child: OutlinedButton(
                                     onPressed: () {
-                                      print("index : $index");
                                       historyController.gotoInterviewQuestion(context, index);
                                     },
                                     style: ButtonStyle(
