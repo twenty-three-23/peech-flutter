@@ -22,6 +22,8 @@ class _MyPageScreenState extends State<MyPageScreen> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
+      appBarTitle: '마이페이지',
+      hideBackButton: true,
       child: ListView(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0), children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
