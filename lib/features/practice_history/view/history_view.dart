@@ -51,7 +51,7 @@ class _HistoryViewState extends State<HistoryView> {
                               fontSize: 12,
                               color: const Color(0xff6D6F78),
                               fontWeight: FontWeight.w600,
-                              height: 1.6,
+                              height: 16 / 12,
                             ),
                           ),
                           Expanded(
@@ -61,8 +61,10 @@ class _HistoryViewState extends State<HistoryView> {
                                 fontSize: 12,
                                 color: const Color(0xff3B3E43),
                                 fontWeight: FontWeight.w400,
-                                height: 1.8,
+                                height: 18 / 12,
                               ),
+                              overflow: TextOverflow.ellipsis, // 남는 텍스트는 생략 표시
+                              maxLines: 3, // 표시할 수 있는 최대 줄 수
                             ),
                           ),
                           SizedBox(
@@ -86,11 +88,7 @@ class _HistoryViewState extends State<HistoryView> {
                                     ),
                                     child: Text(
                                       "분석 보기",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: const Color(0xff3B3E43),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: TextStyle(fontSize: 14, color: const Color(0xff3B3E43), fontWeight: FontWeight.w600, height: 18 / 14),
                                     )),
                               ),
                               SizedBox(
@@ -119,6 +117,7 @@ class _HistoryViewState extends State<HistoryView> {
                                         fontSize: 14,
                                         color: const Color(0xFFFFFFFF),
                                         fontWeight: FontWeight.w600,
+                                        height: 18 / 14,
                                       ),
                                     )),
                               ),
