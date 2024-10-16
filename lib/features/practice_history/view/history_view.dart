@@ -18,8 +18,8 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-        appBarTitle: '발표 기록',
-        child: Obx(() {
+      child: Obx(
+        () {
           if (historyController.isLoading.value) {
             return Center(child: CircularProgressIndicator());
           } else if (historyController.defaultList.value?.defaultScripts == null) {
@@ -128,6 +128,8 @@ class _HistoryViewState extends State<HistoryView> {
                   ),
                 );
               });
-        }));
+        },
+      ),
+    );
   }
 }
