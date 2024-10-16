@@ -46,7 +46,7 @@ class _HistoryViewState extends State<HistoryView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt}",
+                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt?.year}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.month}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.day} ${historyController.weekday[historyController.defaultList.value?.defaultScripts?[index].createdAt?.weekday ?? 7] ?? ''} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) < 12 ? '오전' : '오후'} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) % 12}:${historyController.defaultList.value?.defaultScripts?[index].createdAt?.minute}",
                             style: TextStyle(
                               fontSize: 12,
                               color: const Color(0xff6D6F78),
