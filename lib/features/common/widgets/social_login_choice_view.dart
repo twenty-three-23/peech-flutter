@@ -28,9 +28,16 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
               Column(
                 children: [
                   const Text(
-                    '지금 로그인하면 매달 150분 무료 사용 가능!',
+                    '지금 로그인하면 매달 150분 사용 가능!',
                     style: TextStyle(
                       fontSize: 15,
+                    ),
+                  ),
+                  const Text(
+                    '(유료 결제 없음)',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -38,19 +45,43 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Obx(() =>
-                      Checkbox(value: controller.checkPrivacyAgreement.value, onChanged: (bool? value){
-                        controller.checkPrivacyAgreement.value = value!;
-                      })),
-                      Text("개인정보 처리방침 및 이용약관에 동의합니다.", style: TextStyle(fontSize: 15),),
-                      TextButton(onPressed: (){controller.gotoPrivacyPolicy();}, child: Text("상세보기", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal),), style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all(Size(80, 40)),  // 고정 크기 설정 (너비: 20, 높이: 30)
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,  // 모서리 반경을 0으로 설정
+                      Obx(() => Checkbox(
+                          value: controller.checkPrivacyAgreement.value,
+                          onChanged: (bool? value) {
+                            controller.checkPrivacyAgreement.value = value!;
+                          })),
+                      GestureDetector(
+                        onTap: () {
+                          controller.checkPrivacyAgreement.value = !controller.checkPrivacyAgreement.value;
+                        },
+                        child: Text(
+                          "개인정보 처리방침 및 이용약관에 동의합니다.",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          controller.gotoPrivacyPolicy();
+                        },
+                        child: Text(
+                          "(상세보기)",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey,
                           ),
                         ),
-                      ),),
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero, // 모서리 반경을 0으로 설정
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   if (controller.loginChoiceViewLoginFailed.value == true)
@@ -69,35 +100,14 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                   else
                     const SizedBox(height: 20),
                   GestureDetector(
-                    onTap: () async {
-                      if(controller.checkPrivacyAgreement.value == false){
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.white,
-                              title: Text("주의"),
-                              content: Text("개인정보 처리에 동의해 주세요."),
-                              actions: [
-                                TextButton(
-                                  child: Text("확인"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // 다이얼로그 닫기
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        return;
-                      }
+                    onTap: () {
                       controller.loginWithKakao(context);
                     },
                     child: Image.asset(
                       'assets/images/kakao_login_medium_wide.png',
                     ),
                   ),
-                  if (PlatformDeviceInfo.isIOS())
+                  if (!PlatformDeviceInfo.isIOS())
                     Column(
                       children: [
                         SizedBox(height: 10),

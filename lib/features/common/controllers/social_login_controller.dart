@@ -23,6 +23,7 @@ import 'package:swm_peech_flutter/features/common/models/user_additional_info_mo
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_funnel/platform_funnel.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constant/constants.dart';
@@ -48,6 +49,7 @@ class SocialLoginCtr extends GetxController {
   final userInfoController = Get.find<UserInfoController>();
 
   void loginWithKakao(BuildContext context) async {
+    if (checkPrivacyPolicyAgreement(context) == false) return; // 개인정보 처리방침 체크 확인
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     if (await isKakaoTalkInstalled() && !Platform.isIOS) {
       try {
@@ -137,6 +139,7 @@ class SocialLoginCtr extends GetxController {
   }
 
   void loginWithApple(BuildContext context) async {
+    if (checkPrivacyPolicyAgreement(context) == false) return; // 개인정보 처리방침 체크 확인
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     try {
       //apple id login
@@ -235,7 +238,7 @@ class SocialLoginCtr extends GetxController {
       UserAdditionalInfoModel userAdditionalInfoModel = UserAdditionalInfoModel(
           firstName: firstName.value,
           lastName: lastName.value,
-          birth: formatDate(birthday.value ?? DateTime(1900,0,0)),
+          birth: formatDate(birthday.value ?? DateTime(1900, 0, 0)),
           gender: formatGender(gender.value),
           nickName: nickname.value);
       RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
@@ -292,7 +295,6 @@ class SocialLoginCtr extends GetxController {
   }
 
   void gotoPrivacyPolicy() async {
-
     Uri privacyPolicyUri = Uri.parse(Constants.privacyPolicyUrl);
 
     if (await canLaunchUrl(privacyPolicyUri)) {
@@ -300,5 +302,19 @@ class SocialLoginCtr extends GetxController {
     } else {
       throw '[gotoPrivacyPolicy] Could not launch $privacyPolicyUri';
     }
+  }
+
+  bool checkPrivacyPolicyAgreement(BuildContext context) {
+    if (checkPrivacyAgreement.value == false) {
+      showCommonDialog(
+        context: context,
+        title: '개인정보처리방침',
+        message: "개인정보 처리에 동의해주세요.",
+        showFirstButton: false,
+        secondButtonText: '확인',
+        isSecondButtonToClose: true,
+      );
+    }
+    return checkPrivacyAgreement.value;
   }
 }
