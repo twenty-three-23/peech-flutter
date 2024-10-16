@@ -54,26 +54,25 @@ class _MypageItemButtonState extends State<MypageItemButton> {
           widget.onTap();
         },
         child: Container(
+          height: 48,
           color: _color,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.text,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF3B3E43),
-                    fontWeight: FontWeight.w400,
-                  ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.text,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF3B3E43),
+                  fontWeight: FontWeight.w400,
+                  height: 24 / 16,
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 24,
-                )
-              ],
-            ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 24,
+              )
+            ],
           ),
         ),
       ),
