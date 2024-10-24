@@ -169,7 +169,6 @@ class HistoryCtr extends GetxController {
 
   void getMinorDetail() async {
     try {
-      //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
       isLoading.value = true;
       minorDetail.value = null;
       _minorList = null;
@@ -178,7 +177,7 @@ class HistoryCtr extends GetxController {
       final majorVersion = historyPath.value.major ?? 0;
       final minorVersion = historyPath.value.minor ?? 0;
       _minorDetail = await remoteMinorDetailDataSource.getMinorDetail(themeId, majorVersion, minorVersion);
-      minorDetail.value = _minorDetail; //TODO ui 업데이트를 get함수 내에서 처리해주는게 맞는가? get은 가져오는역할만 하는줄 알았는데 ui가 업데이트되는 사이드 이펙트가 생길수도?
+      minorDetail.value = _minorDetail;
       isLoading.value = false;
     } on DioException catch (e) {
       print("[getMinorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
@@ -266,8 +265,8 @@ class HistoryCtr extends GetxController {
     Navigator.pushNamed(context, '/historyMajorDetail');
     int themeId = historyPath.value.theme ?? 0;
     int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
-    await getMajorDetail(themeId, scriptId); //TODO 이 방식과 _majorDetail = getMajorDetail(themeId, scriptId); 방식 중 옳은 것.
-    majorDetail.value = _majorDetail; //TODO 변수를 매번 화면에 보이는 것과 데이터를 가지고 있는 것으로 나눠야 하는가? 그냥 바로 majorDetail = getMajorDetail(themeId, scriptId); 해도 되는 것 아닌가?
+    await getMajorDetail(themeId, scriptId);
+    majorDetail.value = _majorDetail;
   }
 
   void startWithThemeWithScriptBtn(BuildContext context) async {
@@ -333,7 +332,6 @@ class HistoryCtr extends GetxController {
       rethrow;
     }
     if (scriptIdModel == null || scriptIdModel.scriptId == null) {
-      //TODO 데이터 받아왔을 때 null인 경우를 매번 이렇게 처리해줘야 하는지. 아니면 인터셉터에서 처리?
       isLoading.value = false;
       throw Exception("[startWithMajorScriptBtn] scriptIdModel or scriptIdModel.scriptId is null!");
     }

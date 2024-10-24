@@ -10,9 +10,7 @@ class ParagraphModel {
   int? paragraphOrder;
   String? measurementResult;
   String? time;
-  @JsonKey(
-    fromJson: _parseNowStatus
-  )
+  @JsonKey(fromJson: _parseNowStatus)
   NowStatus? nowStatus;
   List<SentenceModel>? sentences;
 
@@ -26,8 +24,6 @@ class ParagraphModel {
     return sentences?.map((sentence) => sentence.sentenceContent).join(" ") ?? "";
   }
 
-  //TODO 서버에서 enum을 주는 경우 이런 식으로 변환하는게 best?
-  //TODO 이런 코드는 여기에 위치하는게 맞는가?
   static NowStatus? _parseNowStatus(String? status) {
     switch (status) {
       case null:
