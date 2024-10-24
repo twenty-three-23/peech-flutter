@@ -68,6 +68,7 @@ dependencies:
   firebase_analytics: ^10.8.0
   sign_in_with_apple: ^6.1.2
   flutter_native_splash: ^2.4.1
+  app_tracking_transparency: ^2.0.6
 #  firebase_auth: ^4.16.0 # web build error occur
 
 dev_dependencies:

@@ -22,23 +22,33 @@ import 'package:swm_peech_flutter/features/common/models/user_additional_info_mo
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_funnel/platform_funnel.dart';
+import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../constant/constants.dart';
+import '../data_source/local/local_practice_theme_storage.dart';
 
 class SocialLoginCtr extends GetxController {
   bool isShowed = false;
   Rx<SocialLoginChoiceViewState> loginChoiceViewState = Rx<SocialLoginChoiceViewState>(SocialLoginChoiceViewState.waitingToLogin);
   Rx<bool> loginChoiceViewLoginFailed = Rx<bool>(false);
   Rx<SocialLoginBottomSheetState> socialLoginBottomSheetState = Rx<SocialLoginBottomSheetState>(SocialLoginBottomSheetState.choiceView);
-  Rx<String> firstName = Rx<String>('');
-  Rx<String> lastName = Rx<String>('');
-  Rx<DateTime> birthday = Rx<DateTime>(DateTime(2000, 1, 1));
+  Rx<String> firstName = Rx<String>('default');
+  Rx<String> lastName = Rx<String>('default');
+  Rx<DateTime?> birthday = Rx<DateTime?>(null);
   Rx<UserGender> gender = Rx<UserGender>(UserGender.unknown);
   Rx<String> nickname = Rx<String>('');
   Rx<UserAdditionalInfoViewState> userAdditionalInfoViewState = Rx<UserAdditionalInfoViewState>(UserAdditionalInfoViewState.input);
   Rx<bool> userAdditionalInfoViewLoginFailed = Rx<bool>(false);
 
+  RxBool checkPrivacyAgreement = false.obs;
+
+  bool checkDefaultThemeId = false;
+
   final userInfoController = Get.find<UserInfoController>();
 
   void loginWithKakao(BuildContext context) async {
+    if (checkPrivacyPolicyAgreement(context) == false) return; // 개인정보 처리방침 체크 확인
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     if (await isKakaoTalkInstalled() && !Platform.isIOS) {
       try {
@@ -128,6 +138,7 @@ class SocialLoginCtr extends GetxController {
   }
 
   void loginWithApple(BuildContext context) async {
+    if (checkPrivacyPolicyAgreement(context) == false) return; // 개인정보 처리방침 체크 확인
     loginChoiceViewState.value = SocialLoginChoiceViewState.loading;
     try {
       //apple id login
@@ -226,7 +237,7 @@ class SocialLoginCtr extends GetxController {
       UserAdditionalInfoModel userAdditionalInfoModel = UserAdditionalInfoModel(
           firstName: firstName.value,
           lastName: lastName.value,
-          birth: formatDate(birthday.value),
+          birth: formatDate(birthday.value ?? DateTime(1900, 0, 0)),
           gender: formatGender(gender.value),
           nickName: nickname.value);
       RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
@@ -271,5 +282,29 @@ class SocialLoginCtr extends GetxController {
     loginChoiceViewState.value = SocialLoginChoiceViewState.waitingToLogin;
     loginChoiceViewLoginFailed.value = false;
     userAdditionalInfoViewLoginFailed.value = false;
+  }
+
+  void gotoPrivacyPolicy() async {
+    Uri privacyPolicyUri = Uri.parse(Constants.privacyPolicyUrl);
+
+    if (await canLaunchUrl(privacyPolicyUri)) {
+      await launchUrl(privacyPolicyUri, mode: LaunchMode.inAppWebView);
+    } else {
+      throw '[gotoPrivacyPolicy] Could not launch $privacyPolicyUri';
+    }
+  }
+
+  bool checkPrivacyPolicyAgreement(BuildContext context) {
+    if (checkPrivacyAgreement.value == false) {
+      showCommonDialog(
+        context: context,
+        title: '개인정보처리방침',
+        message: "개인정보 처리에 동의해주세요.",
+        showFirstButton: false,
+        secondButtonText: '확인',
+        isSecondButtonToClose: true,
+      );
+    }
+    return checkPrivacyAgreement.value;
   }
 }

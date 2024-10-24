@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 
-Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr controller) {
+Widget socialGettingAdditionalInfoView(
+    BuildContext context, SocialLoginCtr controller) {
   return SizedBox(
     child: Center(
       child: SingleChildScrollView(
@@ -14,7 +16,9 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const SizedBox(height: 40,),
+              const SizedBox(
+                height: 40,
+              ),
               const Text(
                 '계속하려면 사용자 정보를 입력해주세요',
                 style: TextStyle(
@@ -28,40 +32,46 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                ),
+                    color: Colors.grey),
               ),
-              if(controller.userAdditionalInfoViewState.value == UserAdditionalInfoViewState.loading)
+              if (controller.userAdditionalInfoViewState.value ==
+                  UserAdditionalInfoViewState.loading)
                 const Column(
                   children: [
-                    SizedBox(height: 50,),
-                    SizedBox(height: 50, width: 50, child: CircularProgressIndicator()),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator()),
                   ],
                 )
-              else if(controller.userAdditionalInfoViewState.value == UserAdditionalInfoViewState.input)
+              else if (controller.userAdditionalInfoViewState.value ==
+                  UserAdditionalInfoViewState.input)
                 Column(
                   children: [
                     const SizedBox(height: 40),
-                    TextFormField(
-                      initialValue: controller.lastName.value,
-                      onChanged: (value) {
-                        controller.lastName.value = value;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: '성 (last name)',
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      initialValue: controller.firstName.value,
-                      onChanged: (value) {
-                        controller.firstName.value = value;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: '이름 (first name)',
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                    // TextFormField(
+                    //   initialValue: controller.lastName.value,
+                    //   onChanged: (value) {
+                    //     controller.lastName.value = value;
+                    //   },
+                    //   decoration: const InputDecoration(
+                    //     labelText: '성 (last name)',
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 10),
+                    // TextFormField(
+                    //   initialValue: controller.firstName.value,
+                    //   onChanged: (value) {
+                    //     controller.firstName.value = value;
+                    //   },
+                    //   decoration: const InputDecoration(
+                    //     labelText: '이름 (first name)',
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 10),
                     TextFormField(
                       initialValue: controller.nickname.value,
                       onChanged: (value) {
@@ -78,7 +88,9 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                         Column(
                           children: [
                             const Text('생년월일 (birthday)'),
-                            const SizedBox(height: 5,),
+                            const SizedBox(
+                              height: 5,
+                            ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -86,7 +98,7 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                               onPressed: () async {
                                 final selectedDate = await showDatePicker(
                                   context: context,
-                                  initialDate: controller.birthday.value,
+                                  initialDate: controller.birthday.value ?? DateTime.now(), // null일 경우 현재 날짜로 설정
                                   firstDate: DateTime(1900),
                                   lastDate: DateTime.now(),
                                 );
@@ -94,27 +106,44 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                                   controller.birthday.value = selectedDate;
                                 }
                               },
-                              child: Text(
-                                "${controller.birthday.value.year.toString()}-${controller.birthday.value.month.toString().padLeft(2, '0')}-${controller.birthday.value.day.toString().padLeft(2, '0')}",
-                              ),
+                              child: Obx(() {
+                                // 생년월일이 선택되지 않았을 경우 기본 텍스트 표시
+                                return Text(
+                                  controller.birthday.value != null
+                                      ? "${controller.birthday.value!.year.toString()}-${controller.birthday.value!.month.toString().padLeft(2, '0')}-${controller.birthday.value!.day.toString().padLeft(2, '0')}"
+                                      : "생년월일 선택", // 기본 텍스트
+                                  style: TextStyle(color: Colors.black),
+                                );
+                              }),
                             ),
                           ],
                         ),
                         Column(
                           children: [
                             const Text('성별 (gender)'),
-                            const SizedBox(height: 5,),
+                            const SizedBox(
+                              height: 5,
+                            ),
                             DropdownButton<UserGender?>(
                               value: controller.gender.value,
                               onChanged: (UserGender? newValue) {
-                                controller.gender.value = newValue ?? UserGender.unknown;
+                                controller.gender.value =
+                                    newValue ?? UserGender.unknown;
                               },
-                              items: [UserGender.male, UserGender.female, UserGender.unknown]
-                                  .map<DropdownMenuItem<UserGender?>>((UserGender userGender) {
+                              items: [
+                                UserGender.male,
+                                UserGender.female,
+                                UserGender.unknown
+                              ].map<DropdownMenuItem<UserGender?>>(
+                                  (UserGender userGender) {
                                 return DropdownMenuItem<UserGender?>(
                                   value: userGender,
                                   child: Text(
-                                    {UserGender.male: '남성', UserGender.female: '여성', UserGender.unknown: '비공개'}[userGender]!,
+                                    {
+                                      UserGender.male: '남성',
+                                      UserGender.female: '여성',
+                                      UserGender.unknown: '비공개'
+                                    }[userGender]!,
                                   ),
                                 );
                               }).toList(),
@@ -124,7 +153,7 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                       ],
                     ),
                     const SizedBox(height: 65),
-                    if(controller.userAdditionalInfoViewLoginFailed.value)
+                    if (controller.userAdditionalInfoViewLoginFailed.value)
                       const Text(
                         '입력하지 않은 정보가 있습니다. 다시 확인해주세요.',
                         style: TextStyle(
@@ -138,18 +167,22 @@ Widget socialGettingAdditionalInfoView(BuildContext context, SocialLoginCtr cont
                       children: [
                         Expanded(
                             child: ElevatedButton(
-                                onPressed: () { controller.additionInfoConfirmBtn(context); },
+                                onPressed: () {
+                                  controller.additionInfoConfirmBtn(context);
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-                                child: const Text('완료',)
-                            )
-                        ),
+                                child: const Text(
+                                  '완료',
+                                ))),
                       ],
                     )
                   ],
                 ),
-              const SizedBox(height: 40,),
+              const SizedBox(
+                height: 40,
+              ),
             ],
           ),
         ),
