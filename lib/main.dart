@@ -14,6 +14,7 @@ import 'package:swm_peech_flutter/navigator_observers/home_navigator_observer.da
 import 'package:swm_peech_flutter/routers/routers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/common/events/social_login_bottom_sheet_open_event.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 late final _firstScreen;
 
@@ -33,6 +34,17 @@ void main() async {
     } else {
       print('온보딩을 완료하지 않았습니다. 첫 화면을 온보딩 화면으로 설정합니다.');
       _firstScreen = '/onboarding';
+    }
+
+    // If the system can show an authorization request dialog
+    if (await AppTrackingTransparency.trackingAuthorizationStatus == TrackingStatus.notDetermined) {
+      // Show a custom explainer dialog before the system dialog
+      // await showCustomTrackingDialog(context);
+      // Wait for dialog popping animation
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // Request system's tracking authorization dialog
+      final status = await AppTrackingTransparency.requestTrackingAuthorization();
+      print('AppTrackingTransparency status: $status');
     }
 
     FlutterNativeSplash.remove(); // splash screen 제거
