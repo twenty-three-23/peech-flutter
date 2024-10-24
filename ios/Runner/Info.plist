@@ -52,7 +52,7 @@
 			<true/>
 		</dict>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>We need your microphone permission to record audio.</string>
+		<string>앱은 음성 녹음을 위해 마이크에 접근합니다. 이 정보는 사용자 녹음 내용을 분석하는데 사용됩니다.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UILaunchStoryboardName</key>
