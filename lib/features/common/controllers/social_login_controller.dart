@@ -18,7 +18,6 @@ import 'package:swm_peech_flutter/features/common/models/auth_token_response_mod
 import 'package:swm_peech_flutter/features/common/models/social_login_bottom_sheet_state.dart.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_info.dart';
 import 'package:swm_peech_flutter/features/common/models/social_login_choice_view_state.dart';
-import 'package:swm_peech_flutter/features/common/models/theme_id_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_model.dart';
 import 'package:swm_peech_flutter/features/common/models/user_additional_info_view_state.dart';
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
@@ -276,15 +275,6 @@ class SocialLoginCtr extends GetxController {
       case UserGender.unknown:
         return 'UNKNOWN';
     }
-  }
-
-  Future<int> saveDefaultTheme() async {
-    RemoteUserAdditionalInfoDataSource remoteUserAdditionalInfoDataSource = RemoteUserAdditionalInfoDataSource(AuthDioFactory().dio);
-    ThemeIdModel themeIdModel = await remoteUserAdditionalInfoDataSource.getDefaultTheme();
-    int defaultThemeId = themeIdModel.themeId;
-    await LocalPracticeThemeStorage().setThemeId(defaultThemeId.toString());
-    checkDefaultThemeId = true;
-    return defaultThemeId;
   }
 
   void initialViewState() {

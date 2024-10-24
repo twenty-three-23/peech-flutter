@@ -2,8 +2,14 @@ import 'package:swm_peech_flutter/features/common/platform/platform_device_info/
     if (dart.library.html) 'package:swm_peech_flutter/features/common/platform/platform_device_info/device_info_on_web.dart' as device;
 
 class PlatformDeviceInfo {
+  static get type => device.type;
+
   static bool isMobile() {
     return device.isMobile();
+  }
+
+  static bool isWeb() {
+    return device.isWeb();
   }
 
   static bool isRecordUnavailableClient() {

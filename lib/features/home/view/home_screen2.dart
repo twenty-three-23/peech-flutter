@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
+import 'package:swm_peech_flutter/features/home/controller/home_controller.dart';
 
-import '../../common/controllers/social_login_controller.dart';
-import '../../common/data_source/local/local_practice_mode_storage.dart';
-
-class HomeScreen2 extends StatelessWidget {
+class HomeScreen2 extends StatefulWidget {
   const HomeScreen2({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var controller = Get.put(SocialLoginCtr());
+  State<HomeScreen2> createState() => _HomeScreen2State();
+}
 
+class _HomeScreen2State extends State<HomeScreen2> {
+  final controller = Get.find<HomeCtr>();
+
+  @override
+  Widget build(BuildContext context) {
     return CommonScaffold(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
@@ -54,9 +57,10 @@ class HomeScreen2 extends StatelessWidget {
               ),
               child: OutlinedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/interviewQuestions");
+                  controller.gotoInterviewQuestionsBtn(context);
                 },
                 style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.zero,
                   minimumSize: Size(double.infinity, 152),
                   side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0),
                   // 테두리 색상과 두께 설정
@@ -65,12 +69,14 @@ class HomeScreen2 extends StatelessWidget {
                   ),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(child: Image.asset('assets/images/interview_question.png', width: 120, height: 120)),
-                    Expanded(
+                    Image.asset('assets/images/interview_question.png', width: 120, height: 120),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "예상 면접질문 받기",
@@ -78,6 +84,7 @@ class HomeScreen2 extends StatelessWidget {
                               fontWeight: FontWeight.normal,
                               fontSize: 18,
                               color: const Color(0xff3B3E43),
+                              height: 28 / 18,
                             ),
                           ),
                           Text(
@@ -86,6 +93,7 @@ class HomeScreen2 extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xffFF5468),
+                              height: 18 / 14,
                             ),
                           ),
                         ],
@@ -115,11 +123,10 @@ class HomeScreen2 extends StatelessWidget {
                     ),
                     child: OutlinedButton(
                         onPressed: () {
-                          LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-                          controller.saveDefaultTheme();
-                          Navigator.pushNamed(context, "/voiceRecodeNoScript");
+                          controller.gotoSpeedAnalyticsBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
                           minimumSize: Size(148, 164),
                           side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                           shape: RoundedRectangleBorder(
@@ -127,7 +134,7 @@ class HomeScreen2 extends StatelessWidget {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,6 +148,7 @@ class HomeScreen2 extends StatelessWidget {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 16,
                                       color: const Color(0xff3B3E43),
+                                      height: 24 / 16,
                                     ),
                                   ),
                                   Text(
@@ -149,6 +157,7 @@ class HomeScreen2 extends StatelessWidget {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xff6D6F78),
+                                      height: 18 / 14,
                                     ),
                                   ),
                                 ],
@@ -176,11 +185,10 @@ class HomeScreen2 extends StatelessWidget {
                     ),
                     child: OutlinedButton(
                         onPressed: () {
-                          controller.saveDefaultTheme();
-                          LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-                          Navigator.pushNamed(context, '/scriptInput/input');
+                          controller.gotoExpectedTimeBtn(context);
                         },
                         style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
                           minimumSize: Size(148, 164),
                           side: BorderSide(color: const Color(0xffE5E8F0), width: 1.0), // 테두리 색상과 두께 설정
                           shape: RoundedRectangleBorder(
@@ -188,7 +196,7 @@ class HomeScreen2 extends StatelessWidget {
                           ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,6 +210,7 @@ class HomeScreen2 extends StatelessWidget {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 18,
                                       color: const Color(0xff3B3E43),
+                                      height: 24 / 16,
                                     ),
                                   ),
                                   Text(
@@ -210,6 +219,7 @@ class HomeScreen2 extends StatelessWidget {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: const Color(0xff6D6F78),
+                                      height: 18 / 14,
                                     ),
                                   ),
                                 ],
@@ -223,7 +233,8 @@ class HomeScreen2 extends StatelessWidget {
             ),
             SizedBox(
               height: 22,
-            )
+            ),
+            //TextButton(onPressed: (){Navigator.pushNamed(context, "/defaultScripts");}, child: Text("기본 대본"))
           ],
         ),
       ),
