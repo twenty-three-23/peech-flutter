@@ -74,22 +74,30 @@ class _HistoryViewState extends State<HistoryView> {
                             children: [
                               Expanded(
                                 child: OutlinedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
+                                  onPressed: () {
+                                    historyController.gotoDetailBtn(context, historyController.defaultList.value?.defaultScripts?[index].scriptId ?? 0);
+                                  },
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                      side: MaterialStateProperty.all(
-                                        BorderSide(color: Colors.black, width: 1), // 외곽선 설정
-                                      ),
-                                      backgroundColor: MaterialStateProperty.all(const Color(0xffF4F6FA)),
                                     ),
-                                    child: Text(
-                                      "분석 보기",
-                                      style: TextStyle(fontSize: 14, color: const Color(0xff3B3E43), fontWeight: FontWeight.w600, height: 18 / 14),
-                                    )),
+                                    side: MaterialStateProperty.all(
+                                      BorderSide(color: Colors.black, width: 1), // 외곽선 설정
+                                    ),
+                                    backgroundColor: MaterialStateProperty.all(const Color(0xffF4F6FA)),
+                                  ),
+                                  child: Text(
+                                    "분석 보기",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: const Color(0xff3B3E43),
+                                      fontWeight: FontWeight.w600,
+                                      height: 18 / 14,
+                                    ),
+                                  ),
+                                ),
                               ),
                               SizedBox(
                                 width: 4,
