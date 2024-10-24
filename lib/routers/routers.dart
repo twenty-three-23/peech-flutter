@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/mypage/view/mypage_screen.dart';
 import 'package:swm_peech_flutter/features/onboarding/controller/onboarding_controller.dart';
 import 'package:swm_peech_flutter/features/onboarding/view/onboarding_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
+import 'package:swm_peech_flutter/features/practice_history/view/history_detail.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_major_detail_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_screen.dart';
 import 'package:swm_peech_flutter/features/practice_history/view/history_view.dart';
@@ -151,6 +152,14 @@ class Routers {
     GetPage(
       name: '/defaultScripts',
       page: () => const HistoryView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HistoryCtr>(() => HistoryCtr());
+      }),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: '/historyDetail',
+      page: () => const HistoryDetail(),
       binding: BindingsBuilder(() {
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
       }),

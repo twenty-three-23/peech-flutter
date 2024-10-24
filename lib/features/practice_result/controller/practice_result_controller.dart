@@ -44,7 +44,6 @@ class PracticeResultCtr extends GetxController {
 
   void getPracticeResult(BuildContext context) async {
     isLoading.value = true;
-    //TODO 이런 방식으로 밖으로 분리하기? 아니면 postPracticeResult안에 넣기? 이 방식으로 한다고 하면 두 함수 이름은 어떻게 하는게 좋을까?
     PracticeMode? practiceMode = LocalPracticeModeStorage().getMode();
     if (practiceMode == null) throw Exception("[getPracticeResult] practiceMode is null!");
     _practiceResult = await postPracticeResult(context, practiceMode);
