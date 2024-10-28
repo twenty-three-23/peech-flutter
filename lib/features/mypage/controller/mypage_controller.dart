@@ -71,9 +71,9 @@ class MyPageController extends GetxController {
   }
 
   void _deleteUser() async {
-    LocalAuthTokenStorage().removeAllAuthToken();
     var remoteUserDataSource = RemoteUserDataSource(AuthDioFactory().dio);
     await remoteUserDataSource.deleteUser();
+    LocalAuthTokenStorage().removeAllAuthToken();
   }
 
   void deleteUserButton(BuildContext context) {
@@ -88,7 +88,7 @@ class MyPageController extends GetxController {
       secondAction: () {
         _deleteUser();
         Navigator.of(context).pushNamed('/root');
-        Get.snackbar('회원탈퇴', '회원탈퇴가 완료되었습니다.');
+        Get.snackbar('회원탈퇴', '30일 동안 재가입 할 수 있습니다.');
       },
     );
   }
