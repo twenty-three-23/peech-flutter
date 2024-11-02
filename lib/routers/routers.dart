@@ -13,6 +13,7 @@ import 'package:swm_peech_flutter/features/practice_result/controller/practice_r
 import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
 import 'package:swm_peech_flutter/features/root/view/root_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
+import 'package:swm_peech_flutter/features/script_input/view/full_script_input_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/view/script_expected_time_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
@@ -60,6 +61,14 @@ class Routers {
     GetPage(
       name: '/scriptInput/input',
       page: () => const ScriptInputScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
+      }),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: '/scriptInput/fullScriptInput',
+      page: () => const FullScriptInputScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut<ScriptInputCtr>(() => ScriptInputCtr());
       }),

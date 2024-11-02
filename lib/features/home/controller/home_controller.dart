@@ -94,7 +94,7 @@ class HomeCtr extends GetxController {
   void gotoExpectedTimeBtn(BuildContext context) {
     userInfoController.saveDefaultTheme();
     LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-    Navigator.pushNamed(context, '/scriptInput/input');
+    Navigator.pushNamed(context, '/scriptInput/fullScriptInput');
   }
 
   void gotoSpeedAnalyticsBtn(BuildContext context) {
