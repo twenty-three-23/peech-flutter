@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_text_field.dart';
 import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
+import 'package:swm_peech_flutter/features/script_input/model/script_type.dart';
 
 class ScriptExpectedTimeScreen extends StatefulWidget {
   const ScriptExpectedTimeScreen({super.key});
@@ -18,7 +19,14 @@ class _ScriptExpectedTimeScreenState extends State<ScriptExpectedTimeScreen> {
 
   @override
   void initState() {
-    controller.scriptExpectedTimeScriptInit();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      print("test: ${ModalRoute.of(context)?.settings.arguments}");
+      if (ModalRoute.of(context)?.settings.arguments == ScriptType.splitedScript) {
+        controller.scriptExpectedTimeScriptInit();
+      } else {
+        controller.fullScriptExpectedTimeScriptInit();
+      }
+    });
     super.initState();
   }
 

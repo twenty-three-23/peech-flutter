@@ -2,6 +2,8 @@ import 'package:retrofit/retrofit.dart' as retrofit;
 import 'package:dio/dio.dart';
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/full_script_expected_time_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/full_script_model.dart';
 
 part 'remote_script_expected_time_data_source.g.dart';
 
@@ -10,6 +12,10 @@ abstract class RemoteScriptExpectedTimeDataSource {
   factory RemoteScriptExpectedTimeDataSource(Dio dio, {String baseUrl}) = _RemoteScriptExpectedTimeDataSource;
 
   @retrofit.GET('api/v1/themes/{themeId}/scripts/{scriptId}/time')
-  @retrofit.Headers({'accessToken' : 'true'})
+  @retrofit.Headers({'accessToken': 'true'})
   Future<ExpectedTimeModel> getExpectedTime(@retrofit.Path() int themeId, @retrofit.Path() int scriptId);
+
+  @retrofit.POST('api/v2/script/expected-time')
+  @retrofit.Headers({'accessToken': 'true'})
+  Future<FullScriptExpectedTimeModel> getExpectedTimeWithFullScript(@retrofit.Body() FullScriptModel fullScript);
 }

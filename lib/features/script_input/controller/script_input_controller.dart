@@ -8,9 +8,13 @@ import 'package:swm_peech_flutter/features/script_input/data_source/mock/mock_sc
 import 'package:swm_peech_flutter/features/script_input/data_source/remote/remote_script_expected_time_data_source.dart';
 import 'package:swm_peech_flutter/features/common/data_source/remote/remote_script_input_data_source.dart';
 import 'package:dio/dio.dart';
+import 'package:swm_peech_flutter/features/script_input/model/expected_time_by_paragraph_model.dart';
 import 'package:swm_peech_flutter/features/script_input/model/expected_time_model.dart';
 import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/common/models/script_id_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/full_script_expected_time_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/full_script_model.dart';
+import 'package:swm_peech_flutter/features/script_input/model/script_type.dart';
 
 class ScriptInputCtr extends GetxController {
   //대본 입력 데이터
@@ -28,12 +32,18 @@ class ScriptInputCtr extends GetxController {
   List<String>? _expectedTimeScript;
   Rx<List<String>?> expectedTimeScript = Rx<List<String>?>(null);
 
+  String fullScript = '';
+
   @override
   void onClose() {
     for (var element in script.value) {
       element.dispose();
     }
     super.onClose();
+  }
+
+  void changeFullScript(String newFullScript) {
+    fullScript = newFullScript;
   }
 
   void updateScript(int index, String newScript) {
@@ -55,6 +65,10 @@ class ScriptInputCtr extends GetxController {
 
   Future<void> saveScriptContent() async {
     await LocalScriptStorage().setInputScriptContent(_script.paragraphs ?? List.empty());
+  }
+
+  Future<void> saveFullScriptContent(List<String> script) async {
+    await LocalScriptStorage().setInputScriptContent(script);
   }
 
   Future<void> saveScriptId(int scriptId) async {
@@ -128,6 +142,30 @@ class ScriptInputCtr extends GetxController {
     return int.parse(themeId);
   }
 
+  void fullScriptInputConfirmBtn(BuildContext context) async {
+    scriptInputIsLoading.value = true;
+    if (fullScript.isEmpty) {
+      scriptInputIsLoading.value = false;
+      showCommonDialog(
+        context: context,
+        title: '에러',
+        message: '대본을 입력해주세요',
+        showFirstButton: false,
+        secondButtonText: '확인',
+        isSecondButtonToClose: true,
+      );
+      return;
+    }
+    if (context.mounted) {
+      Navigator.pushNamed(
+        context,
+        '/scriptInput/result',
+        arguments: ScriptType.fullScript,
+      );
+      scriptInputIsLoading.value = false;
+    }
+  }
+
   void inputConfirmBtn(BuildContext context) async {
     scriptInputIsLoading.value = true;
     int themeId = getThemeId();
@@ -150,7 +188,11 @@ class ScriptInputCtr extends GetxController {
     await saveScriptId(scriptId);
 
     if (context.mounted) {
-      Navigator.pushNamed(context, '/scriptInput/result');
+      Navigator.pushNamed(
+        context,
+        '/scriptInput/result',
+        arguments: ScriptType.splitedScript,
+      );
       scriptInputIsLoading.value = false;
     }
   }
@@ -170,7 +212,7 @@ class ScriptInputCtr extends GetxController {
     expectedTimeIsLoading.value = true;
     scriptExpectedTime.value = null;
     expectedTimeScript.value = null;
-    _expectedTimeScript = getExpectedTimeScript();
+    _expectedTimeScript = getScript();
     int themeId = getThemeId();
     int scriptId = LocalScriptStorage().getInputScriptId() ?? 0;
     _scriptExpectedTime = await getExpectedTime(themeId, scriptId);
@@ -179,7 +221,41 @@ class ScriptInputCtr extends GetxController {
     expectedTimeIsLoading.value = false;
   }
 
-  List<String>? getExpectedTimeScript() {
+  Future<void> fullScriptExpectedTimeScriptInit() async {
+    expectedTimeIsLoading.value = true;
+    scriptExpectedTime.value = null;
+    expectedTimeScript.value = null;
+
+    String fullScript = LocalScriptStorage().getInputScriptContent()?.first ?? '';
+    RemoteScriptExpectedTimeDataSource remoteScriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(AuthDioFactory().dio);
+    FullScriptExpectedTimeModel fullScriptExpectedTimeModel =
+        await remoteScriptExpectedTimeDataSource.getExpectedTimeWithFullScript(FullScriptModel(fullScript: fullScript));
+
+    List<String> splitedScript = List.empty(growable: true);
+    fullScriptExpectedTimeModel.script?.forEach((element) {
+      splitedScript.add(element.paragraph ?? '');
+    });
+
+    await saveFullScriptContent(splitedScript);
+
+    _expectedTimeScript = splitedScript;
+
+    List<ExpectedTimeByParagraphModel> expectedTimeByParagraphs = List.empty(growable: true);
+    int i = 0;
+    fullScriptExpectedTimeModel.script?.forEach((element) {
+      expectedTimeByParagraphs.add(ExpectedTimeByParagraphModel(paragraphId: i ?? 0, expectedTimePerParagraph: element.time ?? '00:00:00'));
+      i++;
+    });
+
+    _scriptExpectedTime = ExpectedTimeModel(
+        expectedTimeByScript: fullScriptExpectedTimeModel.totalExpectedTime ?? '00:00:00', expectedTimeByParagraphs: expectedTimeByParagraphs);
+
+    expectedTimeScript.value = _expectedTimeScript;
+    scriptExpectedTime.value = _scriptExpectedTime;
+    expectedTimeIsLoading.value = false;
+  }
+
+  List<String>? getScript() {
     LocalScriptStorage localScriptStorage = LocalScriptStorage();
     return localScriptStorage.getInputScriptContent();
   }
