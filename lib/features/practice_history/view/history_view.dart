@@ -30,6 +30,14 @@ class _HistoryViewState extends State<HistoryView> {
           return ListView.builder(
               itemCount: historyController.defaultList.value?.defaultScripts?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
+                DateTime utcTime = DateTime.utc(
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.year ?? 1990,
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.month ?? 1,
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.day ?? 1,
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 1,
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.minute ?? 0,
+                    historyController.defaultList.value?.defaultScripts?[index].createdAt?.second ?? 0); // 예시 UTC 시간
+                DateTime koreaTime = utcTime.toLocal();
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                   child: Container(
@@ -46,7 +54,7 @@ class _HistoryViewState extends State<HistoryView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${historyController.defaultList.value?.defaultScripts?[index].createdAt?.year}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.month}.${historyController.defaultList.value?.defaultScripts?[index].createdAt?.day} ${historyController.weekday[historyController.defaultList.value?.defaultScripts?[index].createdAt?.weekday ?? 7] ?? ''} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) < 12 ? '오전' : '오후'} ${(historyController.defaultList.value?.defaultScripts?[index].createdAt?.hour ?? 0) % 12}:${historyController.defaultList.value?.defaultScripts?[index].createdAt?.minute}",
+                            "${koreaTime.year}.${koreaTime.month}.${koreaTime.day} ${historyController.weekday[koreaTime.weekday]} ${(koreaTime.hour ?? 0) < 12 ? '오전' : '오후'} ${(koreaTime.hour ?? 0) % 12}:${koreaTime.minute}",
                             style: TextStyle(
                               fontSize: 12,
                               color: const Color(0xff6D6F78),
