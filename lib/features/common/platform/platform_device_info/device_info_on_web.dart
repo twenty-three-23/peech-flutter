@@ -1,5 +1,9 @@
 import 'dart:html' as html;
 
+String get type => 'web';
+
+bool isWeb() => true;
+
 bool isMobile() {
   final userAgent = html.window.navigator.userAgent.toLowerCase();
   print('userAgent: $userAgent');

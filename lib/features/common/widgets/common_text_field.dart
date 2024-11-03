@@ -61,7 +61,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
               width: 1.2
           ),
         ),
-        border: OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
             color: Color(0xFFE5E8F0),

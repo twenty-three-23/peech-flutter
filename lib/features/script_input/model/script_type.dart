@@ -1,0 +1,4 @@
+enum ScriptType {
+  fullScript,
+  splitedScript,
+}

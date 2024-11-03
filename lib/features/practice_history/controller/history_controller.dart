@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
+import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_script_storage.dart';
@@ -15,23 +18,26 @@ import 'package:swm_peech_flutter/features/practice_history/data_source/remote/r
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_practice_result_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_theme_list_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/default_script_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_major_paragraphs_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_detail_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_minor_list_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_path_model.dart';
 import 'package:swm_peech_flutter/features/practice_history/model/history_theme_list_model.dart';
+import 'package:swm_peech_flutter/features/practice_history/model/paragraph_list_model.dart';
 
 class HistoryCtr extends GetxController {
-
   HistoryThemeListModel? _themeList;
   Rx<HistoryThemeListModel?> themeList = Rx<HistoryThemeListModel?>(null);
   HistoryMajorListModel? _majorList;
   Rx<HistoryMajorListModel?> majorList = Rx<HistoryMajorListModel?>(null);
   HistoryMinorListModel? _minorList;
   Rx<HistoryMinorListModel?> minorList = Rx<HistoryMinorListModel?>(null);
-
+  DefaultScriptListModel? _defaultList;
+  Rx<DefaultScriptListModel?> defaultList = Rx<DefaultScriptListModel?>(null);
 
   ScrollController themeScrollController = ScrollController();
   ScrollController majorScrollController = ScrollController();
@@ -39,6 +45,7 @@ class HistoryCtr extends GetxController {
 
   ScrollController pathScrollController = ScrollController();
 
+  final userInfoController = Get.find<UserInfoController>();
 
   final Rx<HistoryPathModel> historyPath = Rx<HistoryPathModel>(HistoryPathModel());
 
@@ -49,6 +56,15 @@ class HistoryCtr extends GetxController {
   HistoryMinorDetailModel? _minorDetail;
 
   Rx<bool> isLoading = false.obs;
+
+  List<String> weekday = ['일', '월', '화', '수', '목', '금', '토', ''];
+
+  Rx<ParagraphListModel?> practiceResult = Rx<ParagraphListModel?>(null); //데이터 받아오고, 요청 보낼때만 수정
+
+  // 바텀 네비게이션 통해서 진입시 실행되는 함수
+  void enter() {
+    getDefaultList();
+  }
 
   @override
   void onInit() {
@@ -68,10 +84,10 @@ class HistoryCtr extends GetxController {
     try {
       final remoteMajorDetailDataSource = RemoteMajorDetailDataSource(AuthDioFactory().dio);
       _majorDetail = await remoteMajorDetailDataSource.getMajorDetail(themeId, scriptId);
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getMajorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getMajorDetail] [Exception] $e");
       rethrow;
     }
@@ -84,11 +100,11 @@ class HistoryCtr extends GetxController {
       _themeList = await historyThemeDataSource.getThemeList();
       themeList.value = _themeList;
       isLoading.value = false;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getThemeList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       isLoading.value = false;
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getThemeList] [Exception] $e");
       isLoading.value = false;
       rethrow;
@@ -101,7 +117,6 @@ class HistoryCtr extends GetxController {
     themeList.value = _themeList;
   }
 
-
   void getMajorList() async {
     try {
       isLoading.value = true;
@@ -110,11 +125,11 @@ class HistoryCtr extends GetxController {
       majorList.value = _majorList;
       print("메이저 개수: ${majorList.value?.majorScripts?.length}");
       isLoading.value = false;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getMajorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       isLoading.value = false;
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getMajorList] [Exception] $e");
       isLoading.value = false;
       rethrow;
@@ -135,11 +150,11 @@ class HistoryCtr extends GetxController {
       minorList.value = _minorList;
       print("마이너 리스트 개수: ${minorList.value?.minorScripts?.length}");
       isLoading.value = false;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getMinorList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       isLoading.value = false;
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getMinorList] [Exception] $e");
       isLoading.value = false;
       rethrow;
@@ -153,7 +168,7 @@ class HistoryCtr extends GetxController {
   }
 
   void getMinorDetail() async {
-    try { //TODO try-catch 구문을 api 호출시마다 매번 넣어줘야하는가? 깔끔하게 해결하는 방법이 없을까?
+    try {
       isLoading.value = true;
       minorDetail.value = null;
       _minorList = null;
@@ -162,18 +177,18 @@ class HistoryCtr extends GetxController {
       final majorVersion = historyPath.value.major ?? 0;
       final minorVersion = historyPath.value.minor ?? 0;
       _minorDetail = await remoteMinorDetailDataSource.getMinorDetail(themeId, majorVersion, minorVersion);
-      minorDetail.value = _minorDetail; //TODO ui 업데이트를 get함수 내에서 처리해주는게 맞는가? get은 가져오는역할만 하는줄 알았는데 ui가 업데이트되는 사이드 이펙트가 생길수도?
+      minorDetail.value = _minorDetail;
       isLoading.value = false;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[getMinorDetail] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       isLoading.value = false;
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[getMinorDetail] [Exception] $e");
       isLoading.value = false;
       rethrow;
     }
-}
+  }
 
   void clickThemeList(int index) {
     print("선택 테마: ${themeList.value?.themes?[index].themeId}");
@@ -206,7 +221,7 @@ class HistoryCtr extends GetxController {
     getThemeList();
     historyPath.value.pathState.listen((newState) {
       setPathScrollPosToEndWithAni();
-      switch(newState) {
+      switch (newState) {
         case HistoryPathState.themeList:
           getThemeList();
           break;
@@ -225,7 +240,7 @@ class HistoryCtr extends GetxController {
 
   void initMajorScrollController() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(majorScrollController.hasClients) {
+      if (majorScrollController.hasClients) {
         majorScrollController.jumpTo(0.0);
       }
     });
@@ -233,17 +248,14 @@ class HistoryCtr extends GetxController {
 
   void initMinorScrollController() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(minorScrollController.hasClients) {
+      if (minorScrollController.hasClients) {
         minorScrollController.jumpTo(0.0);
       }
     });
   }
 
   void backButton(BuildContext context) {
-    if(historyPath.value.pathState.value == HistoryPathState.themeList) {
-      Navigator.of(context).pop();
-    }
-    else {
+    if (historyPath.value.pathState.value != HistoryPathState.themeList) {
       historyPath.value.back();
     }
   }
@@ -253,8 +265,8 @@ class HistoryCtr extends GetxController {
     Navigator.pushNamed(context, '/historyMajorDetail');
     int themeId = historyPath.value.theme ?? 0;
     int scriptId = _majorList?.majorScripts?.firstWhere((element) => element.majorVersion == historyPath.value.major).scriptId ?? 0;
-    await getMajorDetail(themeId, scriptId); //TODO 이 방식과 _majorDetail = getMajorDetail(themeId, scriptId); 방식 중 옳은 것.
-    majorDetail.value = _majorDetail; //TODO 변수를 매번 화면에 보이는 것과 데이터를 가지고 있는 것으로 나눠야 하는가? 그냥 바로 majorDetail = getMajorDetail(themeId, scriptId); 해도 되는 것 아닌가?
+    await getMajorDetail(themeId, scriptId);
+    majorDetail.value = _majorDetail;
   }
 
   void startWithThemeWithScriptBtn(BuildContext context) async {
@@ -277,7 +289,7 @@ class HistoryCtr extends GetxController {
     isLoading.value = true;
     await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
     await LocalPracticeModeStorage().setMode(PracticeMode.withScript);
-    if(_majorDetail == null) {
+    if (_majorDetail == null) {
       isLoading.value = false;
       throw Exception("[startWithMajorScriptBtn] major detail is null!");
     }
@@ -292,7 +304,7 @@ class HistoryCtr extends GetxController {
   void startWithMinorScriptBtn(BuildContext context) async {
     isLoading.value = true;
     int themeId = historyPath.value.theme ?? 0;
-    if(_minorDetail == null) {
+    if (_minorDetail == null) {
       isLoading.value = false;
       throw Exception("[startWithMajorScriptBtn] minor detail is null!");
     }
@@ -310,16 +322,16 @@ class HistoryCtr extends GetxController {
     try {
       RemoteScriptInputDataSource remoteScriptInputDataSource = RemoteScriptInputDataSource(AuthDioFactory().dio);
       scriptIdModel = await remoteScriptInputDataSource.postScript(themeId, scriptInputParagraphsModel.toJson());
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("[startWithMinorScriptBtn] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
       isLoading.value = false;
       rethrow;
-    } catch(e) {
+    } catch (e) {
       print("[startWithMinorScriptBtn] [Exception] $e");
       isLoading.value = false;
       rethrow;
     }
-    if(scriptIdModel == null || scriptIdModel.scriptId == null) { //TODO 데이터 받아왔을 때 null인 경우를 매번 이렇게 처리해줘야 하는지. 아니면 인터셉터에서 처리?
+    if (scriptIdModel == null || scriptIdModel.scriptId == null) {
       isLoading.value = false;
       throw Exception("[startWithMajorScriptBtn] scriptIdModel or scriptIdModel.scriptId is null!");
     }
@@ -331,4 +343,51 @@ class HistoryCtr extends GetxController {
     isLoading.value = false;
   }
 
+  void getDefaultList() async {
+    try {
+      isLoading.value = true;
+      final historyMajorDataSource = RemoteMajorListDataSource(AuthDioFactory().dio);
+      int? themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+
+      if (themeId == 0) {
+        await userInfoController.saveDefaultTheme();
+        themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+      }
+
+      _defaultList = await historyMajorDataSource.getDefaultScriptList(themeId);
+      defaultList.value = _defaultList;
+      print("디폴트 리스트 개수: ${defaultList.value}");
+      isLoading.value = false;
+    } on DioException catch (e) {
+      print("[getDefaultList] [DioException] [${e.response?.statusCode}] [${e.response?.data['message']}]]");
+      isLoading.value = false;
+      rethrow;
+    } catch (e) {
+      print("[getDefaultList] [Exception] $e");
+      isLoading.value = false;
+      rethrow;
+    }
+  }
+
+  void gotoInterviewQuestion(BuildContext context, int index) {
+    Navigator.of(context).pushNamed(
+      '/interviewQuestions',
+      arguments: defaultList.value?.defaultScripts?[index].scriptContent,
+    );
+  }
+
+  void gotoDetailBtn(BuildContext context, int scriptId) {
+    Navigator.pushNamed(context, '/historyDetail');
+    getPracticeResult(scriptId);
+  }
+
+  void getPracticeResult(int scriptId) async {
+    isLoading.value = true;
+    practiceResult.value = null;
+    RemotePracticeResultDataSource remotePracticeResultDataSource = RemotePracticeResultDataSource(AuthDioFactory().dio);
+    int themeId = int.parse(LocalPracticeThemeStorage().getThemeId() ?? '0');
+    practiceResult.value = await remotePracticeResultDataSource.getPracticeResult(themeId, scriptId);
+    print("practiceResult: ${practiceResult.value?.toJson()}, ${practiceResult.value?.script?[0].toJson()}");
+    isLoading.value = false;
+  }
 }
