@@ -209,6 +209,7 @@ class ScriptInputCtr extends GetxController {
   }
 
   Future<void> scriptExpectedTimeScriptInit() async {
+    print("[scriptExpectedTimeScriptInit]");
     expectedTimeIsLoading.value = true;
     scriptExpectedTime.value = null;
     expectedTimeScript.value = null;
@@ -222,11 +223,11 @@ class ScriptInputCtr extends GetxController {
   }
 
   Future<void> fullScriptExpectedTimeScriptInit() async {
+    print("[fullScriptExpectedTimeScriptInit]");
     expectedTimeIsLoading.value = true;
     scriptExpectedTime.value = null;
     expectedTimeScript.value = null;
 
-    String fullScript = LocalScriptStorage().getInputScriptContent()?.first ?? '';
     RemoteScriptExpectedTimeDataSource remoteScriptExpectedTimeDataSource = RemoteScriptExpectedTimeDataSource(AuthDioFactory().dio);
     FullScriptExpectedTimeModel fullScriptExpectedTimeModel =
         await remoteScriptExpectedTimeDataSource.getExpectedTimeWithFullScript(FullScriptModel(fullScript: fullScript));
