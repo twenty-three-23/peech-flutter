@@ -8,8 +8,7 @@ class AuthTokenInjectInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers["ngrok-skip-browser-warning"] =
-        '100'; // ngrok 사용할 때 브라우저 경고창 무시
+    options.headers["ngrok-skip-browser-warning"] = '100'; // ngrok 사용할 때 브라우저 경고창 무시
 
     if (options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken');
@@ -18,8 +17,7 @@ class AuthTokenInjectInterceptor extends Interceptor {
         token = 'x';
       }
       options.headers.addAll({"authorization": "Bearer $token"});
-      print(
-          "[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject access token [$token]");
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject access token [$token]");
     }
 
     if (options.headers['refreshToken'] == 'true') {
@@ -29,8 +27,7 @@ class AuthTokenInjectInterceptor extends Interceptor {
         token = 'x';
       }
       options.headers.addAll({"authorization": "Bearer $token"});
-      print(
-          "[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject refresh token [$token]");
+      print("[REQ] [TokenInject] [${options.method}] [${options.path}] -> inject refresh token [$token]");
     }
 
     return super.onRequest(options, handler);
