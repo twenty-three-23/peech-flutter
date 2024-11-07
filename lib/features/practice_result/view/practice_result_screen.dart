@@ -268,7 +268,7 @@ class _PracticeResultScreenState extends State<PracticeResultScreen> {
                   if (controller.isLoading.value == false)
                     Expanded(
                       child: ColoredButton(
-                        text: '예상 면접 질문 받아보기',
+                        text: '예상 질문 보기',
                         onPressed: () {
                           interviewQuestionInputController.getInterviewQuestionsBySTTResult(controller.getScriptContent());
                           Navigator.pushNamed(context, "/interviewQuestionsResult");
