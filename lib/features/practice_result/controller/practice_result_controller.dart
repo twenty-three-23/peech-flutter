@@ -66,28 +66,12 @@ class PracticeResultCtr extends GetxController {
       dynamic voiceFile = await RecordFileUtil().getRecodingFile();
 
       if (!kIsWeb) {
-        if (practiceMode == PracticeMode.withScript) {
-          int? scriptId = LocalScriptStorage().getInputScriptId();
-          if (scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
-          ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeWithScriptResultList(themeId, scriptId, voiceFile as File);
-          return paragraphListModel;
-        } else {
-          ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile as File);
-          return paragraphListModel;
-        }
+        ParagraphListModel paragraphListModel = await practiceResultDataSource.getPracticeNoScriptResultList(themeId, voiceFile as File);
+        return paragraphListModel;
       } else {
-        if (practiceMode == PracticeMode.withScript) {
-          int? scriptId = LocalScriptStorage().getInputScriptId();
-          if (scriptId == null) throw Exception("[postPracticeResult] scriptId is null!");
-          ParagraphListModel paragraphListModel =
-              await practiceResultDataSource.getPracticeWithScriptResultListWeb(themeId, scriptId, WebRecordingFile(file: voiceFile as String));
-
-          return paragraphListModel;
-        } else {
-          ParagraphListModel paragraphListModel =
-              await practiceResultDataSource.getPracticeNoScriptResultListWeb(themeId, WebRecordingFile(file: voiceFile as String));
-          return paragraphListModel;
-        }
+        ParagraphListModel paragraphListModel =
+            await practiceResultDataSource.getPracticeNoScriptResultListWeb(themeId, WebRecordingFile(file: voiceFile as String));
+        return paragraphListModel;
       }
     } on DioException catch (e) {
       print("[postPracticeResult] DioException: [${e.response?.statusCode}] ${e.response?.data}");
