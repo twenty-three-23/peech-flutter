@@ -36,13 +36,7 @@ void main() async {
       _firstScreen = '/onboarding';
     }
 
-    // If the system can show an authorization request dialog
-    if (await AppTrackingTransparency.trackingAuthorizationStatus == TrackingStatus.notDetermined) {
-      // Show a custom explainer dialog before the system dialog
-      // await showCustomTrackingDialog(context);
-      // Wait for dialog popping animation
-      // await Future.delayed(const Duration(milliseconds: 200));
-      // Request system's tracking authorization dialog
+    if (PlatformDeviceInfo.isIOS() && !kIsWeb) {
       final status = await AppTrackingTransparency.requestTrackingAuthorization();
       print('AppTrackingTransparency status: $status');
     }
