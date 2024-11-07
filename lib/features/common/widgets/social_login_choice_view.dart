@@ -10,7 +10,7 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
   return Container(
     color: Colors.white,
     child: SizedBox(
-      height: 300,
+      height: 350,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,30 +54,24 @@ Widget socialLoginChoiceView(BuildContext context, SocialLoginCtr controller) {
                         onTap: () {
                           controller.checkPrivacyAgreement.value = !controller.checkPrivacyAgreement.value;
                         },
-                        child: Text(
-                          "개인정보 처리방침 및 이용약관에 동의합니다.",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          controller.gotoPrivacyPolicy();
-                        },
-                        child: Text(
-                          "(상세보기)",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                            ),
                           ),
-                        ),
-                        style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.zero),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero, // 모서리 반경을 0으로 설정
+                          child: InkWell(
+                            onTap: () {
+                              controller.gotoPrivacyPolicy();
+                            },
+                            child: Text(
+                              "개인정보 처리방침 및 이용약관에 동의합니다.",
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
                             ),
                           ),
                         ),
