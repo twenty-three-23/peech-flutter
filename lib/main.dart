@@ -36,8 +36,10 @@ void main() async {
       _firstScreen = '/onboarding';
     }
 
-    final status = await AppTrackingTransparency.requestTrackingAuthorization();
-    print('AppTrackingTransparency status: $status');
+    if (PlatformDeviceInfo.isIOS() && !kIsWeb) {
+      final status = await AppTrackingTransparency.requestTrackingAuthorization();
+      print('AppTrackingTransparency status: $status');
+    }
 
     FlutterNativeSplash.remove(); // splash screen 제거
 
