@@ -11,6 +11,7 @@ import 'package:swm_peech_flutter/features/practice_history/view/history_screen.
 import 'package:swm_peech_flutter/features/practice_history/view/history_view.dart';
 import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
 import 'package:swm_peech_flutter/features/practice_result/view/practice_result_screen.dart';
+import 'package:swm_peech_flutter/features/root/controller/root_controller.dart';
 import 'package:swm_peech_flutter/features/root/view/root_screen.dart';
 import 'package:swm_peech_flutter/features/script_input/controller/script_input_controller.dart';
 import 'package:swm_peech_flutter/features/script_input/view/full_script_input_screen.dart';
@@ -44,6 +45,7 @@ class Routers {
       name: '/root',
       page: () => RootScreen(),
       binding: BindingsBuilder(() {
+        Get.lazyPut<RootCtr>(() => RootCtr());
         Get.lazyPut<HomeCtr>(() => HomeCtr());
         Get.lazyPut<HistoryCtr>(() => HistoryCtr());
         Get.lazyPut<MyPageController>(() => MyPageController());
