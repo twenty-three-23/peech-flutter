@@ -21,7 +21,7 @@ class _FullScriptInputScreenState extends State<FullScriptInputScreen> {
     final controller = Get.find<ScriptInputCtr>();
 
     return CommonScaffold(
-      appBarTitle: '대본으로 시작',
+      appBarTitle: '자기소개 입력하고 시작',
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus(); // 화면을 터치하면 키보드를 내리고 포커스를 해제합니다.
@@ -80,18 +80,18 @@ class _FullScriptInputScreenState extends State<FullScriptInputScreen> {
                               const SizedBox(
                                 height: 16,
                               ),
-                              const Text("발표할 내용을 적어보세요",
+                              const Text("자기소개 대본을 적어보세요",
                                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF3B3E43), height: 34 / 22)),
                               const SizedBox(
                                 height: 8,
                               ),
-                              const Text("발표할 내용을 적으면 예상 시간을 알 수 있어요",
+                              const Text("자기소개 대본을 적으면 예상 시간을 알 수 있어요",
                                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF3B3E43), height: 22 / 14)),
                               const SizedBox(
                                 height: 24,
                               ),
                               CommonTextField(
-                                hintText: '문단을 입력하세요',
+                                hintText: '자기소개를 입력하세요',
                                 minLines: 10,
                                 onChanged: (value) {
                                   controller.changeFullScript(value);
@@ -118,7 +118,7 @@ class _FullScriptInputScreenState extends State<FullScriptInputScreen> {
                     children: [
                       Expanded(
                         child: ColoredButton(
-                          text: '대본 입력 완료',
+                          text: '자기소개 입력 완료',
                           onPressed: () {
                             controller.fullScriptInputConfirmBtn(context);
                           },
