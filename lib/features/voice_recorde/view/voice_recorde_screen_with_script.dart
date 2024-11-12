@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
-import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
-import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/controller/voice_recorde_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/model/practice_state.dart';
 
-class VoiceRecodeScreenWithScript extends StatefulWidget {
-  const VoiceRecodeScreenWithScript({super.key});
+class VoiceRecordeScreenWithScript extends StatefulWidget {
+  const VoiceRecordeScreenWithScript({super.key});
 
   @override
-  State<VoiceRecodeScreenWithScript> createState() => _VoiceRecodeScreenWithScriptState();
+  State<VoiceRecordeScreenWithScript> createState() => _VoiceRecordeScreenWithScriptState();
 }
 
-class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScript> with WidgetsBindingObserver {
-  final VoiceRecodeCtr _controller = Get.find<VoiceRecodeCtr>();
+class _VoiceRecordeScreenWithScriptState extends State<VoiceRecordeScreenWithScript> with WidgetsBindingObserver {
+  final VoiceRecordeCtr _controller = Get.find<VoiceRecordeCtr>();
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
   Widget build(BuildContext context) {
     return CommonScaffold(
         appBarTitle: '음성 녹음',
-        child: GetX<VoiceRecodeCtr>(
+        child: GetX<VoiceRecordeCtr>(
           builder: (_) => Stack(
             children: [
               if (_controller.practiceState.value == PracticeState.recoding ||
@@ -129,7 +129,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                                           ),
                                           Visibility(
                                               visible: _controller.promptSelectedOption.value == _controller.promptOptions[1],
-                                              child: GetX<VoiceRecodeCtr>(
+                                              child: GetX<VoiceRecordeCtr>(
                                                   builder: (_) => Column(
                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: [
@@ -156,7 +156,7 @@ class _VoiceRecodeScreenWithScriptState extends State<VoiceRecodeScreenWithScrip
                               ),
                             ),
                             SliverToBoxAdapter(
-                              child: GetX<VoiceRecodeCtr>(
+                              child: GetX<VoiceRecordeCtr>(
                                 builder: (_) => Container(
                                   height: _controller.scriptListViewSize.value,
                                   alignment: Alignment.center,

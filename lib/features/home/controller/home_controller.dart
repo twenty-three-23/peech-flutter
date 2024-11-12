@@ -100,7 +100,7 @@ class HomeCtr extends GetxController {
   void gotoSpeedAnalyticsBtn(BuildContext context) {
     LocalPracticeModeStorage().setMode(PracticeMode.noScript);
     userInfoController.saveDefaultTheme();
-    Navigator.pushNamed(context, "/voiceRecodeNoScript");
+    Navigator.pushNamed(context, "/voiceRecordeNoScript");
   }
 
   void gotoInterviewQuestionsBtn(BuildContext context) {
