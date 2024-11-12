@@ -281,7 +281,7 @@ class HistoryCtr extends GetxController {
     isLoading.value = true;
     await LocalPracticeThemeStorage().setThemeId((historyPath.value.theme ?? 0).toString());
     await LocalPracticeModeStorage().setMode(PracticeMode.noScript);
-    Navigator.pushNamed(context, '/voiceRecodeNoScript');
+    Navigator.pushNamed(context, '/voiceRecordeNoScript');
     isLoading.value = false;
   }
 

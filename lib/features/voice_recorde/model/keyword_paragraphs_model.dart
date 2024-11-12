@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:swm_peech_flutter/features/voice_recode/model/keyword_paragraph_unit_model.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/model/keyword_paragraph_unit_model.dart';
 
 part 'keyword_paragraphs_model.g.dart';
 
