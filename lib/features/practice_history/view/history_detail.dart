@@ -70,76 +70,75 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         if (index == 0)
                           Column(
                             children: [
-                              Ink(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                  side: const BorderSide(color: Colors.grey),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                 ),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(10),
-                                  onTap: () {
-                                    controller.aiAnalysisBtn();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                                    child: GetX<HistoryCtr>(
-                                      builder: (_) => Column(
-                                        children: [
-                                          if (controller.aiAnalysisIsShow == false)
+                                onPressed: () {
+                                  controller.aiAnalysisBtn();
+                                },
+                                child: GetX<HistoryCtr>(
+                                  builder: (_) => Column(
+                                    children: [
+                                      if (controller.aiAnalysisIsShow == false)
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'AI의 분석 펼쳐보기',
+                                              style: TextStyle(fontWeight: FontWeight.w500),
+                                            ),
+                                            Icon(
+                                              Icons.keyboard_arrow_down,
+                                              size: 16,
+                                            )
+                                          ],
+                                        ),
+                                      if (controller.aiAnalysisIsShow.value == true)
+                                        Column(
+                                          children: [
+                                            SizedBox(height: 6),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                Text('AI의 분석 펼쳐보기'),
+                                                Text(
+                                                  'AI의 분석 접기',
+                                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                                ),
                                                 Icon(
-                                                  Icons.keyboard_arrow_down,
+                                                  Icons.keyboard_arrow_up,
                                                   size: 16,
                                                 )
                                               ],
                                             ),
-                                          if (controller.aiAnalysisIsShow.value == true)
-                                            Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text('AI의 분석 접기'),
-                                                    Icon(
-                                                      Icons.keyboard_arrow_up,
-                                                      size: 16,
-                                                    )
-                                                  ],
+                                            SizedBox(height: 16),
+                                            if (controller.aiAnalysisResult.value == null)
+                                              CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                color: Color(0xff3B3E43),
+                                              ),
+                                            if (controller.aiAnalysisResult.value != null)
+                                              Text(
+                                                controller.aiAnalysisResult.value ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xFF3B3E43),
                                                 ),
-                                                SizedBox(height: 16),
-                                                if (controller.aiAnalysisResult.value == null)
-                                                  CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    color: Color(0xff3B3E43),
-                                                  ),
-                                                if (controller.aiAnalysisResult.value != null)
-                                                  Text(
-                                                    controller.aiAnalysisResult.value ?? '',
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: Color(0xFF3B3E43),
-                                                      height: 26 / 18,
-                                                    ),
-                                                  ),
-                                                SizedBox(height: 16),
-                                              ],
-                                            )
-                                        ],
-                                      ),
-                                    ),
+                                              ),
+                                            SizedBox(height: 16),
+                                          ],
+                                        )
+                                    ],
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 16,
-                              ),
+                              SizedBox(height: 16),
                             ],
                           ),
                         Container(
