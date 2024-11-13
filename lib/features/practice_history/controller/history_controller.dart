@@ -61,6 +61,9 @@ class HistoryCtr extends GetxController {
 
   Rx<ParagraphListModel?> practiceResult = Rx<ParagraphListModel?>(null); //데이터 받아오고, 요청 보낼때만 수정
 
+  Rx<String?> aiAnalysisResult = Rx<String?>(null);
+  Rx<bool> aiAnalysisIsShow = Rx<bool>(false);
+
   // 바텀 네비게이션 통해서 진입시 실행되는 함수
   void enter() {
     getDefaultList();
@@ -78,6 +81,10 @@ class HistoryCtr extends GetxController {
     majorScrollController.dispose();
     minorScrollController.dispose();
     super.onClose();
+  }
+
+  void aiAnalysisBtn() {
+    aiAnalysisIsShow.value = !aiAnalysisIsShow.value;
   }
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {

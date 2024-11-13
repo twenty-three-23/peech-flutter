@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
-import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
-import 'package:swm_peech_flutter/features/interview_question/controller/interview_question_input_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
-import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
-import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class HistoryDetail extends StatefulWidget {
   const HistoryDetail({super.key});
@@ -72,6 +67,81 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
+                        if (index == 0)
+                          Column(
+                            children: [
+                              Ink(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onTap: () {
+                                    controller.aiAnalysisBtn();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                    child: GetX<HistoryCtr>(
+                                      builder: (_) => Column(
+                                        children: [
+                                          if (controller.aiAnalysisIsShow == false)
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text('AI의 분석 펼쳐보기'),
+                                                Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  size: 16,
+                                                )
+                                              ],
+                                            ),
+                                          if (controller.aiAnalysisIsShow.value == true)
+                                            Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text('AI의 분석 접기'),
+                                                    Icon(
+                                                      Icons.keyboard_arrow_up,
+                                                      size: 16,
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(height: 16),
+                                                if (controller.aiAnalysisResult.value == null)
+                                                  CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    color: Color(0xff3B3E43),
+                                                  ),
+                                                if (controller.aiAnalysisResult.value != null)
+                                                  Text(
+                                                    controller.aiAnalysisResult.value ?? '',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Color(0xFF3B3E43),
+                                                      height: 26 / 18,
+                                                    ),
+                                                  ),
+                                                SizedBox(height: 16),
+                                              ],
+                                            )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                            ],
+                          ),
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white, // 배경 색상
