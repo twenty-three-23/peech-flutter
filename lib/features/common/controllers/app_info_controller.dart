@@ -15,7 +15,7 @@ class AppInfoController extends GetxController {
   bool? appAvailable;
 
   final String _androidAppId = "com.twenty_three.swm_peech_flutter"; // Android 패키지 이름
-  final String _iosAppId = "none"; // TODO iOS 앱스토어 ID
+  final String _iosAppId = "id6612018644"; // iOS 앱스토어 ID
 
   Uri _getStoreUrl(BuildContext context) {
     if (PlatformDeviceInfo.isIOS()) {
