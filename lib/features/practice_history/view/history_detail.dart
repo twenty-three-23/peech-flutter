@@ -90,11 +90,14 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                           children: [
                                             Text(
                                               'AI의 분석 펼쳐보기',
-                                              style: TextStyle(fontWeight: FontWeight.w500),
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                             Icon(
                                               Icons.keyboard_arrow_down,
-                                              size: 16,
+                                              size: 20,
                                             )
                                           ],
                                         ),
@@ -108,11 +111,14 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                               children: [
                                                 Text(
                                                   'AI의 분석 접기',
-                                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
                                                 Icon(
                                                   Icons.keyboard_arrow_up,
-                                                  size: 16,
+                                                  size: 20,
                                                 )
                                               ],
                                             ),
