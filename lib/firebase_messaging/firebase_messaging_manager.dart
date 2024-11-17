@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_device_uuid_storage.dart';
 import 'package:swm_peech_flutter/features/common/dio/auth_dio_factory.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_device_info/platform_device_info.dart';
+import 'package:swm_peech_flutter/firebase_messaging/data_source/remote_remove_fcm_token.dart';
 import 'package:swm_peech_flutter/firebase_messaging/data_source/remote_save_fcm_token.dart';
 import 'package:swm_peech_flutter/firebase_messaging/model/notification_data.dart';
 import 'package:swm_peech_flutter/firebase_messaging/model/save_token_request_model.dart';
@@ -18,6 +20,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class FirebaseMessagingManager {
   static Future<void> initialize() async {
+    if (kIsWeb) return;
     await FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: true,
@@ -37,11 +40,7 @@ class FirebaseMessagingManager {
     print('FCM token = ${await FirebaseMessaging.instance.getToken()}');
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
       print('onTokenRefresh = $fcmToken');
-      RemoteSaveFcmToken remoteSaveFcmToken = RemoteSaveFcmToken(AuthDioFactory().dio);
-      remoteSaveFcmToken.putFcmToken(SaveTokenRequestModel(
-        deviceId: await LocalDeviceUuidStorage().getDeviceUuid() ?? 'unknown',
-        fcmToken: fcmToken,
-      ));
+      putFcmToken(fcmToken: fcmToken);
     }).onError((err) {
       print('onTokenRefresh error = $err');
     });
@@ -85,6 +84,22 @@ class FirebaseMessagingManager {
   static void onNotificationOpened() {
     print('onNotificationOpened');
     // AnalyticsManager.sendEvent(AnalyticsEvent.openPushClick);
+  }
+
+  static void putFcmToken({String? fcmToken = null}) async {
+    if (fcmToken == null) fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+    print('[putFcmToken] fcmToken = $fcmToken');
+    RemoteSaveFcmToken remoteSaveFcmToken = RemoteSaveFcmToken(AuthDioFactory().dio);
+    remoteSaveFcmToken.putFcmToken(SaveTokenRequestModel(
+      deviceId: await LocalDeviceUuidStorage().getDeviceUuid() ?? 'unknown',
+      fcmToken: fcmToken,
+    ));
+  }
+
+  static Future<void> deleteFcmToken() async {
+    print('[deleteFcmToken] deviceUuid = ${await LocalDeviceUuidStorage().getDeviceUuid() ?? 'unknown'}');
+    RemoteRemoveFcmToken remoteRemoveFcmToken = RemoteRemoveFcmToken(AuthDioFactory().dio);
+    remoteRemoveFcmToken.deleteFcmToken(await LocalDeviceUuidStorage().getDeviceUuid() ?? 'unknown');
   }
 }
 

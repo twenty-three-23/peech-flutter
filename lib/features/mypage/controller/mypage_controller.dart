@@ -5,6 +5,7 @@ import 'package:swm_peech_flutter/features/common/constant/constants.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
 import 'package:swm_peech_flutter/features/mypage/data_source/remote/remote_user_data_source.dart';
+import 'package:swm_peech_flutter/firebase_messaging/firebase_messaging_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/data_source/local/local_auth_token_storage.dart';
@@ -37,6 +38,7 @@ class MyPageController extends GetxController {
   }
 
   void _logOut() async {
+    await FirebaseMessagingManager.deleteFcmToken();
     LocalAuthTokenStorage().removeAllAuthToken();
   }
 
@@ -71,6 +73,7 @@ class MyPageController extends GetxController {
   }
 
   void _deleteUser() async {
+    await FirebaseMessagingManager.deleteFcmToken();
     var remoteUserDataSource = RemoteUserDataSource(AuthDioFactory().dio);
     await remoteUserDataSource.deleteUser();
     LocalAuthTokenStorage().removeAllAuthToken();
