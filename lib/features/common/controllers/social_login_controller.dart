@@ -23,6 +23,7 @@ import 'package:swm_peech_flutter/features/common/models/user_additional_info_vi
 import 'package:swm_peech_flutter/features/common/models/user_gender.dart';
 import 'package:swm_peech_flutter/features/common/platform/platform_funnel/platform_funnel.dart';
 import 'package:swm_peech_flutter/features/common/widgets/show_common_dialog.dart';
+import 'package:swm_peech_flutter/firebase_messaging/firebase_messaging_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constant/constants.dart';
@@ -64,6 +65,8 @@ class SocialLoginCtr extends GetxController {
         loginChoiceViewState.value = SocialLoginChoiceViewState.success;
         loginChoiceViewLoginFailed.value = false;
         print('카카오톡으로 로그인 성공');
+
+        loginFinish(); // 로그인 성공시 호출하는 함수
 
         //추가 정보 입력 분기
         await Future.delayed(const Duration(milliseconds: 500));
@@ -117,6 +120,8 @@ class SocialLoginCtr extends GetxController {
       loginChoiceViewLoginFailed.value = false;
       print('카카오톡으로 로그인 성공');
 
+      loginFinish(); // 로그인 성공시 호출하는 함수
+
       //추가 정보 입력 분기
       await Future.delayed(const Duration(milliseconds: 500));
       if (authTokenResponseModel.statusCode == 411) {
@@ -165,6 +170,8 @@ class SocialLoginCtr extends GetxController {
       loginChoiceViewState.value = SocialLoginChoiceViewState.success;
       loginChoiceViewLoginFailed.value = false;
       print('apple id로 로그인 성공');
+
+      loginFinish(); // 로그인 성공시 호출하는 함수
 
       // 추가정보 입력 분기
       await Future.delayed(const Duration(milliseconds: 500));
@@ -306,5 +313,10 @@ class SocialLoginCtr extends GetxController {
       );
     }
     return checkPrivacyAgreement.value;
+  }
+
+  void loginFinish() {
+    print('[loginFinish]');
+    FirebaseMessagingManager.putFcmToken();
   }
 }

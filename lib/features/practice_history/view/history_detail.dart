@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
-import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
-import 'package:swm_peech_flutter/features/interview_question/controller/interview_question_input_controller.dart';
 import 'package:swm_peech_flutter/features/practice_history/controller/history_controller.dart';
-import 'package:swm_peech_flutter/features/practice_result/controller/practice_result_controller.dart';
-import 'package:swm_peech_flutter/features/practice_result/widget/editing_dialog.dart';
 
 class HistoryDetail extends StatefulWidget {
   const HistoryDetail({super.key});
@@ -72,6 +67,86 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
+                        if (index == 0)
+                          Column(
+                            children: [
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                  side: const BorderSide(color: Colors.grey),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                ),
+                                onPressed: () {
+                                  controller.aiAnalysisBtn();
+                                },
+                                child: GetX<HistoryCtr>(
+                                  builder: (_) => Column(
+                                    children: [
+                                      if (controller.aiAnalysisIsShow == false)
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'AI의 분석 펼쳐보기',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.keyboard_arrow_down,
+                                              size: 20,
+                                            )
+                                          ],
+                                        ),
+                                      if (controller.aiAnalysisIsShow.value == true)
+                                        Column(
+                                          children: [
+                                            SizedBox(height: 6),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'AI의 분석 접기',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.keyboard_arrow_up,
+                                                  size: 20,
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(height: 16),
+                                            if (controller.aiAnalysisResult.value == null)
+                                              CircularProgressIndicator(
+                                                strokeWidth: 1.5,
+                                                color: Color(0xff3B3E43),
+                                              ),
+                                            if (controller.aiAnalysisResult.value != null)
+                                              Text(
+                                                controller.aiAnalysisResult.value ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xFF3B3E43),
+                                                ),
+                                              ),
+                                            SizedBox(height: 16),
+                                          ],
+                                        )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                            ],
+                          ),
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white, // 배경 색상

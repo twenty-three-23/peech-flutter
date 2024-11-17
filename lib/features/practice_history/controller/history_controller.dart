@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:swm_peech_flutter/features/common/controllers/social_login_controller.dart';
-import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/controllers/user_info_controller.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_mode_storage.dart';
 import 'package:swm_peech_flutter/features/common/data_source/local/local_practice_theme_storage.dart';
@@ -14,6 +12,7 @@ import 'package:swm_peech_flutter/features/common/models/script_input_paragraphs
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_major_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_minor_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/mock/mock_history_theme_data_source.dart';
+import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_ai_analysis_result_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_detail_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_major_list_data_source.dart';
 import 'package:swm_peech_flutter/features/practice_history/data_source/remote/remote_minor_detail_data_source.dart';
@@ -61,6 +60,9 @@ class HistoryCtr extends GetxController {
 
   Rx<ParagraphListModel?> practiceResult = Rx<ParagraphListModel?>(null); //데이터 받아오고, 요청 보낼때만 수정
 
+  Rx<String?> aiAnalysisResult = Rx<String?>(null);
+  Rx<bool> aiAnalysisIsShow = Rx<bool>(false);
+
   // 바텀 네비게이션 통해서 진입시 실행되는 함수
   void enter() {
     getDefaultList();
@@ -78,6 +80,14 @@ class HistoryCtr extends GetxController {
     majorScrollController.dispose();
     minorScrollController.dispose();
     super.onClose();
+  }
+
+  void aiAnalysisBtn() {
+    aiAnalysisIsShow.value = !aiAnalysisIsShow.value;
+  }
+
+  void getAiAnalysis(int scriptId) async {
+    aiAnalysisResult.value = await RemoteAiAnalysisResultDataSource(AuthDioFactory().dio).getAnalysisResult(scriptId);
   }
 
   Future<void> getMajorDetail(int themeId, int scriptId) async {
@@ -377,8 +387,10 @@ class HistoryCtr extends GetxController {
   }
 
   void gotoDetailBtn(BuildContext context, int scriptId) {
+    aiAnalysisIsShow.value = false;
     Navigator.pushNamed(context, '/historyDetail');
     getPracticeResult(scriptId);
+    getAiAnalysis(scriptId);
   }
 
   void getPracticeResult(int scriptId) async {
