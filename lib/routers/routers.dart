@@ -19,9 +19,9 @@ import 'package:swm_peech_flutter/features/script_input/view/script_expected_tim
 import 'package:swm_peech_flutter/features/script_input/view/script_input_screen.dart';
 import 'package:swm_peech_flutter/features/theme_input/controller/theme_input_controller.dart';
 import 'package:swm_peech_flutter/features/theme_input/view/theme_input_screen.dart';
-import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
-import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_no_script.dart';
-import 'package:swm_peech_flutter/features/voice_recode/view/voice_recode_screen_with_script.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/controller/voice_recorde_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/view/voice_recorde_screen_no_script.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/view/voice_recorde_screen_with_script.dart';
 
 import '../features/interview_question/controller/interview_question_input_controller.dart';
 import '../features/interview_question/view/interview_question_input_screen.dart';
@@ -85,18 +85,18 @@ class Routers {
       transition: Transition.noTransition,
     ),
     GetPage(
-      name: '/voiceRecodeNoScript',
-      page: () => const VoiceRecodeScreenNoScript(),
+      name: '/voiceRecordeNoScript',
+      page: () => const VoiceRecordeScreenNoScript(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
+        Get.lazyPut<VoiceRecordeCtr>(() => VoiceRecordeCtr());
       }),
       transition: Transition.noTransition,
     ),
     GetPage(
-      name: '/voiceRecodeWithScript',
-      page: () => const VoiceRecodeScreenWithScript(),
+      name: '/voiceRecordeWithScript',
+      page: () => const VoiceRecordeScreenWithScript(),
       binding: BindingsBuilder(() {
-        Get.lazyPut<VoiceRecodeCtr>(() => VoiceRecodeCtr());
+        Get.lazyPut<VoiceRecordeCtr>(() => VoiceRecordeCtr());
       }),
       transition: Transition.noTransition,
     ),

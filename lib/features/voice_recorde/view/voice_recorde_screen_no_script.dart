@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swm_peech_flutter/features/common/widgets/common_scaffold.dart';
 import 'package:swm_peech_flutter/features/common/widgets/colored_button.dart';
-import 'package:swm_peech_flutter/features/voice_recode/controller/voice_recode_controller.dart';
-import 'package:swm_peech_flutter/features/voice_recode/model/practice_state.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/controller/voice_recorde_controller.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/model/practice_state.dart';
 
-class VoiceRecodeScreenNoScript extends StatefulWidget {
-  const VoiceRecodeScreenNoScript({super.key});
+class VoiceRecordeScreenNoScript extends StatefulWidget {
+  const VoiceRecordeScreenNoScript({super.key});
 
   @override
-  State<VoiceRecodeScreenNoScript> createState() => _VoiceRecodeScreenNoScriptState();
+  State<VoiceRecordeScreenNoScript> createState() => _VoiceRecordeScreenNoScriptState();
 }
 
-class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> with WidgetsBindingObserver {
-  final VoiceRecodeCtr _controller = Get.find<VoiceRecodeCtr>();
+class _VoiceRecordeScreenNoScriptState extends State<VoiceRecordeScreenNoScript> with WidgetsBindingObserver {
+  final VoiceRecordeCtr _controller = Get.find<VoiceRecordeCtr>();
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _VoiceRecodeScreenNoScriptState extends State<VoiceRecodeScreenNoScript> w
   Widget build(BuildContext context) {
     return CommonScaffold(
       appBarTitle: '음성 녹음',
-      child: GetX<VoiceRecodeCtr>(
+      child: GetX<VoiceRecordeCtr>(
         builder: (_) => Center(
           child: _controller.isLoading.value == true
               ? const CircularProgressIndicator()

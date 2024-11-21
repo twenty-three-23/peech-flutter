@@ -74,6 +74,7 @@ class _MyAppState extends State<MyApp> {
     if (kIsWeb) {
       //web 인 경우
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Container(
           color: const Color(0xFFf1f1f1),
           child: Row(
@@ -103,6 +104,7 @@ class _MyAppState extends State<MyApp> {
                   supportedLocales: const [
                     Locale('ko', 'KR'),
                   ],
+                  debugShowCheckedModeBanner: false,
                 ),
               ),
               if (PlatformDeviceInfo.isMobile() == false)
@@ -168,6 +170,7 @@ class _MyAppState extends State<MyApp> {
         supportedLocales: const [
           Locale('ko', 'KR'),
         ],
+        debugShowCheckedModeBanner: false,
       );
     }
   }

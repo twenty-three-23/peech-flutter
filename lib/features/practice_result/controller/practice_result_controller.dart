@@ -98,22 +98,22 @@ class PracticeResultCtr extends GetxController {
     }
   }
 
-  Future<void> checkRecodeFileDuration() async {
+  Future<void> checkRecordeFileDuration() async {
     try {
-      int seconds = await getRecodeSeconds();
+      int seconds = await getRecordeSeconds();
       RemoteFileDurationCheckDataSource remoteFileDurationCheckDataSource = RemoteFileDurationCheckDataSource(AuthDioFactory().dio);
       UsageTimeCheckModel usageTimeCheck = await remoteFileDurationCheckDataSource.checkFileDuration(seconds);
       print("응답: ${usageTimeCheck.message}");
     } on DioException catch (e) {
-      print("[checkRecodeFileDuration] DioException: [${e.response?.statusCode}] ${e.response?.data}");
+      print("[checkRecordeFileDuration] DioException: [${e.response?.statusCode}] ${e.response?.data}");
       rethrow;
     } catch (e) {
-      print("[checkRecodeFileDuration] Exception: ${e}");
+      print("[checkRecordeFileDuration] Exception: ${e}");
       rethrow;
     }
   }
 
-  Future<int> getRecodeSeconds() async {
+  Future<int> getRecordeSeconds() async {
     Duration duration = await RecordFileUtil().getDuration();
     return duration.inSeconds;
   }

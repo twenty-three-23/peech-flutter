@@ -21,7 +21,7 @@ class ThemeInputCtr extends GetxController {
   }
 
   Future<void> saveTheme() async {
-    if(_theme == null || _theme == "") {
+    if (_theme == null || _theme == "") {
       throw Exception("error: theme is null or blank");
     }
     await LocalPracticeThemeStorage().setThemeText(_theme);
@@ -40,9 +40,9 @@ class ThemeInputCtr extends GetxController {
       final ThemeIdModel themeIdModel = await remoteThemeSaveDataSource.postTheme({"themeTitle": theme});
       print("테마id: ${themeIdModel.themeId}");
       return themeIdModel;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       print("status: ${e.response?.statusCode}, message: ${e.response?.data["message"]}");
-      throw(Exception("[remoteThemeSaveDataSource.postTheme()] Bad Request"));
+      throw (Exception("[remoteThemeSaveDataSource.postTheme()] Bad Request"));
     }
   }
 
@@ -50,17 +50,16 @@ class ThemeInputCtr extends GetxController {
     isLoading.value = true;
     try {
       await saveTheme();
-    } catch(e) {
+    } catch (e) {
       print(e);
       isLoading.value = false;
       rethrow;
     }
-    if(context.mounted) {
+    if (context.mounted) {
       if (LocalPracticeModeStorage().getMode() == PracticeMode.withScript) {
         await Navigator.pushNamed(context, '/scriptInput/input');
-      }
-      else if (LocalPracticeModeStorage().getMode() == PracticeMode.noScript) {
-        await Navigator.pushNamed(context, '/voiceRecodeNoScript');
+      } else if (LocalPracticeModeStorage().getMode() == PracticeMode.noScript) {
+        await Navigator.pushNamed(context, '/voiceRecordeNoScript');
       }
     }
     isLoading.value = false;

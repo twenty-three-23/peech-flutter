@@ -1,7 +1,7 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart' hide Headers;
 import 'package:swm_peech_flutter/features/common/constant/constants.dart';
-import 'package:swm_peech_flutter/features/voice_recode/model/keyword_response_model.dart';
+import 'package:swm_peech_flutter/features/voice_recorde/model/keyword_response_model.dart';
 
 part 'remote_paragraph_keywords.g.dart';
 
