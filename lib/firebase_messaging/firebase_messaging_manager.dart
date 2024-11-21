@@ -37,7 +37,7 @@ class FirebaseMessagingManager {
       sound: true,
     );
 
-    print('FCM token = ${await FirebaseMessaging.instance.getToken()}');
+    print('FCM token = ${await getToken()}');
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
       print('onTokenRefresh = $fcmToken');
       putFcmToken(fcmToken: fcmToken);
@@ -74,7 +74,11 @@ class FirebaseMessagingManager {
 
   static Future<String?> getToken() async {
     try {
-      return await FirebaseMessaging.instance.getToken();
+      if (PlatformDeviceInfo.isAndroid()) {
+        return await FirebaseMessaging.instance.getToken();
+      } else if (PlatformDeviceInfo.isIOS()) {
+        return await FirebaseMessaging.instance.getAPNSToken();
+      }
     } catch (e) {
       print('getToken failed = $e');
     }
@@ -87,7 +91,7 @@ class FirebaseMessagingManager {
   }
 
   static void putFcmToken({String? fcmToken = null}) async {
-    if (fcmToken == null) fcmToken = await FirebaseMessaging.instance.getToken() ?? '';
+    if (fcmToken == null) fcmToken = await getToken() ?? '';
     print('[putFcmToken] fcmToken = $fcmToken');
     RemoteSaveFcmToken remoteSaveFcmToken = RemoteSaveFcmToken(AuthDioFactory().dio);
     remoteSaveFcmToken.putFcmToken(SaveTokenRequestModel(
